@@ -176,12 +176,12 @@ jackstraw.PCA = function(dat, r1=NULL, r=NULL, s=NULL, B=NULL, covariate=NULL, c
 		r0 = seq(r)[-r1]
 	}
 
-	svd.dat = fast.svd(dat)
-	LV = svd.dat$v[,r1, drop=FALSE]
-	if(!is.null(r0)) ALV = svd.dat$v[,r0, drop=FALSE]
-
 	# Calculate observed association statistics
 	if(compute.obs==TRUE) {
+  	svd.dat = fast.svd(dat)
+  	LV = svd.dat$v[,r1, drop=FALSE]
+  	if(!is.null(r0)) ALV = svd.dat$v[,r0, drop=FALSE]
+
 	  obs = FSTAT(dat=dat, LV=LV, ALV=ALV, covariate=covariate)$fstat
 	} else{
 	  obs = NULL
@@ -295,14 +295,14 @@ jackstraw.LFA = function(dat, FUN = function(x) lfa(x, r)[,,drop=FALSE], devR=FA
 		stop("Please provide a function to estimate latent variables.")
 	}
 
-	## note that LFr has an intercept term as the last column
-	## LFr1 and LFr0 (subsetting LFr) do not inherit/have an intercept term
-	LFr = FUN(dat)
-	LFr1 = LFr[,r1, drop=FALSE]
-	if(r != ncol(LFr)) stop(paste0("The number of latent variables ", r, "is not equal to the number of column(s) provided by ", FUN))
-	if(!is.null(r0)) LFr0 = LFr[,r0, drop=FALSE]
-
 	if(compute.obs == TRUE) {
+  	## note that LFr has an intercept term as the last column
+  	## LFr1 and LFr0 (subsetting LFr) do not inherit/have an intercept term
+  	LFr = FUN(dat)
+  	LFr1 = LFr[,r1, drop=FALSE]
+  	if(r != ncol(LFr)) stop(paste0("The number of latent variables ", r, "is not equal to the number of column(s) provided by ", FUN))
+  	if(!is.null(r0)) LFr0 = LFr[,r0, drop=FALSE]
+
   	if(devR == FALSE) {
   		## uses a deviance computation function in lfagen
   		obs = devdiff(dat, LF_alt=cbind(LFr, covariate), LF_null=cbind(LFr0, matrix(1, n, 1), covariate))
@@ -400,15 +400,12 @@ jackstraw.FUN = function(dat, FUN, r=NULL, r1=NULL, s=NULL, B=NULL, covariate=NU
 	n = dim(dat)[2]
 	if(is.null(s)) { s=round(m/10); message(paste0("A number of null variables (s) to be permuted is not specified: s=round(0.10*m)=",s,".")); }
 	if(is.null(B)) { B=round(m*10/s); message(paste0("A number of resampling iterations (B) is not specified: B=round(m*10/s)=",B,"."));}
+  if(is.null(FUN)) { stop("Please provide a function to estimate latent variables."); }
 
-	if(!is.null(FUN)) {
-		FUN = match.fun(FUN)
-		LV = FUN(dat)
-		if(is.null(r)) r = ncol(LV)
-		if(r != ncol(LV)) stop(paste0("The number of latent variables ", r, "is not equal to the number of column(s) provided by ", FUN))
-	} else {
-		stop("Please provide a function to estimate latent variables.")
-	}
+	FUN = match.fun(FUN)
+	LV = FUN(dat)
+	if(is.null(r)) r = ncol(LV)
+	if(r != ncol(LV)) stop(paste0("The number of latent variables ", r, "is not equal to the number of column(s) provided by ", FUN))
 
 	if(is.null(r1)) r1 = 1:r
 	if(all(seq(r) %in% r1)) {
