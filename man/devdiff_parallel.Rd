@@ -20,4 +20,3 @@ Difference in Deviances, in Parallel
 Wei Hao
 }
 \keyword{internal}
-

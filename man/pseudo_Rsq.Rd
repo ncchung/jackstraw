@@ -20,4 +20,3 @@ Mcfadden's Pseudo R-sqaured
 Wei Hao
 }
 \keyword{internal}
-

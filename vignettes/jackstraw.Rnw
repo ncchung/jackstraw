@@ -1,6 +1,7 @@
 \documentclass{article}
 
 %\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{jackstraw: Significance test for association between variables	and their estimated latent variables}
 
 \usepackage{natbib}
 \usepackage{graphics}

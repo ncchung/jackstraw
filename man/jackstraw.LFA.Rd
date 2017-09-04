@@ -68,10 +68,9 @@ dat = matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 out = jackstraw.LFA(dat, r=2)
 }
 }
-\author{
-Neo Christopher Chung \email{nchchung@gmail.com}
-}
 \seealso{
 \link{jackstraw} \link{jackstraw.FUN}
 }
-
+\author{
+Neo Christopher Chung \email{nchchung@gmail.com}
+}

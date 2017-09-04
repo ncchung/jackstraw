@@ -30,4 +30,3 @@ Make sure that \code{LFr1} and \code{LFr0} do not have intercept terms.
 \author{
 Neo Christopher Chung \email{nchchung@gmail.com}
 }
-

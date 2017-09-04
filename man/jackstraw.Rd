@@ -56,6 +56,7 @@ If \code{B} is not supplied, \code{B} is set to \code{m*10/s}.
   \item{seed}{a seed for the random number generator.}
 }
 }
+
 \examples{
 set.seed(1234)
 ## simulate data from a latent variable model: Y = BL + E
@@ -74,13 +75,12 @@ out = jackstraw(dat, r=1, method="PCA")
 out = jackstraw(dat, r=1, s=10, B=1000, seed=5678)
 }
 }
-\author{
-Neo Christopher Chung \email{nchchung@gmail.com}
-}
 \references{
 Chung and Storey (2013) Statistical significance of variables driving systematic variation in high-dimensional data Bioinformatics, 31(4): 545-554 \url{http://bioinformatics.oxfordjournals.org/content/31/4/545}
 }
 \seealso{
 \link{permutationPA} \link{jackstraw.PCA} \link{jackstraw.LFA} \link{jackstraw.FUN}
 }
-
+\author{
+Neo Christopher Chung \email{nchchung@gmail.com}
+}

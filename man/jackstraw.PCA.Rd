@@ -81,13 +81,12 @@ out = jackstraw.PCA(dat, r=1)
 ## out = jackstraw.PCA(dat, r=1, s=10, B=1000, seed=5678)
 }
 }
-\author{
-Neo Christopher Chung \email{nchchung@gmail.com}
-}
 \references{
 Chung and Storey (2013) Statistical Significance of Variables Driving Systematic Variation in High-Dimensional Data. arXiv:1308.6013 [stat.ME] \url{http://arxiv.org/abs/1308.6013}
 }
 \seealso{
 \link{jackstraw} \link{jackstraw.FUN} \link{permutationPA}
 }
-
+\author{
+Neo Christopher Chung \email{nchchung@gmail.com}
+}

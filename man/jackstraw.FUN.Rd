@@ -54,13 +54,12 @@ dat = t(scale(t(dat), center=TRUE, scale=TRUE))
 ## apply the jackstraw with the svd as a function
 out = jackstraw.FUN(dat, FUN = function(x) svd(x)$v[,1,drop=FALSE], r=1, s=100, B=50)
 }
-\author{
-Neo Christopher Chung \email{nchchung@gmail.com}
-}
 \references{
 Chung and Storey (2013) Statistical Significance of Variables Driving Systematic Variation in High-Dimensional Data. arXiv:1308.6013 [stat.ME] \url{http://arxiv.org/abs/1308.6013}
 }
 \seealso{
 \link{jackstraw}
 }
-
+\author{
+Neo Christopher Chung \email{nchchung@gmail.com}
+}

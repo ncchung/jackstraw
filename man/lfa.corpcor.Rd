@@ -43,4 +43,3 @@ out = lfa.corpcor(x=dat, d=2)
 \seealso{
 \link{jackstraw.LFA}
 }
-

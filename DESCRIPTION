@@ -1,21 +1,24 @@
 Package: jackstraw
 Type: Package
 Title: Statistical Inference of Variables Driving Systematic Variation
-Version: 1.1
-Date: 2015-12-26
+Version: 1.1.1
+Date: 2017-09-01
 Author: Neo Christopher Chung <nchchung@gmail.com>, John D. Storey
     <jstorey@princeton.edu>, Wei Hao <whao@princeton.edu>
-Maintainer: Neo Christopher Chung <nchchung@gmail.com>, John D. Storey
-    <jstorey@princeton.edu>
+Maintainer: Neo Christopher Chung <nchchung@gmail.com>
 Description: Significance test for association between variables
 	and their estimated latent variables.
 	Latent variables may be estimated by principal component analysis (PCA),
 	logistic factor analysis (LFA), and other techniques.
+biocViews: 
 Imports:
 	corpcor,
 	lfa,
 	stats
 Suggests:
-	parallel
+	parallel,
+	knitr,
+	rmarkdown
 License: GPL-2
-RoxygenNote: 5.0.0
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr

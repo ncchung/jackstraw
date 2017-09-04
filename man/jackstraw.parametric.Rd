@@ -49,12 +49,11 @@ are called the jackstraw statistics. P-values are computed by comparing observed
 
 Note that unless you have a strong reason to use a parametric distribution, it is advised to use the non-parametric jackstraw.
 }
-\author{
-Neo Christopher Chung \email{nchchung@gmail.com}
-}
 \seealso{
 \link{jackstraw.FUN}
 
 \link{jackstraw}
 }
-
+\author{
+Neo Christopher Chung \email{nchchung@gmail.com}
+}

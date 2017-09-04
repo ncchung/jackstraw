@@ -32,4 +32,3 @@ Adopted from sva::num.sv, and based on Buja and Eyuboglu (1992)
 \references{
 Buja A and Eyuboglu N. (1992) Remarks on parrallel analysis. Multivariate Behavioral Research, 27(4), 509-540
 }
-
