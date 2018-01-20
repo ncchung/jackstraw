@@ -13,7 +13,7 @@ dev.R(dat, LFr1, LFr0 = NULL, p = FALSE)
 
 \item{LFr0}{null logistic factors (an output from lfa or lfa.corpcor)}
 
-\item{p}{estimate p-values (by default, "FALSE")}
+\item{p}{estimate p-values (by default, 'FALSE')}
 }
 \value{
 When {p=FALSE} (by default), \code{dev.R} returns a vector of \code{m} deviances.

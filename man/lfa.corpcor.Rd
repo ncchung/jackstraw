@@ -41,5 +41,5 @@ dat = matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 out = lfa.corpcor(x=dat, d=2)
 }
 \seealso{
-\link{jackstraw.LFA}
+\link{jackstraw_lfa}
 }

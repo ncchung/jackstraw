@@ -15,7 +15,7 @@
 #'
 #' @importFrom corpcor fast.svd
 #' @export lfa.corpcor
-#' @seealso \link{jackstraw.LFA}
+#' @seealso \link{jackstraw_lfa}
 #'
 #' @examples
 #' set.seed(1234)
@@ -31,48 +31,57 @@
 #'
 #' dat = matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 #' out = lfa.corpcor(x=dat, d=2)
-lfa.corpcor <- function(x, d, ltrace = FALSE){
-    n.sv = d - 1
-    m = nrow(x)
-    n = ncol(x)
-
-    norm_x = t(scale(t(x), scale=FALSE, center=TRUE))
-    mysvd = fast.svd(norm_x)
-
-    mean_x = apply(x,1,mean)
-    sd_x = apply(x,1,sd)
-
+lfa.corpcor <- function(x, d, ltrace = FALSE) {
+    n.sv <- d - 1
+    m <- nrow(x)
+    n <- ncol(x)
+    
+    norm_x <- t(scale(t(x), scale = FALSE, 
+        center = TRUE))
+    mysvd <- fast.svd(norm_x)
+    
+    mean_x <- apply(x, 1, mean)
+    sd_x <- apply(x, 1, sd)
+    
     rm(norm_x)
-    d = mysvd$d[1:n.sv]
-    u = mysvd$u[,1:n.sv]
-    v = mysvd$v[,1:n.sv]
+    d <- mysvd$d[1:n.sv]
+    u <- mysvd$u[, 1:n.sv]
+    v <- mysvd$v[, 1:n.sv]
     rm(mysvd)
-
-    z = u %*% diag(d, n.sv, n.sv)  %*% t(v)
-
-    z = (z*sd_x) + mean_x
-    z = z/2
-    rm(u); rm(d); rm(v)
-
-    if(ltrace){
+    
+    z <- u %*% diag(d, n.sv, n.sv) %*% 
+        t(v)
+    
+    z <- (z * sd_x) + mean_x
+    z <- z/2
+    rm(u)
+    rm(d)
+    rm(v)
+    
+    if (ltrace) {
         print(summary(as.vector(z)))
     }
-
-    #The .Call() is equivalent to the following lines of R code:
-    #ind = as.logical(.Call("lfa_threshold", z, 1/(2*n)))
-    zmin = apply(z, 1, min)
-    zmax = apply(z, 1, max)
-    ind  = (zmax<(1-2/n)) & (zmin>(2/n))
-    z = z[ind,]
-    z = log(z/(1-z))
-
-    if(ltrace){
+    
+    # The .Call() is equivalent to
+    # the following lines of R
+    # code: ind =
+    # as.logical(.Call('lfa_threshold',
+    # z, 1/(2*n)))
+    zmin <- apply(z, 1, min)
+    zmax <- apply(z, 1, max)
+    ind <- (zmax < (1 - 2/n)) & 
+        (zmin > (2/n))
+    z <- z[ind, ]
+    z <- log(z/(1 - z))
+    
+    if (ltrace) {
         print(dim(z))
     }
-
-    norm_z = t(scale(t(z), scale=TRUE, center=TRUE))
-    v= fast.svd(norm_z)$v[,1:n.sv]
-    v = cbind(v,1)
+    
+    norm_z <- t(scale(t(z), scale = TRUE, 
+        center = TRUE))
+    v <- fast.svd(norm_z)$v[, 1:n.sv]
+    v <- cbind(v, 1)
     return(v)
 }
 
@@ -85,7 +94,7 @@ lfa.corpcor <- function(x, d, ltrace = FALSE){
 #' @param dat a matrix with \code{m} rows and \code{n} columns.
 #' @param LFr1 alternative logistic factors (an output from lfa or lfa.corpcor)
 #' @param LFr0 null logistic factors (an output from lfa or lfa.corpcor)
-#' @param p estimate p-values (by default, "FALSE")
+#' @param p estimate p-values (by default, 'FALSE')
 #'
 #' @return When {p=FALSE} (by default), \code{dev.R} returns a vector of \code{m} deviances.
 #' @return When {p=TRUE}, a list consisting of
@@ -94,19 +103,25 @@ lfa.corpcor <- function(x, d, ltrace = FALSE){
 #'
 #' @import stats
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-dev.R = function(dat, LFr1, LFr0=NULL, p=FALSE) {
-    n = ncol(dat)
+dev.R <- function(dat, LFr1, LFr0 = NULL, 
+    p = FALSE) {
+    n <- ncol(dat)
     # if(is.null(LFr0)) LFr0 = 1
-    if(is.null(LFr0)) LFr0 = matrix(1, n, 1)
-
-    obs1 = apply(dat, 1, function(x) glm(cbind(x, 2-x) ~ LFr1, family=binomial(link="logit"))$deviance)
-    obs0 = apply(dat, 1, function(x) glm(cbind(x, 2-x) ~ LFr0, family=binomial(link="logit"))$deviance)
-
-    dev = obs0 - obs1
-
-    if(p==TRUE) {
-        p.value = 1-pchisq(dev,ncol(LFr1)-ncol(LFr0))
-        return(list(p.value=p.value, dev=dev))
+    if (is.null(LFr0)) 
+        LFr0 <- matrix(1, n, 1)
+    
+    obs1 <- apply(dat, 1, function(x) glm(cbind(x, 
+        2 - x) ~ LFr1, family = binomial(link = "logit"))$deviance)
+    obs0 <- apply(dat, 1, function(x) glm(cbind(x, 
+        2 - x) ~ LFr0, family = binomial(link = "logit"))$deviance)
+    
+    dev <- obs0 - obs1
+    
+    if (p == TRUE) {
+        p.value <- 1 - pchisq(dev, 
+            ncol(LFr1) - ncol(LFr0))
+        return(list(p.value = p.value, 
+            dev = dev))
     } else {
         return(dev)
     }

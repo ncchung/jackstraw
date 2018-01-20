@@ -1,7 +1,7 @@
 \documentclass{article}
 
 %\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{jackstraw: Significance test for association between variables	and their estimated latent variables}
+%\VignetteIndexEntry{jackstraw: Statistical Inference using Latent Variables}
 
 \usepackage{natbib}
 \usepackage{graphics}
@@ -28,7 +28,7 @@ options(keep.source = TRUE, width=50)
 desc <- packageDescription("jackstraw")
 @
 
-\title{jackstraw: Significance test for association between variables	and their estimated latent variables}
+\title{jackstraw: Statistical Inference using Latent Variables}
 \author{Neo Christopher Chung}
 
 \begin{document}
@@ -98,7 +98,7 @@ plot(svd.out$d[1] * svd.out$v[,1], pch=20, main="1st PC", xlab="Observation", yl
 We are now ready to apply the jackstraw to our data, in order to assess statistical significance of association between variables and the first PC:
 
 <<sim_pca_jackstraw, dependson="sim_pca_data", cache=TRUE>>=
-js.pca = jackstraw(Y, r = 1, method = "PCA", s = 100, B = 100, verbose = FALSE)
+js.pca = jackstraw_pca(Y, r = 1, s = 100, B = 100, verbose = FALSE)
 
 hist(js.pca$p.value, 10, col="black")
 @
@@ -148,7 +148,8 @@ The output includes the genotype matrix \verb@dat$Y@, the status of hypothesis \
 With a genotype matrix, we can use the Logistic Factor Analysis from \cite{lfa}. We are interested in identifying loci which are truly associated with an underlying population structure (which we must directly estimated from the genotype matrix). LFA estimates this underlying population structure with ``logistic factors (LFs)'' and we will carry out association tests between loci and LFs.
 
 <<sim_lfa_jackstraw, dependson="sim_lfa_data", cache=TRUE>>=
-js.lfa = jackstraw(dat$Y, r = 2, method = "LFA-R", s = 200, B = 10)
+js.lfa = jackstraw_lfa(dat$Y, r = 2, FUN = function(x) lfa.corpcor(x, 2)[, , drop = FALSE], s = 200, B = 10, devR = TRUE)
+
 
 hist(js.lfa$p.value, 10, col="black")
 @

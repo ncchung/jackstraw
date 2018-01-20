@@ -1,18 +1,19 @@
 Package: jackstraw
 Type: Package
-Title: Statistical Inference of Variables Driving Systematic Variation
-Version: 1.1.1
-Date: 2017-09-01
+Title: Statistical Inference using Latent Variables
+Version: 1.1.2
+Date: 2018-01-16
 Author: Neo Christopher Chung <nchchung@gmail.com>, John D. Storey
     <jstorey@princeton.edu>, Wei Hao <whao@princeton.edu>
 Maintainer: Neo Christopher Chung <nchchung@gmail.com>
-Description: Significance test for association between variables
-	and their estimated latent variables.
-	Latent variables may be estimated by principal component analysis (PCA),
-	logistic factor analysis (LFA), and other techniques.
+Description: Test for association between the observed data
+	and their latent variables.
+	Latent variables may be estimated by principal component analysis,
+	factor analysis, K-means clustering, and related methods.
 biocViews: 
 Imports:
 	corpcor,
+	qvalue,
 	lfa,
 	stats
 Suggests:
