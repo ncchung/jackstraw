@@ -30,7 +30,7 @@ jackstraw_lfa(dat, FUN = function(x) lfa(x, r)[, , drop = FALSE],
 \item{seed}{a seed for the random number generator.}
 }
 \value{
-\code{jackstraw} returns a list consisting of
+\code{jackstraw_lfa} returns a list consisting of
 \item{p.value}{\code{m} p-values of association tests between variables and their LFs}
 \item{obs.stat}{\code{m} observed devs}
 \item{null.stat}{\code{s*B} null devs}

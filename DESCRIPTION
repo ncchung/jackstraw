@@ -1,21 +1,25 @@
 Package: jackstraw
 Type: Package
-Title: Statistical Inference using Latent Variables
-Version: 1.1.2
-Date: 2018-01-16
+Title: Statistical Inference for Unsupervised Learning
+Version: 1.3
+Date: 2018-08-08
 Author: Neo Christopher Chung <nchchung@gmail.com>, John D. Storey
     <jstorey@princeton.edu>, Wei Hao <whao@princeton.edu>
 Maintainer: Neo Christopher Chung <nchchung@gmail.com>
 Description: Test for association between the observed data
-	and their latent variables.
-	Latent variables may be estimated by principal component analysis,
-	factor analysis, K-means clustering, and related methods.
+	and their systematic patterns, that are often extracted by unsupervised learning.
+	Latent variables in high-dimensional data may be estimated by principal component analysis, factor analysis, and related methods. Subpopulations among the observed data may be determined by K-means clustering, partition around medoids (PAM), and other algorithms.
+LazyData: true
 biocViews: 
 Imports:
 	corpcor,
+	cluster,
+	ClusterR,
 	qvalue,
 	lfa,
-	stats
+	stats,
+	irlba,
+	rsvd
 Suggests:
 	parallel,
 	knitr,

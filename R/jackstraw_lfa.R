@@ -16,7 +16,7 @@
 #' @param verbose a logical specifying to print the computational progress.
 #' @param seed a seed for the random number generator.
 #'
-#' @return \code{jackstraw} returns a list consisting of
+#' @return \code{jackstraw_lfa} returns a list consisting of
 #' \item{p.value}{\code{m} p-values of association tests between variables and their LFs}
 #' \item{obs.stat}{\code{m} observed devs}
 #' \item{null.stat}{\code{s*B} null devs}

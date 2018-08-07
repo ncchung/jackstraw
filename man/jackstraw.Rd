@@ -5,12 +5,11 @@
 \alias{jackstraw}
 \alias{jackstraw-package}
 \alias{jackstraw-package}
-\title{jackstraw: Statistical Inference using Latent Variables}
+\title{jackstraw: Statistical Inference for Unsupervised Learning}
 \description{
 Test for association between the observed data
-and their latent variables.
-Latent variables may be estimated by principal component analysis,
-factor analysis, K-means clustering, and related methods.
+and their systematic patterns, that are often extracted by unsupervised learning.
+Latent variables in high-dimensional data may be estimated by principal component analysis, factor analysis, and related methods. Subpopulations among the observed data may be determined by K-means clustering, partition around medoids (PAM), and other algorithms.
 }
 \details{
 The jackstraw package provides a resampling strategy and testing scheme to estimate statistical significance

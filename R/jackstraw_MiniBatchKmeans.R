@@ -1,4 +1,4 @@
-#' Non-Parametric Jackstraw for K-means Clustering
+#' Non-Parametric Jackstraw for Mini Batch K-means Clustering
 #'
 #' Test the cluster membership for K-means clustering
 #'
@@ -8,36 +8,40 @@
 #' Its resampling strategy accounts for the over-fitting characteristics due to direct computation of clusters from the observed data
 #' and protects against an anti-conservative bias.
 #'
-#' The input data (\code{dat}) must be of a class `matrix`.
-#'
-#' @param dat a matrix with \code{m} rows as variables and \code{n} columns as observations.
-#' @param kmeans.dat an output from applying \code{kmeans()} onto \code{dat}.
+#' @param dat a data matrix with \code{m} rows as variables and \code{n} columns as observations.
+#' @param MiniBatchKmeans.output an output from applying \code{ClusterR::MiniBatchKmeans()} onto \code{dat}. This provides more controls over the algorithm and subsequently the initial centroids used.
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations.
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
 #' @param seed a seed for the random number generator.
-#' @param ... optional arguments to control the k-means clustering algorithm (refers to \code{kmeans}).
+#' @param ... optional arguments to control the Mini Batch K-means clustering algorithm (refers to \code{ClusterR::MiniBatchKmeans}).
 #'
-#' @return \code{jackstraw_kmeans} returns a list consisting of
+#' @return \code{jackstraw_MiniBatchKmeans} returns a list consisting of
 #' \item{F.obs}{\code{m} observed F statistics between variables and cluster centers.}
 #' \item{F.null}{F null statistics between null variables and cluster centers, from the jackstraw method.}
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
-#' @export jackstraw_kmeans
+#' @export jackstraw_MiniBatchKmeans
 #' @importFrom qvalue empPvals
+#' @importFrom ClusterR MiniBatchKmeans
+#' @importFrom ClusterR predict_MBatchKMeans
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 #' @examples
+#' library(ClusterR)
 #' set.seed(1234)
 #' dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
-#' kmeans.dat <- kmeans(dat, centers=2, nstart = 10, iter.max = 100)
-#' jackstraw.out <- jackstraw_kmeans(dat, kmeans.dat)
-jackstraw_kmeans <- function(dat,
-    kmeans.dat, s = NULL, B = NULL,
-    covariate = NULL, verbose = FALSE,
-    pool = TRUE, seed = NULL, ...) {
+#' MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = 2, batch_size = 300, num_init = 10, max_iters = 1000, init_fraction = 1, initializer = "kmeans++")
+#' jackstraw.output <- jackstraw_MiniBatchKmeans(dat, clusters=2, MiniBatchKmeans.output = MiniBatchKmeans.output)
+jackstraw_MiniBatchKmeans <- function(dat, clusters,
+    MiniBatchKmeans.output = NULL, s = NULL, B = NULL,
+    covariate = NULL, verbose = FALSE, seed = NULL,
+    batch_size = floor(nrow(dat)/100), num_init = 1, max_iters = 100,
+    init_fraction = 1, initializer = 'kmeans++', early_stop_iter = 10,
+    pool = TRUE,
+    ...) {
     if (is.null(seed))
         set.seed(seed)
     m <- nrow(dat)
@@ -54,10 +58,19 @@ jackstraw_kmeans <- function(dat,
     }
 
     ## sanity check
-    if (!is(kmeans.dat,"kmeans")) {
-      stop("`kmeans.dat` must be an object of class `kmeans`. See ?kmeans.")
+    if (is.null(MiniBatchKmeans.output)) {
+      MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = clusters, batch_size = batch_size, num_init = num_init, max_iters = max_iters,
+                                                   init_fraction = init_fraction, initializer = initializer, early_stop_iter = early_stop_iter, ...)
+      MiniBatchKmeans.output$cluster = predict_MBatchKMeans(dat, MiniBatchKmeans.output$centroids)
+    } else if (!is(MiniBatchKmeans.output,"k-means clustering")) {
+        stop("`MiniBatchKmeans.output` must be an object of class `k-means clustering` as a result from applying ClusterR::MiniBatchKmeans. See ?ClusterR::MiniBatchKmeans.")
+    } else {
+      if(clusters != nrow(MiniBatchKmeans.output$centroids)) {
+        stop("The number of clusters (specified by `clusters`) does not match the number of clusters in `MiniBatchKmeans.output`. Check MiniBatchKmeans.output$centroids.")
+      }
+      MiniBatchKmeans.output$cluster = predict_MBatchKMeans(dat, MiniBatchKmeans.output$centroids)
     }
-    k <- nrow(kmeans.dat$centers)
+    k <- clusters <- nrow(MiniBatchKmeans.output$centroids)
 
     if (verbose == TRUE) {
         cat(paste0("\nComputating null statistics (",
@@ -70,10 +83,10 @@ jackstraw_kmeans <- function(dat,
     F.obs <- vector("numeric",
         m)
     for (i in 1:k) {
-        F.obs[kmeans.dat$cluster ==
-            i] <- FSTAT(dat[kmeans.dat$cluster ==
+        F.obs[MiniBatchKmeans.output$cluster ==
+            i] <- FSTAT(dat[MiniBatchKmeans.output$cluster ==
             i, , drop = FALSE],
-            LV = t(kmeans.dat$centers[i,
+            LV = t(MiniBatchKmeans.output$centroids[i,
                 , drop = FALSE]),
             covariate = covariate)$fstat
     }
@@ -99,29 +112,23 @@ jackstraw_kmeans <- function(dat,
             scale = FALSE))
 
         # re-cluster the jackstraw data
-        kmeans.null <- kmeans(jackstraw.dat,
-            centers = kmeans.dat$centers,
-            ...)
+        jackstraw.MiniBatchKmeans <- MiniBatchKmeans(data=jackstraw.dat, CENTROIDS = MiniBatchKmeans.output$centroids,
+                                                     clusters = clusters, batch_size = batch_size, num_init = num_init, max_iters = max_iters,
+                                                     init_fraction = init_fraction, initializer = initializer, early_stop_iter = early_stop_iter, ...)
+        jackstraw.MiniBatchKmeans$cluster = predict_MBatchKMeans(jackstraw.dat, jackstraw.MiniBatchKmeans$centroids)
 
         for (i in 1:k) {
-            ind.i <- intersect(ind,
-                which(kmeans.null$cluster ==
-                  i))
-            if (length(ind.i) >
-                0) {
-
-                F.null[[i]] <- c(F.null[[i]],
-                  as.vector(FSTAT(dat = jackstraw.dat[ind.i,
-                    , drop = FALSE],
-                    LV = t(kmeans.null$centers[i,
-                      , drop = FALSE]),
-                    covariate = covariate)$fstat))
+            ind.i <- intersect(ind, which(jackstraw.MiniBatchKmeans$cluster == i))
+            if (length(ind.i) > 0) {
+                F.null[[i]] <- c(F.null[[i]], as.vector(
+                  FSTAT(dat = jackstraw.dat[ind.i, , drop = FALSE],
+                        LV = t(jackstraw.MiniBatchKmeans$centroids[i, , drop = FALSE]),
+                        covariate = covariate)$fstat))
             }
         }
     }
 
     # compute p-values
-    p.F <- vector("numeric", m)
     p.F <- vector("numeric", m)
     if(pool) {
       p.F <- empPvals(F.obs, as.vector(unlist(F.null)))
@@ -135,8 +142,8 @@ jackstraw_kmeans <- function(dat,
                   i, "] is [", length(F.null[[i]]),
                   "]."))
           }
-          p.F[kmeans.dat$cluster ==
-              i] <- empPvals(F.obs[kmeans.dat$cluster ==
+          p.F[MiniBatchKmeans.output$cluster ==
+              i] <- empPvals(F.obs[MiniBatchKmeans.output$cluster ==
               i], F.null[[i]])
       }
     }

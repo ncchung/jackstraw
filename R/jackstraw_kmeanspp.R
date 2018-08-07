@@ -1,6 +1,6 @@
-#' Non-Parametric Jackstraw for K-means Clustering
+#' Non-Parametric Jackstraw for K-means Clustering using RcppArmadillo
 #'
-#' Test the cluster membership for K-means clustering
+#' Test the cluster membership for K-means clustering, using K-means++ initialization
 #'
 #' K-means clustering assign \code{m} rows into \code{K} clusters. This function enable statistical
 #' evaluation if the cluster membership is correctly assigned. Each of \code{m} p-values refers to
@@ -8,33 +8,40 @@
 #' Its resampling strategy accounts for the over-fitting characteristics due to direct computation of clusters from the observed data
 #' and protects against an anti-conservative bias.
 #'
+#' Generally, it functions identical to \code{jackstraw_kmeans}, but this uses \code{ClusterR::KMeans_rcpp} instead of \code{stats::kmeans}.
+#' A speed improvement is gained by K-means++ initialization and \code{RcppArmadillo}. If the input data is still too large,
+#' consider using \code{jackstraw_MiniBatchKmeans}.
+#'
 #' The input data (\code{dat}) must be of a class `matrix`.
 #'
 #' @param dat a matrix with \code{m} rows as variables and \code{n} columns as observations.
-#' @param kmeans.dat an output from applying \code{kmeans()} onto \code{dat}.
+#' @param kmeans.dat an output from applying \code{ClusterR::KMeans_rcpp} onto \code{dat}.
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations.
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
 #' @param seed a seed for the random number generator.
-#' @param ... optional arguments to control the k-means clustering algorithm (refers to \code{kmeans}).
+#' @param ... optional arguments to control the k-means clustering algorithm (refers to \code{ClusterR::KMeans_rcpp}).
 #'
-#' @return \code{jackstraw_kmeans} returns a list consisting of
+#' @return \code{jackstraw_kmeanspp} returns a list consisting of
 #' \item{F.obs}{\code{m} observed F statistics between variables and cluster centers.}
 #' \item{F.null}{F null statistics between null variables and cluster centers, from the jackstraw method.}
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
-#' @export jackstraw_kmeans
+#' @export jackstraw_kmeanspp
 #' @importFrom qvalue empPvals
+#' @importFrom ClusterR KMeans_rcpp
+#' @importFrom ClusterR predict_KMeans
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 #' @examples
 #' set.seed(1234)
+#' library(ClusterR)
 #' dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
-#' kmeans.dat <- kmeans(dat, centers=2, nstart = 10, iter.max = 100)
-#' jackstraw.out <- jackstraw_kmeans(dat, kmeans.dat)
-jackstraw_kmeans <- function(dat,
+#' kmeans.dat <- KMeans_rcpp(dat,  clusters = 10, num_init = 1, max_iters = 100, initializer = 'kmeans++')
+#' jackstraw.out <- jackstraw_kmeanspp(dat, kmeans.dat)
+jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
     kmeans.dat, s = NULL, B = NULL,
     covariate = NULL, verbose = FALSE,
     pool = TRUE, seed = NULL, ...) {
@@ -54,10 +61,10 @@ jackstraw_kmeans <- function(dat,
     }
 
     ## sanity check
-    if (!is(kmeans.dat,"kmeans")) {
-      stop("`kmeans.dat` must be an object of class `kmeans`. See ?kmeans.")
+    if (!is(kmeans.dat,"k-means clustering")) {
+      stop("`kmeans.dat` must be an object of class `k-means clustering`. See ?KMeans_rcpp.")
     }
-    k <- nrow(kmeans.dat$centers)
+    k <- nrow(kmeans.dat$centroids)
 
     if (verbose == TRUE) {
         cat(paste0("\nComputating null statistics (",
@@ -70,10 +77,10 @@ jackstraw_kmeans <- function(dat,
     F.obs <- vector("numeric",
         m)
     for (i in 1:k) {
-        F.obs[kmeans.dat$cluster ==
-            i] <- FSTAT(dat[kmeans.dat$cluster ==
+        F.obs[kmeans.dat$clusters ==
+            i] <- FSTAT(dat[kmeans.dat$clusters ==
             i, , drop = FALSE],
-            LV = t(kmeans.dat$centers[i,
+            LV = t(kmeans.dat$centroids[i,
                 , drop = FALSE]),
             covariate = covariate)$fstat
     }
@@ -99,13 +106,13 @@ jackstraw_kmeans <- function(dat,
             scale = FALSE))
 
         # re-cluster the jackstraw data
-        kmeans.null <- kmeans(jackstraw.dat,
-            centers = kmeans.dat$centers,
+        kmeans.null <- KMeans_rcpp(jackstraw.dat,clusters=k,
+            CENTROIDS = kmeans.dat$centroids,
             ...)
 
         for (i in 1:k) {
             ind.i <- intersect(ind,
-                which(kmeans.null$cluster ==
+                which(kmeans.null$clusters ==
                   i))
             if (length(ind.i) >
                 0) {
@@ -113,7 +120,7 @@ jackstraw_kmeans <- function(dat,
                 F.null[[i]] <- c(F.null[[i]],
                   as.vector(FSTAT(dat = jackstraw.dat[ind.i,
                     , drop = FALSE],
-                    LV = t(kmeans.null$centers[i,
+                    LV = t(kmeans.null$centroids[i,
                       , drop = FALSE]),
                     covariate = covariate)$fstat))
             }
@@ -121,7 +128,6 @@ jackstraw_kmeans <- function(dat,
     }
 
     # compute p-values
-    p.F <- vector("numeric", m)
     p.F <- vector("numeric", m)
     if(pool) {
       p.F <- empPvals(F.obs, as.vector(unlist(F.null)))
@@ -136,7 +142,7 @@ jackstraw_kmeans <- function(dat,
                   "]."))
           }
           p.F[kmeans.dat$cluster ==
-              i] <- empPvals(F.obs[kmeans.dat$cluster ==
+              i] <- empPvals(F.obs[kmeans.dat$clusters ==
               i], F.null[[i]])
       }
     }
