@@ -4,10 +4,9 @@
 \alias{jackstraw_MiniBatchKmeans}
 \title{Non-Parametric Jackstraw for Mini Batch K-means Clustering}
 \usage{
-jackstraw_MiniBatchKmeans(dat, clusters, MiniBatchKmeans.output = NULL,
-  s = NULL, B = NULL, covariate = NULL, verbose = FALSE, seed = NULL,
-  batch_size = floor(nrow(dat)/100), num_init = 1, max_iters = 100,
-  init_fraction = 1, initializer = "kmeans++", early_stop_iter = 10,
+jackstraw_MiniBatchKmeans(dat, MiniBatchKmeans.output = NULL, s = NULL,
+  B = NULL, covariate = NULL, verbose = FALSE, seed = NULL,
+  batch_size = floor(nrow(dat)/100), initializer = "kmeans++",
   pool = TRUE, ...)
 }
 \arguments{
@@ -24,6 +23,10 @@ jackstraw_MiniBatchKmeans(dat, clusters, MiniBatchKmeans.output = NULL,
 \item{verbose}{a logical specifying to print the computational progress. By default, \code{FALSE}.}
 
 \item{seed}{a seed for the random number generator.}
+
+\item{batch_size}{the size of the mini batches.}
+
+\item{initializer}{the method of initialization. By default, \code{kmeans++}.}
 
 \item{pool}{a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.}
 
@@ -49,8 +52,10 @@ and protects against an anti-conservative bias.
 library(ClusterR)
 set.seed(1234)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
-MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = 2, batch_size = 300, num_init = 10, max_iters = 1000, init_fraction = 1, initializer = "kmeans++")
-jackstraw.output <- jackstraw_MiniBatchKmeans(dat, clusters=2, MiniBatchKmeans.output = MiniBatchKmeans.output)
+MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = 2, batch_size = 300,
+initializer = "kmeans++")
+jackstraw.output <- jackstraw_MiniBatchKmeans(dat,
+MiniBatchKmeans.output = MiniBatchKmeans.output)
 }
 \references{
 Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}

@@ -8,8 +8,8 @@
 \title{jackstraw: Statistical Inference for Unsupervised Learning}
 \description{
 Test for association between the observed data
-and their systematic patterns, that are often extracted by unsupervised learning.
-Latent variables in high-dimensional data may be estimated by principal component analysis, factor analysis, and related methods. Subpopulations among the observed data may be determined by K-means clustering, partition around medoids (PAM), and other algorithms.
+and their systematic patterns of variations, that are often extracted by unsupervised learning.
+Systematic patterns may be captured by latent variables using principal component analysis (PCA), factor analysis (FA), and related methods. This allows one to, for example, obtain principal components (PCs) and conduct rigorous statistical testing for association between observed variables and PCs. Similarly, unsupervised clustering, such as K-means clustering, partition around medoids (PAM), and other algorithms, finds subpopulations among the observed variables. The jackstraw test can estimate statistical significance of cluster membership, so that one can evaluate the strength of membership assignments. This package also includes several related methods to support statistical inference and probabilistic feature selection for unsupervised learning.
 }
 \details{
 The jackstraw package provides a resampling strategy and testing scheme to estimate statistical significance

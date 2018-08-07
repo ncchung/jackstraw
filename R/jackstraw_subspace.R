@@ -26,6 +26,7 @@
 #' \item{obs.stat}{\code{m} observed statistics}
 #' \item{null.stat}{\code{s*B} null statistics}
 #'
+#' @importFrom methods is
 #' @importFrom corpcor fast.svd
 #' @export jackstraw_subspace
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}

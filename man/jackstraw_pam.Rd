@@ -47,6 +47,7 @@ For a large dataset, PAM could be too slow. Consider using \code{cluster::clara}
 The input data (\code{dat}) must be of a class `matrix`.
 }
 \examples{
+library(cluster)
 set.seed(1234)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 pam.dat <- pam(dat, k=2)

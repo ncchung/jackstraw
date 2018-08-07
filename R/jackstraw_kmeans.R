@@ -27,6 +27,7 @@
 #'
 #' @export jackstraw_kmeans
 #' @importFrom qvalue empPvals
+#' @importFrom methods is
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 #' @examples

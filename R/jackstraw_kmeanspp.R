@@ -31,6 +31,7 @@
 #'
 #' @export jackstraw_kmeanspp
 #' @importFrom qvalue empPvals
+#' @importFrom methods is
 #' @importFrom ClusterR KMeans_rcpp
 #' @importFrom ClusterR predict_KMeans
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
@@ -39,7 +40,8 @@
 #' set.seed(1234)
 #' library(ClusterR)
 #' dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
-#' kmeans.dat <- KMeans_rcpp(dat,  clusters = 10, num_init = 1, max_iters = 100, initializer = 'kmeans++')
+#' kmeans.dat <- KMeans_rcpp(dat,  clusters = 10, num_init = 1,
+#' max_iters = 100, initializer = 'kmeans++')
 #' jackstraw.out <- jackstraw_kmeanspp(dat, kmeans.dat)
 jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
     kmeans.dat, s = NULL, B = NULL,

@@ -14,6 +14,8 @@
 #' @param B a number of resampling iterations.
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
+#' @param batch_size the size of the mini batches.
+#' @param initializer the method of initialization. By default, \code{kmeans++}.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
 #' @param seed a seed for the random number generator.
 #' @param ... optional arguments to control the Mini Batch K-means clustering algorithm (refers to \code{ClusterR::MiniBatchKmeans}).
@@ -25,6 +27,7 @@
 #'
 #' @export jackstraw_MiniBatchKmeans
 #' @importFrom qvalue empPvals
+#' @importFrom methods is
 #' @importFrom ClusterR MiniBatchKmeans
 #' @importFrom ClusterR predict_MBatchKMeans
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
@@ -33,13 +36,14 @@
 #' library(ClusterR)
 #' set.seed(1234)
 #' dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
-#' MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = 2, batch_size = 300, num_init = 10, max_iters = 1000, init_fraction = 1, initializer = "kmeans++")
-#' jackstraw.output <- jackstraw_MiniBatchKmeans(dat, clusters=2, MiniBatchKmeans.output = MiniBatchKmeans.output)
-jackstraw_MiniBatchKmeans <- function(dat, clusters,
+#' MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = 2, batch_size = 300,
+#' initializer = "kmeans++")
+#' jackstraw.output <- jackstraw_MiniBatchKmeans(dat,
+#' MiniBatchKmeans.output = MiniBatchKmeans.output)
+jackstraw_MiniBatchKmeans <- function(dat,
     MiniBatchKmeans.output = NULL, s = NULL, B = NULL,
     covariate = NULL, verbose = FALSE, seed = NULL,
-    batch_size = floor(nrow(dat)/100), num_init = 1, max_iters = 100,
-    init_fraction = 1, initializer = 'kmeans++', early_stop_iter = 10,
+    batch_size = floor(nrow(dat)/100), initializer = 'kmeans++',
     pool = TRUE,
     ...) {
     if (is.null(seed))
@@ -58,18 +62,10 @@ jackstraw_MiniBatchKmeans <- function(dat, clusters,
     }
 
     ## sanity check
-    if (is.null(MiniBatchKmeans.output)) {
-      MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = clusters, batch_size = batch_size, num_init = num_init, max_iters = max_iters,
-                                                   init_fraction = init_fraction, initializer = initializer, early_stop_iter = early_stop_iter, ...)
-      MiniBatchKmeans.output$cluster = predict_MBatchKMeans(dat, MiniBatchKmeans.output$centroids)
-    } else if (!is(MiniBatchKmeans.output,"k-means clustering")) {
-        stop("`MiniBatchKmeans.output` must be an object of class `k-means clustering` as a result from applying ClusterR::MiniBatchKmeans. See ?ClusterR::MiniBatchKmeans.")
-    } else {
-      if(clusters != nrow(MiniBatchKmeans.output$centroids)) {
-        stop("The number of clusters (specified by `clusters`) does not match the number of clusters in `MiniBatchKmeans.output`. Check MiniBatchKmeans.output$centroids.")
-      }
-      MiniBatchKmeans.output$cluster = predict_MBatchKMeans(dat, MiniBatchKmeans.output$centroids)
+    if (!is(MiniBatchKmeans.output,"k-means clustering")) {
+      stop("`MiniBatchKmeans.output` must be an object of class `k-means clustering` as a result from applying ClusterR::MiniBatchKmeans. See ?ClusterR::MiniBatchKmeans.")
     }
+    MiniBatchKmeans.output$cluster = predict_MBatchKMeans(dat, MiniBatchKmeans.output$centroids)
     k <- clusters <- nrow(MiniBatchKmeans.output$centroids)
 
     if (verbose == TRUE) {
@@ -113,8 +109,8 @@ jackstraw_MiniBatchKmeans <- function(dat, clusters,
 
         # re-cluster the jackstraw data
         jackstraw.MiniBatchKmeans <- MiniBatchKmeans(data=jackstraw.dat, CENTROIDS = MiniBatchKmeans.output$centroids,
-                                                     clusters = clusters, batch_size = batch_size, num_init = num_init, max_iters = max_iters,
-                                                     init_fraction = init_fraction, initializer = initializer, early_stop_iter = early_stop_iter, ...)
+                                                     clusters = clusters, batch_size = batch_size,
+                                                     initializer = initializer, ...)
         jackstraw.MiniBatchKmeans$cluster = predict_MBatchKMeans(jackstraw.dat, jackstraw.MiniBatchKmeans$centroids)
 
         for (i in 1:k) {

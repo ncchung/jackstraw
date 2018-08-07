@@ -52,7 +52,8 @@ The input data (\code{dat}) must be of a class `matrix`.
 set.seed(1234)
 library(ClusterR)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
-kmeans.dat <- KMeans_rcpp(dat,  clusters = 10, num_init = 1, max_iters = 100, initializer = 'kmeans++')
+kmeans.dat <- KMeans_rcpp(dat,  clusters = 10, num_init = 1,
+max_iters = 100, initializer = 'kmeans++')
 jackstraw.out <- jackstraw_kmeanspp(dat, kmeans.dat)
 }
 \references{
