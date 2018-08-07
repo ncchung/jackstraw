@@ -47,6 +47,7 @@
 #' @seealso \link{jackstraw} \link{jackstraw_subspace} \link{permutationPA}
 #'
 #' @examples
+#' \dontrun{
 #' set.seed(1234)
 #' ## simulate data from a latent variable model: Y = BL + E
 #' B = c(rep(1,50),rep(-1,50), rep(0,900))
@@ -60,38 +61,37 @@
 #'
 #' ## Use optional arguments
 #' ## For example, set s and B for a balance between speed of the algorithm and accuracy of p-values
-#' \dontrun{
 #' ## out = jackstraw_pca(dat, r=1, s=10, B=1000, seed=5678)
 #' }
-jackstraw_pca <- function(dat, 
-    r1 = NULL, r = NULL, s = NULL, 
-    B = NULL, covariate = NULL, 
+jackstraw_pca <- function(dat,
+    r1 = NULL, r = NULL, s = NULL,
+    B = NULL, covariate = NULL,
     verbose = TRUE, seed = NULL) {
     m <- dim(dat)[1]
     n <- dim(dat)[2]
     if (is.null(s)) {
         s <- round(m/10)
-        message(paste0("A number of null variables (s) to be permuted is not specified: s=round(0.10*m)=", 
+        message(paste0("A number of null variables (s) to be permuted is not specified: s=round(0.10*m)=",
             s, "."))
     }
     if (is.null(B)) {
         B <- round(m * 10/s)
-        message(paste0("A number of resampling iterations (B) is not specified: B=round(m*10/s)=", 
+        message(paste0("A number of resampling iterations (B) is not specified: B=round(m*10/s)=",
             B, "."))
     }
-    if (!is.null(seed)) 
+    if (!is.null(seed))
         set.seed(seed)
     if (is.null(r)) {
         warning("The number of significant PCs (r) is missing; this is strongly advised to determine r using appropriate statistical and graphical criteria.")
-        r <- permutationPA(dat = dat, 
+        r <- permutationPA(dat = dat,
             threshold = 0.05, verbose = verbose)$r
-        message(paste0("Permutation Parallel Analysis, with a threshold of 0.05, estimated r = ", 
+        message(paste0("Permutation Parallel Analysis, with a threshold of 0.05, estimated r = ",
             r, "."))
     }
     if (!(r > 0 && r < n)) {
         stop("r is not in valid range between 1 and n-1.")
     }
-    if (is.null(r1)) 
+    if (is.null(r1))
         r1 <- 1:r
     if (all(seq(r) %in% r1)) {
         # no adjustment LVs
@@ -100,53 +100,53 @@ jackstraw_pca <- function(dat,
     } else {
         r0 <- seq(r)[-r1]
     }
-    
+
     # Calculate observed
     # association statistics
     svd.dat <- fast.svd(dat)
     LV <- svd.dat$v[, r1, drop = FALSE]
-    if (!is.null(r0)) 
-        ALV <- svd.dat$v[, r0, 
+    if (!is.null(r0))
+        ALV <- svd.dat$v[, r0,
             drop = FALSE]
-    
-    obs <- FSTAT(dat = dat, LV = LV, 
+
+    obs <- FSTAT(dat = dat, LV = LV,
         ALV = ALV, covariate = covariate)$fstat
-    
+
     # Estimate null association
     # statistics
-    null <- matrix(0, nrow = s, 
+    null <- matrix(0, nrow = s,
         ncol = B)
     ALV.js <- NULL
-    
-    if (verbose == TRUE) 
-        cat(paste0("\nComputating null statistics (", 
+
+    if (verbose == TRUE)
+        cat(paste0("\nComputating null statistics (",
             B, " total iterations): "))
     for (i in 1:B) {
-        random.s <- sample(1:m, 
+        random.s <- sample(1:m,
             size = s, replace = FALSE)
-        s.nulls <- t(apply(dat[random.s, 
-            , drop = FALSE], 1, 
+        s.nulls <- t(apply(dat[random.s,
+            , drop = FALSE], 1,
             function(x) sample(x)))
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls
-        
+
         svd.jackstraw.dat <- fast.svd(jackstraw.dat)
-        LV.js <- svd.jackstraw.dat$v[, 
+        LV.js <- svd.jackstraw.dat$v[,
             r1, drop = FALSE]
-        if (!is.null(r0)) 
-            ALV.js <- svd.jackstraw.dat$v[, 
+        if (!is.null(r0))
+            ALV.js <- svd.jackstraw.dat$v[,
                 r0, drop = FALSE]
-        null[, i] <- FSTAT(dat = s.nulls, 
-            LV = LV.js, ALV = ALV.js, 
+        null[, i] <- FSTAT(dat = s.nulls,
+            LV = LV.js, ALV = ALV.js,
             covariate = covariate)$fstat
-        
-        if (verbose == TRUE) 
+
+        if (verbose == TRUE)
             cat(paste(i, " "))
     }
-    
+
     p.value <- empPvals(as.vector(obs), as.vector(null))
-    
-    return(list(call = match.call(), 
-        p.value = p.value, obs.stat = obs, 
+
+    return(list(call = match.call(),
+        p.value = p.value, obs.stat = obs,
         null.stat = null))
 }
