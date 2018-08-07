@@ -6,6 +6,11 @@ The jackstraw package provides a resampling strategy and testing scheme to estim
 
 The jackstraw tests enable us to identify the data features (i.e., variables or observations) that are driving systematic variation, in an unsupervised manner. Using **jackstraw_pca**, we can find statistically significant features with regard to the top r principal components. Alternatively, **jackstraw_kmeans** can identify the data features that are statistically significant members of the data-dependent clusters. Furthermore, this package includes more general algorithms such as **jackstraw_subspace** for the dimension reduction techniques and **jackstraw_cluster** for the clustering algorithms.
 
+<<<<<<< HEAD
+=======
+*Chung, N.C.* (2018) Statistical significance for cluster membership with applications to high-throughput genomic data. biorxiv:2018/02/23/248633 https://github.com/ncchung/jackstraw
+
+>>>>>>> e93b1163ca6ab3b6ed6f4df85922f153a5542a9a
 *Chung, N.C.* and *Storey, J.D.* (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554
 http://bioinformatics.oxfordjournals.org/content/31/4/545
 
