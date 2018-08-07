@@ -1,16 +1,11 @@
 # jackstraw: Statistical Inference for Unsupervised Learning
 
-This **R** package performs association tests between the observed data and their latent variables. Latent variables may be estimated by principal component analysis, factor analysis, K-means clustering, and related methods.
+This **R** package performs association tests between the observed data and their systematic patterns of variation. Systematic variation can be modeled by latent variables, that are likely arising from biological processes, experimental conditions, and environmental factors. We are often interested in estimating these patterns using principal component analysis (PCA), factor analysis (FA), K-means clustering, partition around medoids (PAM), and related methods. The jackstraw methods learn over-fitting characteristics inherent in unsupervised learning, where the observed data are used to estimate the systematic patterns and to be tested again.
 
-The jackstraw package provides a resampling strategy and testing scheme to estimate statistical significance of association between the observed data and their latent variables. Depending on the data type and the analysis aim, the latent variables may be estimated by principal component analysis, K-means clustering, and related algorithms. The jackstraw methods learn over-fitting characteristics inherent in this circular analysis, where the observed data are used to estimate the latent variables and to again test against the estimated latent variables.
+Using a variety of unsupervised learning techniques, the jackstraw provides a resampling strategy and testing scheme to estimate statistical significance of association between the observed data and their systematic patterns of variation. For example, the cell cycle in microarray data may be estimated by principal components (PCs); then, we can use the jackstraw for PCA to identify genes that are significantly associated with these PCs. On the other hand, cell identities in single cell RNA-seq data are identified by K-means clustering; then, the jackstraw for clustering can evaluate reliability of computationally determined cell identities.
 
 The jackstraw tests enable us to identify the data features (i.e., variables or observations) that are driving systematic variation, in an unsupervised manner. Using **jackstraw_pca**, we can find statistically significant features with regard to the top r principal components. Alternatively, **jackstraw_kmeans** can identify the data features that are statistically significant members of the data-dependent clusters. Furthermore, this package includes more general algorithms such as **jackstraw_subspace** for the dimension reduction techniques and **jackstraw_cluster** for the clustering algorithms.
 
-<<<<<<< HEAD
-=======
-*Chung, N.C.* (2018) Statistical significance for cluster membership with applications to high-throughput genomic data. biorxiv:2018/02/23/248633 https://github.com/ncchung/jackstraw
-
->>>>>>> e93b1163ca6ab3b6ed6f4df85922f153a5542a9a
 *Chung, N.C.* and *Storey, J.D.* (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554
 http://bioinformatics.oxfordjournals.org/content/31/4/545
 
