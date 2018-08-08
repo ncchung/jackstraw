@@ -6,6 +6,9 @@ Using a variety of unsupervised learning techniques, the jackstraw provides a re
 
 The jackstraw tests enable us to identify the variables (or observations) that are driving systematic variation, in an unsupervised manner. Using **jackstraw_pca**, we can find statistically significant variables with regard to the top r principal components. Alternatively, **jackstraw_kmeans** can identify the variables that are statistically significant members of clusters. There are many functions to support statistical inference for unsupervised learning, such as finding a number of PCs or clusters and estimating posterior probabilities from jackstraw p-values. Furthermore, this package includes more general and experimental algorithms such as **jackstraw_subspace** for the dimension reduction techniques and **jackstraw_cluster** for the clustering algorithms.
 
+*Chung, N.C.* (2018) Statistical significance of cluster membership for determination of cell identities in single cell genomics. Biorxiv, 10.1101/248633
+https://www.biorxiv.org/content/early/2018/08/07/248633
+
 *Chung, N.C.* and *Storey, J.D.* (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554
 http://bioinformatics.oxfordjournals.org/content/31/4/545
 
