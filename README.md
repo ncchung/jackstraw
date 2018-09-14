@@ -25,3 +25,18 @@ install.packages("devtools")
 library("devtools")
 install_github("ncchung/jackstraw")
 ```
+
+#### Troubleshooting
+Some of dependencies may fail to automatically install, particularlay [lfa](https://bioconductor.org/packages/release/bioc/html/lfa.html) and [qvalue](https://bioconductor.org/packages/release/bioc/html/qvalue.html) from Bioconductor. This would result in a warning similar to:
+```R
+Error: package or namespace load failed for ‘jackstraw’ in loadNamespace(j <- i[[1L]], c(lib.loc, .libPaths()), versionCheck = vI[[j]]):
+ there is no package called ‘lfa’
+```
+
+Then, please install these two packages manually using the following command:
+```R
+source("https://bioconductor.org/biocLite.R")
+biocLite(c('lfa', 'qvalue'))
+```
+
+Thanks to [idc9](https://github.com/idc9) for raising [this issue](https://github.com/ncchung/jackstraw/issues/2).
