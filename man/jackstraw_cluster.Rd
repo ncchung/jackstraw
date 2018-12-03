@@ -6,8 +6,8 @@
 \usage{
 jackstraw_cluster(dat, k, cluster = NULL, centers = NULL,
   algorithm = function(x, centers) kmeans(x, centers, ...), s = 1,
-  B = 1000, noise = NULL, covariate = NULL, verbose = FALSE,
-  seed = NULL, ...)
+  B = 1000, center = TRUE, noise = NULL, covariate = NULL,
+  verbose = FALSE, seed = NULL, ...)
 }
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}
@@ -23,6 +23,8 @@ jackstraw_cluster(dat, k, cluster = NULL, centers = NULL,
 \item{s}{a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.}
 
 \item{B}{a number of resampling iterations.}
+
+\item{center}{a logical specifying to center the rows. By default, \code{TRUE}.}
 
 \item{noise}{specify a parametric distribution to generate a noise term. If \code{NULL}, a non-parametric jackstraw test is performed.}
 

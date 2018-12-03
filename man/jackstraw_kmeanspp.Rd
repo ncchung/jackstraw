@@ -4,8 +4,9 @@
 \alias{jackstraw_kmeanspp}
 \title{Non-Parametric Jackstraw for K-means Clustering using RcppArmadillo}
 \usage{
-jackstraw_kmeanspp(dat, kmeans.dat, s = NULL, B = NULL, covariate = NULL,
-  verbose = FALSE, pool = TRUE, seed = NULL, ...)
+jackstraw_kmeanspp(dat, kmeans.dat, s = NULL, B = NULL,
+  center = TRUE, covariate = NULL, verbose = FALSE, pool = TRUE,
+  seed = NULL, ...)
 }
 \arguments{
 \item{dat}{a matrix with \code{m} rows as variables and \code{n} columns as observations.}
@@ -15,6 +16,8 @@ jackstraw_kmeanspp(dat, kmeans.dat, s = NULL, B = NULL, covariate = NULL,
 \item{s}{a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.}
 
 \item{B}{a number of resampling iterations.}
+
+\item{center}{a logical specifying to center the rows. By default, \code{TRUE}.}
 
 \item{covariate}{a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.}
 
@@ -49,12 +52,14 @@ consider using \code{jackstraw_MiniBatchKmeans}.
 The input data (\code{dat}) must be of a class `matrix`.
 }
 \examples{
+\dontrun{
 set.seed(1234)
 library(ClusterR)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 kmeans.dat <- KMeans_rcpp(dat,  clusters = 10, num_init = 1,
 max_iters = 100, initializer = 'kmeans++')
 jackstraw.out <- jackstraw_kmeanspp(dat, kmeans.dat)
+}
 }
 \references{
 Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}

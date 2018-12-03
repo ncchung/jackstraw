@@ -18,6 +18,7 @@
 #' @param kmeans.dat an output from applying \code{ClusterR::KMeans_rcpp} onto \code{dat}.
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations.
+#' @param center a logical specifying to center the rows. By default, \code{TRUE}.
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
@@ -46,7 +47,7 @@
 #' jackstraw.out <- jackstraw_kmeanspp(dat, kmeans.dat)
 #' }
 jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
-    kmeans.dat, s = NULL, B = NULL,
+    kmeans.dat, s = NULL, B = NULL, center = TRUE,
     covariate = NULL, verbose = FALSE,
     pool = TRUE, seed = NULL, ...) {
     if (is.null(seed))
@@ -105,9 +106,10 @@ jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
             , drop = FALSE], 1,
             function(x) sample(x,
                 replace = TRUE))
-        jackstraw.dat[ind, ] <- t(scale(t(jackstraw.dat[ind,
-            ]), center = TRUE,
-            scale = FALSE))
+        if(center == TRUE) {
+          jackstraw.dat[ind, ] <- t(scale(t(jackstraw.dat[ind,
+              ]), center = TRUE, scale = FALSE))
+        }
 
         # re-cluster the jackstraw data
         kmeans.null <- KMeans_rcpp(jackstraw.dat,clusters=k,

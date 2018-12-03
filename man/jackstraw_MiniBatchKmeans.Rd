@@ -5,9 +5,9 @@
 \title{Non-Parametric Jackstraw for Mini Batch K-means Clustering}
 \usage{
 jackstraw_MiniBatchKmeans(dat, MiniBatchKmeans.output = NULL, s = NULL,
-  B = NULL, covariate = NULL, verbose = FALSE, seed = NULL,
-  batch_size = floor(nrow(dat)/100), initializer = "kmeans++",
-  pool = TRUE, ...)
+  B = NULL, center = TRUE, covariate = NULL, verbose = FALSE,
+  seed = NULL, batch_size = floor(nrow(dat)/100),
+  initializer = "kmeans++", pool = TRUE, ...)
 }
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}
@@ -17,6 +17,8 @@ jackstraw_MiniBatchKmeans(dat, MiniBatchKmeans.output = NULL, s = NULL,
 \item{s}{a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.}
 
 \item{B}{a number of resampling iterations.}
+
+\item{center}{a logical specifying to center the rows. By default, \code{TRUE}.}
 
 \item{covariate}{a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.}
 
@@ -49,6 +51,7 @@ Its resampling strategy accounts for the over-fitting characteristics due to dir
 and protects against an anti-conservative bias.
 }
 \examples{
+\dontrun{
 library(ClusterR)
 set.seed(1234)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
@@ -56,6 +59,7 @@ MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = 2, batch_size = 3
 initializer = "kmeans++")
 jackstraw.output <- jackstraw_MiniBatchKmeans(dat,
 MiniBatchKmeans.output = MiniBatchKmeans.output)
+}
 }
 \references{
 Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}

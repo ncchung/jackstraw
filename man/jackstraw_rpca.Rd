@@ -23,6 +23,8 @@ jackstraw_rpca(dat, r1 = NULL, r = NULL, s = NULL, B = NULL,
 \item{verbose}{a logical specifying to print the computational progress.}
 
 \item{seed}{a numeric seed for the random number generator.}
+
+\item{...}{additional arguments to \code{rpca}.}
 }
 \value{
 \code{jackstraw_rpca} returns a list consisting of

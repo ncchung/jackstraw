@@ -22,6 +22,7 @@
 #' @param noise specify a parametric distribution to generate a noise term. If \code{NULL}, a non-parametric jackstraw test is performed.
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations.
+#' @param center a logical specifying to center the rows. By default, \code{TRUE}.
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
 #' @param seed a seed for the random number generator.
@@ -37,9 +38,9 @@
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 jackstraw_cluster <- function(dat, 
-    k, cluster = NULL, centers = NULL, 
-    algorithm = function(x, centers) kmeans(x, 
-        centers, ...), s = 1, B = 1000, noise = NULL, covariate = NULL,
+    k, cluster = NULL, centers = NULL,
+    algorithm = function(x, centers) kmeans(x, centers, ...),
+    s = 1, B = 1000, center = TRUE, noise = NULL, covariate = NULL,
     verbose = FALSE, seed = NULL, 
     ...) {
     if (is.null(seed)) 
@@ -107,9 +108,10 @@ jackstraw_cluster <- function(dat,
                 function(x) sample(x, 
                     replace = TRUE))
         }
-        jackstraw.dat[ind, ] <- t(scale(t(jackstraw.dat[ind, 
-            ]), center = TRUE, 
-            scale = FALSE))
+        if(center == TRUE) {
+            jackstraw.dat[ind, ] <- t(scale(t(jackstraw.dat[ind, 
+                ]), center = TRUE, scale = FALSE))
+        }
         
         # re-cluster the jackstraw data
         recluster <- algorithm(jackstraw.dat, 

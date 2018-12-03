@@ -23,6 +23,8 @@ jackstraw_irlba(dat, r1 = NULL, r = NULL, s = NULL, B = NULL,
 \item{verbose}{a logical specifying to print the computational progress.}
 
 \item{seed}{a numeric seed for the random number generator.}
+
+\item{...}{additional arguments to \code{irlba}.}
 }
 \value{
 \code{jackstraw_irlba} returns a list consisting of

@@ -57,6 +57,7 @@ If \code{s} is not supplied, \code{s} is set to about 10\% of \code{m} variables
 If \code{B} is not supplied, \code{B} is set to \code{m*10/s}.
 }
 \examples{
+\dontrun{
 set.seed(1234)
 ## simulate data from a latent variable model: Y = BL + E
 B = c(rep(1,50),rep(-1,50), rep(0,900))
@@ -70,7 +71,6 @@ out = jackstraw_pca(dat, r=1)
 
 ## Use optional arguments
 ## For example, set s and B for a balance between speed of the algorithm and accuracy of p-values
-\dontrun{
 ## out = jackstraw_pca(dat, r=1, s=10, B=1000, seed=5678)
 }
 }

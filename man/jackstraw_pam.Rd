@@ -4,8 +4,8 @@
 \alias{jackstraw_pam}
 \title{Non-Parametric Jackstraw for Partitioning Around Medoids (PAM)}
 \usage{
-jackstraw_pam(dat, pam.dat, s = NULL, B = NULL, covariate = NULL,
-  verbose = FALSE, pool = TRUE, seed = NULL, ...)
+jackstraw_pam(dat, pam.dat, s = NULL, B = NULL, center = TRUE,
+  covariate = NULL, verbose = FALSE, pool = TRUE, seed = NULL, ...)
 }
 \arguments{
 \item{dat}{a matrix with \code{m} rows as variables and \code{n} columns as observations.}
@@ -15,6 +15,8 @@ jackstraw_pam(dat, pam.dat, s = NULL, B = NULL, covariate = NULL,
 \item{s}{a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.}
 
 \item{B}{a number of resampling iterations.}
+
+\item{center}{a logical specifying to center the rows. By default, \code{TRUE}.}
 
 \item{covariate}{a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.}
 
@@ -47,11 +49,13 @@ For a large dataset, PAM could be too slow. Consider using \code{cluster::clara}
 The input data (\code{dat}) must be of a class `matrix`.
 }
 \examples{
+\dontrun{
 library(cluster)
 set.seed(1234)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 pam.dat <- pam(dat, k=2)
 jackstraw.out <- jackstraw_pam(dat, pam.dat = pam.dat)
+}
 }
 \references{
 Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}

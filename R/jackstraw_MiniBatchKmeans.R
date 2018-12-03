@@ -12,6 +12,7 @@
 #' @param MiniBatchKmeans.output an output from applying \code{ClusterR::MiniBatchKmeans()} onto \code{dat}. This provides more controls over the algorithm and subsequently the initial centroids used.
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations.
+#' @param center a logical specifying to center the rows. By default, \code{TRUE}.
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
 #' @param batch_size the size of the mini batches.
@@ -43,7 +44,7 @@
 #' MiniBatchKmeans.output = MiniBatchKmeans.output)
 #' }
 jackstraw_MiniBatchKmeans <- function(dat,
-    MiniBatchKmeans.output = NULL, s = NULL, B = NULL,
+    MiniBatchKmeans.output = NULL, s = NULL, B = NULL, center = TRUE,
     covariate = NULL, verbose = FALSE, seed = NULL,
     batch_size = floor(nrow(dat)/100), initializer = 'kmeans++',
     pool = TRUE,
@@ -105,9 +106,10 @@ jackstraw_MiniBatchKmeans <- function(dat,
             , drop = FALSE], 1,
             function(x) sample(x,
                 replace = TRUE))
-        jackstraw.dat[ind, ] <- t(scale(t(jackstraw.dat[ind,
-            ]), center = TRUE,
-            scale = FALSE))
+        if(center == TRUE) {
+          jackstraw.dat[ind, ] <- t(scale(t(jackstraw.dat[ind,
+              ]), center = TRUE, scale = FALSE))
+        }
 
         # re-cluster the jackstraw data
         jackstraw.MiniBatchKmeans <- MiniBatchKmeans(data=jackstraw.dat, CENTROIDS = MiniBatchKmeans.output$centroids,

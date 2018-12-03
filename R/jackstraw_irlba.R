@@ -32,6 +32,7 @@
 #' @param covariate a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).
 #' @param verbose a logical specifying to print the computational progress.
 #' @param seed a numeric seed for the random number generator.
+#' @param ... additional arguments to \code{irlba}.
 #'
 #' @return \code{jackstraw_irlba} returns a list consisting of
 #' \item{p.value}{\code{m} p-values of association tests between variables and their principal components}
