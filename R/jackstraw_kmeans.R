@@ -16,8 +16,9 @@
 #' @param B a number of resampling iterations.
 #' @param center a logical specifying to center the rows. By default, \code{TRUE}.
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
-#' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
+#' @param match a logical specifying to match the observed clusters and jackstraw clusters using minimum Euclidean distances.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
+#' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
 #' @param seed a seed for the random number generator.
 #' @param ... optional arguments to control the k-means clustering algorithm (refers to \code{kmeans}).
 #'
@@ -39,9 +40,9 @@
 #' jackstraw.out <- jackstraw_kmeans(dat, kmeans.dat)
 #' }
 jackstraw_kmeans <- function(dat,
-    kmeans.dat, s = NULL, B = NULL, center = TRUE,
-    covariate = NULL, verbose = FALSE,
-    pool = TRUE, seed = NULL, ...) {
+    kmeans.dat, s = NULL, B = NULL, center = FALSE,
+    covariate = NULL, match = TRUE, pool = TRUE,
+    verbose = FALSE, seed = NULL, ...) {
     if (is.null(seed))
         set.seed(seed)
     m <- nrow(dat)
@@ -62,6 +63,8 @@ jackstraw_kmeans <- function(dat,
       stop("`kmeans.dat` must be an object of class `kmeans`. See ?kmeans.")
     }
     k <- nrow(kmeans.dat$centers)
+    obs.centers <- kmeans.dat$centers
+    rownames(obs.centers) <- paste0("obs",1:k)
 
     if (verbose == TRUE) {
         cat(paste0("\nComputating null statistics (",
@@ -71,8 +74,7 @@ jackstraw_kmeans <- function(dat,
     # compute the observed
     # statistics between rows and
     # cluster centers
-    F.obs <- vector("numeric",
-        m)
+    F.obs <- vector("numeric", m)
     for (i in 1:k) {
         F.obs[kmeans.dat$cluster ==
             i] <- FSTAT(dat[kmeans.dat$cluster ==
@@ -98,7 +100,7 @@ jackstraw_kmeans <- function(dat,
             , drop = FALSE], 1,
             function(x) sample(x,
                 replace = TRUE))
-        if(center == TRUE) {
+        if(center) {
           jackstraw.dat[ind, ] <- t(scale(t(jackstraw.dat[ind,
             ]), center = TRUE,
             scale = FALSE))
@@ -109,21 +111,36 @@ jackstraw_kmeans <- function(dat,
             centers = kmeans.dat$centers,
             ...)
 
-        for (i in 1:k) {
-            ind.i <- intersect(ind,
-                which(kmeans.null$cluster ==
-                  i))
-            if (length(ind.i) >
-                0) {
+	    # with stable clusters, numeric identities of clusters are typically matched, after resampling s
+	    if(match) {
+		    jck.centers <- kmeans.null$centers
+		    rownames(jck.centers) <- paste0("jck",1:k)
+		    # min euclidean dist to match jck.centers with obs.centers
+		    jck.clmatch <- apply(jck.centers, 1, function(y) which.min(apply(obs.centers, 1, function(x,y) dist(rbind(x,y)),y)))
+		    if(verbose) message("Numeric identities of clusters are matched according to min euclidean distances.")
 
-                F.null[[i]] <- c(F.null[[i]],
-                  as.vector(FSTAT(dat = jackstraw.dat[ind.i,
-                    , drop = FALSE],
-                    LV = t(kmeans.null$centers[i,
-                      , drop = FALSE]),
-                    covariate = covariate)$fstat))
-            }
-        }
+	        for (i in 1:k) {
+	        	ind.i <- intersect(ind,
+	        		which(kmeans.null$cluster == which(jck.clmatch == i) ))
+
+	            if(verbose) message(paste("Iteration",j,": jackstraw cluster", which(jck.clmatch == i), "matched with obs cluster", i,"; # intersections",length(ind.i)))
+	            if (length(ind.i) > 0) {
+	                F.null[[i]] <- c(F.null[[i]],
+	                  as.vector(FSTAT(dat = jackstraw.dat[ind.i, , drop = FALSE],
+	                    LV = t(kmeans.null$centers[which(jck.clmatch == i), , drop = FALSE]), covariate = covariate)$fstat))
+	            }
+	        }
+	    } else {
+	    	# no matching required
+	        for (i in 1:k) {
+	        	ind.i <- intersect(ind, which(kmeans.null$cluster == i))
+	            if (length(ind.i) > 0) {
+	                F.null[[i]] <- c(F.null[[i]],
+	                  as.vector(FSTAT(dat = jackstraw.dat[ind.i, , drop = FALSE],
+	                    LV = t(kmeans.null$centers[i, , drop = FALSE]), covariate = covariate)$fstat))
+	            }
+	        }
+	    }
     }
 
     # compute p-values
@@ -135,6 +152,9 @@ jackstraw_kmeans <- function(dat,
       for (i in 1:k) {
           # warn about a relatively low
           # number of null statistics
+          if(length(F.null[[i]] == 0)) {
+            stop(paste0("There are no null statistics for the cluster ", i, ". Check if B is large enough, clusters stable, and k selected appropriately. Also consider running the algorithm with the pool option."))
+          }
           if (length(F.null[[i]]) <
               (B * s/k * 0.1)) {
               warning(paste0("The number of empirical null statistics for the cluster [",
@@ -142,8 +162,7 @@ jackstraw_kmeans <- function(dat,
                   "]."))
           }
           p.F[kmeans.dat$cluster ==
-              i] <- empPvals(F.obs[kmeans.dat$cluster ==
-              i], F.null[[i]])
+              i] <- empPvals(F.obs[kmeans.dat$cluster == i], F.null[[i]])
       }
     }
 

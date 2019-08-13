@@ -4,8 +4,9 @@
 \alias{jackstraw_kmeans}
 \title{Non-Parametric Jackstraw for K-means Clustering}
 \usage{
-jackstraw_kmeans(dat, kmeans.dat, s = NULL, B = NULL, center = TRUE,
-  covariate = NULL, verbose = FALSE, pool = TRUE, seed = NULL, ...)
+jackstraw_kmeans(dat, kmeans.dat, s = NULL, B = NULL, center = FALSE,
+  covariate = NULL, match = TRUE, pool = TRUE, verbose = FALSE,
+  seed = NULL, ...)
 }
 \arguments{
 \item{dat}{a matrix with \code{m} rows as variables and \code{n} columns as observations.}
@@ -20,9 +21,11 @@ jackstraw_kmeans(dat, kmeans.dat, s = NULL, B = NULL, center = TRUE,
 
 \item{covariate}{a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.}
 
-\item{verbose}{a logical specifying to print the computational progress. By default, \code{FALSE}.}
+\item{match}{a logical specifying to match the observed clusters and jackstraw clusters using minimum Euclidean distances.}
 
 \item{pool}{a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.}
+
+\item{verbose}{a logical specifying to print the computational progress. By default, \code{FALSE}.}
 
 \item{seed}{a seed for the random number generator.}
 
