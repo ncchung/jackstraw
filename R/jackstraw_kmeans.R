@@ -145,24 +145,21 @@ jackstraw_kmeans <- function(dat,
 
     # compute p-values
     p.F <- vector("numeric", m)
-    p.F <- vector("numeric", m)
     if(pool) {
       p.F <- empPvals(F.obs, as.vector(unlist(F.null)))
     } else {
       for (i in 1:k) {
           # warn about a relatively low
           # number of null statistics
-          if(length(F.null[[i]] == 0)) {
+          if(length(F.null[[i]]) == 0) {
             stop(paste0("There are no null statistics for the cluster ", i, ". Check if B is large enough, clusters stable, and k selected appropriately. Also consider running the algorithm with the pool option."))
           }
-          if (length(F.null[[i]]) <
-              (B * s/k * 0.1)) {
+          if (length(F.null[[i]]) < (B * s/k * 0.1)) {
               warning(paste0("The number of empirical null statistics for the cluster [",
                   i, "] is [", length(F.null[[i]]),
                   "]."))
           }
-          p.F[kmeans.dat$cluster ==
-              i] <- empPvals(F.obs[kmeans.dat$cluster == i], F.null[[i]])
+          p.F[kmeans.dat$cluster == i] <- empPvals(F.obs[kmeans.dat$cluster == i], F.null[[i]])
       }
     }
 

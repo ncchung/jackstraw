@@ -4,10 +4,20 @@
 \alias{jackstraw_MiniBatchKmeans}
 \title{Non-Parametric Jackstraw for Mini Batch K-means Clustering}
 \usage{
-jackstraw_MiniBatchKmeans(dat, MiniBatchKmeans.output = NULL, s = NULL,
-  B = NULL, center = TRUE, covariate = NULL, verbose = FALSE,
-  seed = NULL, batch_size = floor(nrow(dat)/100),
-  initializer = "kmeans++", pool = TRUE, ...)
+jackstraw_MiniBatchKmeans(
+  dat,
+  MiniBatchKmeans.output = NULL,
+  s = NULL,
+  B = NULL,
+  center = TRUE,
+  covariate = NULL,
+  verbose = FALSE,
+  seed = NULL,
+  batch_size = floor(nrow(dat)/100),
+  initializer = "kmeans++",
+  pool = TRUE,
+  ...
+)
 }
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}

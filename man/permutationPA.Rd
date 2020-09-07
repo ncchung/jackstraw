@@ -4,8 +4,7 @@
 \alias{permutationPA}
 \title{Permutation Parallel Analysis}
 \usage{
-permutationPA(dat, B = 100, threshold = 0.05, verbose = TRUE,
-  seed = NULL)
+permutationPA(dat, B = 100, threshold = 0.05, verbose = TRUE, seed = NULL)
 }
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}

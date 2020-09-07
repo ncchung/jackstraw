@@ -8,32 +8,32 @@
 #' @importFrom lfa af
 #'
 #' @keywords internal
-devdiff <- function(X, LF_alt, 
+devdiff <- function(X, LF_alt,
     LF_null = NULL) {
     if (is.null(LF_null)) {
-        LF_null <- matrix(1, ncol(X), 
+        LF_null <- matrix(1, ncol(X),
             1)
     }
-    
+
     m <- nrow(X)
-    
+
     F_alt <- af(X, LF_alt)
     F_null <- af(X, LF_null)
-    
+
     sapply(1:m, function(i) {
-        devdiff_snp(X[i, ], F_alt[i, 
+        devdiff_snp(X[i, ], F_alt[i,
             ], F_null[i, ])
     })
 }
 
 #' @keywords internal
-devdiff_snp <- function(snp, p1, 
-    p0) {
-    devalt <- sum(snp * log(p1) + 
+devdiff_snp <- function(snp, p1, p0) {
+
+    devalt <- sum(snp * log(p1) +
         (2 - snp) * log(1 - p1))
-    devnull <- sum(snp * log(p0) + 
+    devnull <- sum(snp * log(p0) +
         (2 - snp) * log(1 - p0))
-    
+
     -2 * (devnull - devalt)
 }
 
@@ -49,34 +49,34 @@ devdiff_snp <- function(snp, p1,
 #' @importFrom parallel mclapply
 #'
 #' @keywords internal
-devdiff_parallel <- function(X, 
+devdiff_parallel <- function(X,
     LF_alt, LF_null = NULL, numcores = 1) {
     if (is.null(LF_null)) {
-        LF_null <- matrix(1, ncol(X), 
+        LF_null <- matrix(1, ncol(X),
             1)
     }
-    
+
     m <- nrow(X)
-    
-    devdiff_parallel_snp <- function(snp, 
+
+    devdiff_parallel_snp <- function(snp,
         LF_alt, LF_null) {
         p0 <- af_snp(snp, LF_null)
         p1 <- af_snp(snp, LF_alt)
-        
-        devalt <- sum(snp * log(p1) + 
-            (2 - snp) * log(1 - 
+
+        devalt <- sum(snp * log(p1) +
+            (2 - snp) * log(1 -
                 p1))
-        devnull <- sum(snp * log(p0) + 
-            (2 - snp) * log(1 - 
+        devnull <- sum(snp * log(p0) +
+            (2 - snp) * log(1 -
                 p0))
-        
+
         -2 * (devnull - devalt)
     }
-    
-    
-    simplify2array(mclapply(1:m, 
+
+
+    simplify2array(mclapply(1:m,
         function(i) {
-            devdiff_parallel_snp(X[i, 
+            devdiff_parallel_snp(X[i,
                 ], LF_alt, LF_null)
         }, mc.cores = numcores))
 }
@@ -91,40 +91,40 @@ devdiff_parallel <- function(X,
 #' @importFrom lfa af
 #'
 #' @keywords internal
-pseudo_Rsq <- function(X, LF_alt, 
+pseudo_Rsq <- function(X, LF_alt,
     LF_null = NULL) {
     if (is.null(LF_null)) {
-        LF_null <- matrix(1, ncol(X), 
+        LF_null <- matrix(1, ncol(X),
             1)
     }
-    
+
     m <- nrow(X)
-    
+
     F_alt <- af(X, LF_alt)
     F_null <- af(X, LF_null)
-    
+
     sapply(1:m, function(i) {
-        mcfadden_Rsq_snp(X[i, ], 
-            F_alt[i, ], F_null[i, 
+        mcfadden_Rsq_snp(X[i, ],
+            F_alt[i, ], F_null[i,
                 ])
     })
 }
 
 #' @keywords internal
-mcfadden_Rsq_snp <- function(snp, 
+mcfadden_Rsq_snp <- function(snp,
     p1, p0) {
     # check for p's = 0 or 1
-    IND <- (p0 != 0) & (p0 != 1) & 
+    IND <- (p0 != 0) & (p0 != 1) &
         (p1 != 0) & (p1 != 1)
     p1 <- p1[IND]
     p0 <- p0[IND]
     snp <- snp[IND]
-    
-    llalt <- sum(snp * log(p1) + 
+
+    llalt <- sum(snp * log(p1) +
         (2 - snp) * log(1 - p1))
-    llnull <- sum(snp * log(p0) + 
+    llnull <- sum(snp * log(p0) +
         (2 - snp) * log(1 - p0))
-    
+
     1 - (llalt/llnull)
 }
 
@@ -139,27 +139,27 @@ mcfadden_Rsq_snp <- function(snp,
 #' @keywords internal
 efron_Rsq <- function(X, LF) {
     m <- nrow(X)
-    
+
     F <- af(X, LF)
-    
+
     sapply(1:m, function(i) {
-        efron_Rsq_snp(X[i, ], F[i, 
+        efron_Rsq_snp(X[i, ], F[i,
             ])
     })
 }
 
 #' @keywords internal
-efron_Rsq_snp <- function(snp, 
+efron_Rsq_snp <- function(snp,
     p1) {
     IND <- (p1 != 0) & (p1 != 1)
     p1 <- p1[IND]
     snp <- snp[IND]
-    
-    y <- as.numeric(c(snp > 0, 
+
+    y <- as.numeric(c(snp > 0,
         snp == 2))
     p <- c(p1, p1)
     ybar <- mean(y)
-    
-    1 - sum((y - p)^2)/sum((y - 
+
+    1 - sum((y - p)^2)/sum((y -
         ybar)^2)
 }

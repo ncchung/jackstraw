@@ -4,9 +4,19 @@
 \alias{jackstraw_kmeans}
 \title{Non-Parametric Jackstraw for K-means Clustering}
 \usage{
-jackstraw_kmeans(dat, kmeans.dat, s = NULL, B = NULL, center = FALSE,
-  covariate = NULL, match = TRUE, pool = TRUE, verbose = FALSE,
-  seed = NULL, ...)
+jackstraw_kmeans(
+  dat,
+  kmeans.dat,
+  s = NULL,
+  B = NULL,
+  center = FALSE,
+  covariate = NULL,
+  match = TRUE,
+  pool = TRUE,
+  verbose = FALSE,
+  seed = NULL,
+  ...
+)
 }
 \arguments{
 \item{dat}{a matrix with \code{m} rows as variables and \code{n} columns as observations.}

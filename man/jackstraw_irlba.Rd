@@ -4,8 +4,17 @@
 \alias{jackstraw_irlba}
 \title{Non-Parametric Jackstraw for Principal Component Analysis (PCA) using the augmented implicitly restarted Lanczos bidiagonalization algorithm (IRLBA)}
 \usage{
-jackstraw_irlba(dat, r1 = NULL, r = NULL, s = NULL, B = NULL,
-  covariate = NULL, verbose = TRUE, seed = NULL, ...)
+jackstraw_irlba(
+  dat,
+  r1 = NULL,
+  r = NULL,
+  s = NULL,
+  B = NULL,
+  covariate = NULL,
+  verbose = TRUE,
+  seed = NULL,
+  ...
+)
 }
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}

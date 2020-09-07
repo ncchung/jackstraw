@@ -4,10 +4,21 @@
 \alias{jackstraw_cluster}
 \title{Jackstraw for the User-Defined Clustering Algorithm}
 \usage{
-jackstraw_cluster(dat, k, cluster = NULL, centers = NULL,
-  algorithm = function(x, centers) kmeans(x, centers, ...), s = 1,
-  B = 1000, center = TRUE, noise = NULL, covariate = NULL,
-  verbose = FALSE, seed = NULL, ...)
+jackstraw_cluster(
+  dat,
+  k,
+  cluster = NULL,
+  centers = NULL,
+  algorithm = function(x, centers) kmeans(x, centers, ...),
+  s = 1,
+  B = 1000,
+  center = TRUE,
+  noise = NULL,
+  covariate = NULL,
+  verbose = FALSE,
+  seed = NULL,
+  ...
+)
 }
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}

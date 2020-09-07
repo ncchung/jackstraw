@@ -4,8 +4,16 @@
 \alias{jackstraw_pca}
 \title{Non-Parametric Jackstraw for Principal Component Analysis (PCA)}
 \usage{
-jackstraw_pca(dat, r1 = NULL, r = NULL, s = NULL, B = NULL,
-  covariate = NULL, verbose = TRUE, seed = NULL)
+jackstraw_pca(
+  dat,
+  r1 = NULL,
+  r = NULL,
+  s = NULL,
+  B = NULL,
+  covariate = NULL,
+  verbose = TRUE,
+  seed = NULL
+)
 }
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}

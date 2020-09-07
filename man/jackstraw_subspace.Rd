@@ -4,9 +4,18 @@
 \alias{jackstraw_subspace}
 \title{Jackstraw for the User-Defined Dimension Reduction Methods}
 \usage{
-jackstraw_subspace(dat, FUN, r = NULL, r1 = NULL, s = NULL,
-  B = NULL, covariate = NULL, noise = NULL, verbose = TRUE,
-  seed = NULL)
+jackstraw_subspace(
+  dat,
+  FUN,
+  r = NULL,
+  r1 = NULL,
+  s = NULL,
+  B = NULL,
+  covariate = NULL,
+  noise = NULL,
+  verbose = TRUE,
+  seed = NULL
+)
 }
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}

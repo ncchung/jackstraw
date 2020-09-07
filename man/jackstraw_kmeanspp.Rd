@@ -4,9 +4,18 @@
 \alias{jackstraw_kmeanspp}
 \title{Non-Parametric Jackstraw for K-means Clustering using RcppArmadillo}
 \usage{
-jackstraw_kmeanspp(dat, kmeans.dat, s = NULL, B = NULL,
-  center = TRUE, covariate = NULL, verbose = FALSE, pool = TRUE,
-  seed = NULL, ...)
+jackstraw_kmeanspp(
+  dat,
+  kmeans.dat,
+  s = NULL,
+  B = NULL,
+  center = TRUE,
+  covariate = NULL,
+  verbose = FALSE,
+  pool = TRUE,
+  seed = NULL,
+  ...
+)
 }
 \arguments{
 \item{dat}{a matrix with \code{m} rows as variables and \code{n} columns as observations.}

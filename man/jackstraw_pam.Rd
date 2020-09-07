@@ -4,8 +4,18 @@
 \alias{jackstraw_pam}
 \title{Non-Parametric Jackstraw for Partitioning Around Medoids (PAM)}
 \usage{
-jackstraw_pam(dat, pam.dat, s = NULL, B = NULL, center = TRUE,
-  covariate = NULL, verbose = FALSE, pool = TRUE, seed = NULL, ...)
+jackstraw_pam(
+  dat,
+  pam.dat,
+  s = NULL,
+  B = NULL,
+  center = TRUE,
+  covariate = NULL,
+  verbose = FALSE,
+  pool = TRUE,
+  seed = NULL,
+  ...
+)
 }
 \arguments{
 \item{dat}{a matrix with \code{m} rows as variables and \code{n} columns as observations.}

@@ -4,14 +4,18 @@
 \alias{pip}
 \title{Compute posterior inclusion probabilities (PIPs)}
 \usage{
-pip(pvalue, group = NULL, ...)
+pip(pvalue, group = NULL, pi0 = NULL, ...)
 }
 \arguments{
 \item{pvalue}{a vector of p-values.}
 
 \item{group}{a vector of group indicators (optional).}
 
+\item{pi0}{a vector of pi0 values (optional)}
+
 \item{...}{optional arguments to control a local FDR estimation.}
+
+\item{verbose}{print a progress}
 }
 \value{
 \code{pip} returns a vector of posterior inclusion probabilities

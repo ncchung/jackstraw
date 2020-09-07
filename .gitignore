@@ -2,4 +2,7 @@
 .Rhistory
 .RData
 inst/doc
+vignettes/jackstraw-cluster_cache
 *.history
+vignettes/fixed/.DS_Store
+vignettes/.DS_Store
