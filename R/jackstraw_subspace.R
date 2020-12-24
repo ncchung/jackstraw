@@ -26,9 +26,6 @@
 #' \item{obs.stat}{\code{m} observed statistics}
 #' \item{null.stat}{\code{s*B} null statistics}
 #'
-#' @importFrom methods is
-#' @importFrom corpcor fast.svd
-#' @export jackstraw_subspace
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{http://bioinformatics.oxfordjournals.org/content/31/4/545}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
@@ -46,6 +43,8 @@
 #'
 #' ## apply the jackstraw with the svd as a function
 #' out = jackstraw_subspace(dat, FUN = function(x) svd(x)$v[,1,drop=FALSE], r=1, s=100, B=50)
+#' 
+#' @export
 jackstraw_subspace <- function(dat, 
     FUN, r = NULL, 
     r1 = NULL, s = NULL, B = NULL, 
@@ -138,7 +137,7 @@ jackstraw_subspace <- function(dat,
             covariate = covariate)$fstat
     }
     
-    p.value <- empPvals(as.vector(obs), as.vector(null))
+    p.value <- qvalue::empPvals(as.vector(obs), as.vector(null))
     
     return(list(call = match.call(), 
         p.value = p.value, obs.stat = obs, 

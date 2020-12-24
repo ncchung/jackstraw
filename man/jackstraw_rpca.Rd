@@ -42,7 +42,7 @@ jackstraw_rpca(
 \item{null.stat}{\code{s*B} null F-test statistics}
 }
 \description{
-Test association between the observed variables and their latent variables captured by principal components (PCs). PCs are computed by randomized Singular Value Decomposition (see \code{rsvd}).
+Test association between the observed variables and their latent variables captured by principal components (PCs). PCs are computed by randomized Singular Value Decomposition (see \code{\link[rsvd]{rsvd}}).
 }
 \details{
 This function computes \code{m} p-values of linear association between \code{m} variables and their PCs.
@@ -84,6 +84,7 @@ out = jackstraw_rpca(dat, r=1)
 \dontrun{
 ## out = jackstraw_rpca(dat, r=1, s=10, B=1000, seed=5678)
 }
+
 }
 \references{
 Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{http://bioinformatics.oxfordjournals.org/content/31/4/545}

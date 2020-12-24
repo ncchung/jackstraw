@@ -4,7 +4,9 @@
 \name{Jurkat293T}
 \alias{Jurkat293T}
 \title{A Jurkat:293T equal mixture dataset from Zheng et. al. (2017)}
-\format{A data frame with 3381 rows correspoding to single cells and 10 columns corresponding to the top 10 principal components}
+\format{
+A data frame with 3381 rows correspoding to single cells and 10 columns corresponding to the top 10 principal components
+}
 \source{
 Supplementary Data 1 from Zheng et al. (2017) \url{https://media.nature.com/original/nature-assets/ncomms/2017/170116/ncomms14049/extref/ncomms14049-s2.xlsx}
 }

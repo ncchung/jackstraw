@@ -78,18 +78,22 @@ print(g.pvalue)
 
 We are interested in estimating ```\pi_0```, which is the number of null cells. Quantitatively, there are a few different ways to estimate. We recommend following ```qvalue``` R/Biocondutor package. However, a hyperparameter (lambda) must be estimated and sometimes it could be problematic. e.g., see the discussion on https://github.com/StoreyLab/qvalue/issues/19
 
-For demonstration purposes, we apply different methods from packages ```mutoss``` and ```qvalue```. Note when lambda is not given to ```qvalue::pi0est```, it's automatically esitmated from fitting a cubic smoothing spline.
+For demonstration purposes, we apply different methods from packages ```mutoss``` and ```qvalue```. Note when lambda is not given to ```qvalue::pi0est```, it's automatically estimated from fitting a cubic smoothing spline.
 
 ```{r est_pi0}
 library(qvalue)
 # lambda estimated from fitting a cubic smoothing spline
-qvalue::pi0est(js$p.F)$pi0
+# NOTE: default is `lambda = seq(0.05, 0.95, 0.05)`, but max p-value (`max(js$p.F)`) is 0.9454553 < 0.95, which causes an error.  We avoid the error by testing lambdas up to 0.9 only.
+pi0_qvalue <- qvalue::pi0est(js$p.F, lambda = seq(0.05, 0.9, 0.05))$pi0
+pi0_qvalue
 
 # alternatively, use other estimators such as the Blanchard-Roquain procedure.
 library(mutoss)
-mutoss::BR_pi0_est(js$p.F, alpha=.3)$pi0
+pi0_mutoss <- mutoss::BR_pi0_est(js$p.F, alpha=.3)$pi0
+pi0_mutoss
 
-pi0_avg = (qvalue::pi0est(js$p.F)$pi0 + mutoss::BR_pi0_est(js$p.F, alpha=.3)$pi0)/2
+pi0_avg <- (pi0_qvalue + pi0_mutoss)/2
+pi0_avg
 ```
 
 Here, we use the mean of two results. With the estimated ```pi0_avg```, we run the PIP calculation. And visuaslize p-values and PIPs with ggplot2:

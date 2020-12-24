@@ -1,6 +1,6 @@
 #' Non-Parametric Jackstraw for Principal Component Analysis (PCA) using Randomized Singular Value Decomposition
 #'
-#' Test association between the observed variables and their latent variables captured by principal components (PCs). PCs are computed by randomized Singular Value Decomposition (see \code{rsvd}).
+#' Test association between the observed variables and their latent variables captured by principal components (PCs). PCs are computed by randomized Singular Value Decomposition (see \code{\link[rsvd]{rsvd}}).
 #'
 #' This function computes \code{m} p-values of linear association between \code{m} variables and their PCs.
 #' Its resampling strategy accounts for the over-fitting characteristics due to direct computation of PCs from the observed data
@@ -39,10 +39,6 @@
 #' \item{obs.stat}{\code{m} observed F-test statistics}
 #' \item{null.stat}{\code{s*B} null F-test statistics}
 #'
-#' @importFrom corpcor fast.svd
-#' @importFrom qvalue empPvals
-#' @importFrom rsvd rsvd
-#' @export jackstraw_rpca
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{http://bioinformatics.oxfordjournals.org/content/31/4/545}
 #'
@@ -65,6 +61,8 @@
 #' \dontrun{
 #' ## out = jackstraw_rpca(dat, r=1, s=10, B=1000, seed=5678)
 #' }
+#' 
+#' @export
 jackstraw_rpca <- jackstraw_rsvd <- function(dat,
     r1 = NULL, r = NULL, s = NULL,
     B = NULL, covariate = NULL,
@@ -105,7 +103,7 @@ jackstraw_rpca <- jackstraw_rsvd <- function(dat,
 
     # Calculate observed
     # association statistics
-    svd.dat <- rsvd(dat, k=r, ...)
+    svd.dat <- rsvd::rsvd(dat, k=r, ...)
     LV <- svd.dat$v[, r1, drop = FALSE]
     if (!is.null(r0))
         ALV <- svd.dat$v[, r0,
@@ -132,7 +130,7 @@ jackstraw_rpca <- jackstraw_rsvd <- function(dat,
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls
 
-        svd.jackstraw.dat <- rsvd(jackstraw.dat, k=r, ...)
+        svd.jackstraw.dat <- rsvd::rsvd(jackstraw.dat, k=r, ...)
         LV.js <- svd.jackstraw.dat$v[,
             r1, drop = FALSE]
         if (!is.null(r0))
@@ -146,7 +144,7 @@ jackstraw_rpca <- jackstraw_rsvd <- function(dat,
             cat(paste(i, " "))
     }
 
-    p.value <- empPvals(as.vector(obs), as.vector(null))
+    p.value <- qvalue::empPvals(as.vector(obs), as.vector(null))
 
     return(list(call = match.call(),
         p.value = p.value, obs.stat = obs,

@@ -65,10 +65,11 @@ The input data (\code{dat}) must be of a class `matrix`.
 set.seed(1234)
 library(ClusterR)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
-kmeans.dat <- KMeans_rcpp(dat,  clusters = 10, num_init = 1,
+kmeans.dat <- ClusterR::KMeans_rcpp(dat,  clusters = 10, num_init = 1,
 max_iters = 100, initializer = 'kmeans++')
 jackstraw.out <- jackstraw_kmeanspp(dat, kmeans.dat)
 }
+
 }
 \references{
 Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}

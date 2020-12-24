@@ -66,6 +66,7 @@ dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 kmeans.dat <- kmeans(dat, centers=2, nstart = 10, iter.max = 100)
 jackstraw.out <- jackstraw_kmeans(dat, kmeans.dat)
 }
+
 }
 \references{
 Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}

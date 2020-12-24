@@ -70,6 +70,7 @@ initializer = "kmeans++")
 jackstraw.output <- jackstraw_MiniBatchKmeans(dat,
 MiniBatchKmeans.output = MiniBatchKmeans.output)
 }
+
 }
 \references{
 Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}

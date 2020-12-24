@@ -38,9 +38,6 @@
 #' \item{obs.stat}{\code{m} observed F-test statistics}
 #' \item{null.stat}{\code{s*B} null F-test statistics}
 #'
-#' @importFrom corpcor fast.svd
-#' @importFrom qvalue empPvals
-#' @export jackstraw_pca
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{http://bioinformatics.oxfordjournals.org/content/31/4/545}
 #'
@@ -63,6 +60,8 @@
 #' ## For example, set s and B for a balance between speed of the algorithm and accuracy of p-values
 #' ## out = jackstraw_pca(dat, r=1, s=10, B=1000, seed=5678)
 #' }
+#' 
+#' @export
 jackstraw_pca <- function(dat,
     r1 = NULL, r = NULL, s = NULL,
     B = NULL, covariate = NULL,
@@ -103,7 +102,7 @@ jackstraw_pca <- function(dat,
 
     # Calculate observed
     # association statistics
-    svd.dat <- fast.svd(dat)
+    svd.dat <- corpcor::fast.svd(dat)
     LV <- svd.dat$v[, r1, drop = FALSE]
     if (!is.null(r0))
         ALV <- svd.dat$v[, r0,
@@ -130,7 +129,7 @@ jackstraw_pca <- function(dat,
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls
 
-        svd.jackstraw.dat <- fast.svd(jackstraw.dat)
+        svd.jackstraw.dat <- corpcor::fast.svd(jackstraw.dat)
         LV.js <- svd.jackstraw.dat$v[,
             r1, drop = FALSE]
         if (!is.null(r0))
@@ -144,7 +143,7 @@ jackstraw_pca <- function(dat,
             cat(paste(i, " "))
     }
 
-    p.value <- empPvals(as.vector(obs), as.vector(null))
+    p.value <- qvalue::empPvals(as.vector(obs), as.vector(null))
 
     return(list(call = match.call(),
         p.value = p.value, obs.stat = obs,

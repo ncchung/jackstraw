@@ -18,7 +18,7 @@
 #' @param k a number of clusters.
 #' @param cluster a vector of cluster assignments.
 #' @param centers a matrix of all cluster centers.
-#' @param algorithm a clustering algorithm to use, where an output must include `cluster` and `centers`. For exact specification, see \code{kmeans}.
+#' @param algorithm a clustering algorithm to use, where an output must include `cluster` and `centers`. For exact specification, see \code{\link[stats]{kmeans}}.
 #' @param noise specify a parametric distribution to generate a noise term. If \code{NULL}, a non-parametric jackstraw test is performed.
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations.
@@ -33,13 +33,13 @@
 #' \item{F.null}{F null statistics between null variables and cluster centers, from the jackstraw method.}
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
-#' @export jackstraw_cluster
-#' @importFrom qvalue empPvals
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
+#' 
+#' @export
 jackstraw_cluster <- function(dat, 
     k, cluster = NULL, centers = NULL,
-    algorithm = function(x, centers) kmeans(x, centers, ...),
+    algorithm = function(x, centers) stats::kmeans(x, centers, ...),
     s = 1, B = 1000, center = TRUE, noise = NULL, covariate = NULL,
     verbose = FALSE, seed = NULL, 
     ...) {
@@ -146,7 +146,7 @@ jackstraw_cluster <- function(dat,
                 i, "] is [", length(F.null[[i]]), 
                 "]."))
         }
-        p.F[cluster == i] <- empPvals(F.obs[cluster == 
+        p.F[cluster == i] <- qvalue::empPvals(F.obs[cluster == 
             i], F.null[[i]])
     }
     

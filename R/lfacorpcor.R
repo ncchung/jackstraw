@@ -1,6 +1,6 @@
 #' Logistic Factor Analysis without C++ Dependency
 #'
-#' Estimate populatoin structure in genome-wide genotype matrices.
+#' Estimate population structure in genome-wide genotype matrices.
 #'
 #' It performs the logistic factor analysis, similar to \code{lfa} function in the lfa package.
 #' This function works without C++ dependencies.
@@ -13,8 +13,6 @@
 #' @return \code{lfa.corpcor} returns a \code{n*d} matrix of \code{d} logistic factors.
 #' The last column is always an intercept term.
 #'
-#' @importFrom corpcor fast.svd
-#' @export lfa.corpcor
 #' @seealso \link{jackstraw_lfa}
 #'
 #' @examples
@@ -31,6 +29,8 @@
 #'
 #' dat = matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 #' out = lfa.corpcor(x=dat, d=2)
+#' 
+#' @export
 lfa.corpcor <- function(x, d, ltrace = FALSE) {
     n.sv <- d - 1
     m <- nrow(x)
@@ -38,10 +38,10 @@ lfa.corpcor <- function(x, d, ltrace = FALSE) {
 
     norm_x <- t(scale(t(x), scale = FALSE,
         center = TRUE))
-    mysvd <- fast.svd(norm_x)
+    mysvd <- corpcor::fast.svd(norm_x)
 
     mean_x <- apply(x, 1, mean)
-    sd_x <- apply(x, 1, sd)
+    sd_x <- apply(x, 1, stats::sd)
 
     rm(norm_x)
     d <- mysvd$d[1:n.sv]
@@ -80,7 +80,7 @@ lfa.corpcor <- function(x, d, ltrace = FALSE) {
 
     norm_z <- t(scale(t(z), scale = TRUE,
         center = TRUE))
-    v <- fast.svd(norm_z)$v[, 1:n.sv]
+    v <- corpcor::fast.svd(norm_z)$v[, 1:n.sv]
     v <- cbind(v, 1)
     return(v)
 }
@@ -101,7 +101,6 @@ lfa.corpcor <- function(x, d, ltrace = FALSE) {
 #' \item{dev}{the \code{m} deviances}
 #' \item{p.value}{the \code{m} p-values based on a chisq distribution}
 #'
-#' @import stats
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 dev.R <- function(dat, LFr1, LFr0 = NULL, p = FALSE) {
     n <- ncol(dat)
@@ -109,15 +108,15 @@ dev.R <- function(dat, LFr1, LFr0 = NULL, p = FALSE) {
     if (is.null(LFr0))
         LFr0 <- matrix(1, n, 1)
 
-    obs1 <- apply(dat, 1, function(x) glm(cbind(x,
-        2 - x) ~ LFr1, family = binomial(link = "logit"))$deviance)
-    obs0 <- apply(dat, 1, function(x) glm(cbind(x,
-        2 - x) ~ LFr0, family = binomial(link = "logit"))$deviance)
+    obs1 <- apply(dat, 1, function(x) stats::glm(cbind(x,
+        2 - x) ~ LFr1, family = stats::binomial(link = "logit"))$deviance)
+    obs0 <- apply(dat, 1, function(x) stats::glm(cbind(x,
+        2 - x) ~ LFr0, family = stats::binomial(link = "logit"))$deviance)
 
     dev <- obs0 - obs1
 
     if (p == TRUE) {
-        p.value <- 1 - pchisq(dev,
+        p.value <- 1 - stats::pchisq(dev,
             ncol(LFr1) - ncol(LFr0))
         return(list(p.value = p.value,
             dev = dev))

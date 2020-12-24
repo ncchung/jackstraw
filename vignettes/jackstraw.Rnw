@@ -58,7 +58,7 @@ When we have a high-dimensional data where a large number of variables are measu
 
 We simulate a simple gene expression data with $m=1000$ genes (or variables) and $n=20$ samples (or observations). The following simulation code generates a dichonomous mean shift between the first set of 10 samples and the second set of 10 samples (e.g., this may represent a case-control study). This mean shift affects $10\%$ of $m=1000$ genes:
 
-<<sim_pca_data>>=
+<<sim_pca_data, cache=TRUE>>=
 library(jackstraw)
 library(corpcor)
 

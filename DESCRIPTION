@@ -1,11 +1,10 @@
 Package: jackstraw
 Type: Package
 Title: Statistical Inference for Unsupervised Learning
-Version: 1.3.1
-Date: 2019-8-13
+Version: 1.3.2
 Author: Neo Christopher Chung <nchchung@gmail.com>, John D. Storey
-    <jstorey@princeton.edu>, Wei Hao <whao@princeton.edu>
-Maintainer: Neo Christopher Chung <nchchung@gmail.com>
+    <jstorey@princeton.edu>, Wei Hao <whao@princeton.edu>, Alejandro Ochoa <alejandro.ochoa@duke.edu>
+Maintainer: Neo Christopher Chung <nchchung@gmail.com>, Alejandro Ochoa <alejandro.ochoa@duke.edu>
 Description: Test for association between the observed data
 	and their systematic patterns of variations.
 	Systematic patterns may be captured with latent variable modelings using principal component analysis (PCA), factor analysis (FA), and related methods. The jackstraw enables statistical testing for association between observed variables and latent variables, as captured by PCs or other estimates. Similarly, unsupervised clustering, such as K-means clustering, partition around medoids (PAM), and others, finds subpopulations among the observed variables. The jackstraw estimates statistical significance of cluster membership, with an application to unsupervised evaluation of cell identities in single cell RNA-seq. This package also implements posterior inclusion probabilities (PIPs) that can be used for feature selection of genes, cells, and others.
@@ -14,19 +13,26 @@ Depends: R (>= 3.0.0)
 biocViews: 
 Imports:
 	methods,
-	stats
-Suggests:
+	stats,
+	qvalue,
 	corpcor,
-	cluster,
+	irlba,
+	rsvd,
 	ClusterR,
+	cluster,
+	lfa,
 	parallel,
+	alstructure
+Suggests:
 	knitr,
 	rmarkdown,
-	irlba,
-	qvalue,
-	lfa,
-	rsvd
+	ggplot2,
+	mutoss,
+	Matrix,
+	gridExtra,
+	cowplot,
+	scales
 License: GPL-2
 Encoding: UTF-8
-RoxygenNote: 7.0.1
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

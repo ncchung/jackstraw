@@ -30,11 +30,6 @@
 #' \item{F.null}{F null statistics between null variables and cluster centers, from the jackstraw method.}
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
-#' @export jackstraw_kmeanspp
-#' @importFrom qvalue empPvals
-#' @importFrom methods is
-#' @importFrom ClusterR KMeans_rcpp
-#' @importFrom ClusterR predict_KMeans
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 #' @examples
@@ -46,6 +41,8 @@
 #' max_iters = 100, initializer = 'kmeans++')
 #' jackstraw.out <- jackstraw_kmeanspp(dat, kmeans.dat)
 #' }
+#' 
+#' @export
 jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
     kmeans.dat, s = NULL, B = NULL, center = TRUE,
     covariate = NULL, verbose = FALSE,
@@ -66,8 +63,8 @@ jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
     }
 
     ## sanity check
-    if (!is(kmeans.dat,"k-means clustering")) {
-      stop("`kmeans.dat` must be an object of class `k-means clustering`. See ?KMeans_rcpp.")
+    if (!methods::is(kmeans.dat,"k-means clustering")) {
+      stop("`kmeans.dat` must be an object of class `k-means clustering`. See ?ClusterR::KMeans_rcpp.")
     }
     k <- nrow(kmeans.dat$centroids)
 
@@ -112,7 +109,7 @@ jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
         }
 
         # re-cluster the jackstraw data
-        kmeans.null <- KMeans_rcpp(jackstraw.dat,clusters=k,
+        kmeans.null <- ClusterR::KMeans_rcpp(jackstraw.dat,clusters=k,
             CENTROIDS = kmeans.dat$centroids,
             ...)
 
@@ -136,7 +133,7 @@ jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
     # compute p-values
     p.F <- vector("numeric", m)
     if(pool) {
-      p.F <- empPvals(F.obs, as.vector(unlist(F.null)))
+      p.F <- qvalue::empPvals(F.obs, as.vector(unlist(F.null)))
     } else {
       for (i in 1:k) {
           # warn about a relatively low
@@ -148,7 +145,7 @@ jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
                   "]."))
           }
           p.F[kmeans.dat$cluster ==
-              i] <- empPvals(F.obs[kmeans.dat$clusters ==
+              i] <- qvalue::empPvals(F.obs[kmeans.dat$clusters ==
               i], F.null[[i]])
       }
     }

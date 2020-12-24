@@ -26,11 +26,6 @@
 #' \item{F.null}{F null statistics between null variables and cluster centers, from the jackstraw method.}
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
-#' @export jackstraw_MiniBatchKmeans
-#' @importFrom qvalue empPvals
-#' @importFrom methods is
-#' @importFrom ClusterR MiniBatchKmeans
-#' @importFrom ClusterR predict_MBatchKMeans
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 #' @examples
@@ -43,6 +38,8 @@
 #' jackstraw.output <- jackstraw_MiniBatchKmeans(dat,
 #' MiniBatchKmeans.output = MiniBatchKmeans.output)
 #' }
+#' 
+#' @export
 jackstraw_MiniBatchKmeans <- function(dat,
     MiniBatchKmeans.output = NULL, s = NULL, B = NULL, center = TRUE,
     covariate = NULL, verbose = FALSE, seed = NULL,
@@ -65,10 +62,10 @@ jackstraw_MiniBatchKmeans <- function(dat,
     }
 
     ## sanity check
-    if (!is(MiniBatchKmeans.output,"k-means clustering")) {
+    if (!methods::is(MiniBatchKmeans.output,"k-means clustering")) {
       stop("`MiniBatchKmeans.output` must be an object of class `k-means clustering` as a result from applying ClusterR::MiniBatchKmeans. See ?ClusterR::MiniBatchKmeans.")
     }
-    MiniBatchKmeans.output$cluster = predict_MBatchKMeans(dat, MiniBatchKmeans.output$centroids)
+    MiniBatchKmeans.output$cluster = ClusterR::predict_MBatchKMeans(dat, MiniBatchKmeans.output$centroids)
     k <- clusters <- nrow(MiniBatchKmeans.output$centroids)
 
     if (verbose == TRUE) {
@@ -112,10 +109,10 @@ jackstraw_MiniBatchKmeans <- function(dat,
         }
 
         # re-cluster the jackstraw data
-        jackstraw.MiniBatchKmeans <- MiniBatchKmeans(data=jackstraw.dat, CENTROIDS = MiniBatchKmeans.output$centroids,
+        jackstraw.MiniBatchKmeans <- ClusterR::MiniBatchKmeans(data=jackstraw.dat, CENTROIDS = MiniBatchKmeans.output$centroids,
                                                      clusters = clusters, batch_size = batch_size,
                                                      initializer = initializer, ...)
-        jackstraw.MiniBatchKmeans$cluster = predict_MBatchKMeans(jackstraw.dat, jackstraw.MiniBatchKmeans$centroids)
+        jackstraw.MiniBatchKmeans$cluster = ClusterR::predict_MBatchKMeans(jackstraw.dat, jackstraw.MiniBatchKmeans$centroids)
 
         for (i in 1:k) {
             ind.i <- intersect(ind, which(jackstraw.MiniBatchKmeans$cluster == i))
@@ -131,7 +128,7 @@ jackstraw_MiniBatchKmeans <- function(dat,
     # compute p-values
     p.F <- vector("numeric", m)
     if(pool) {
-      p.F <- empPvals(F.obs, as.vector(unlist(F.null)))
+      p.F <- qvalue::empPvals(F.obs, as.vector(unlist(F.null)))
     } else {
       for (i in 1:k) {
           # warn about a relatively low
@@ -143,7 +140,7 @@ jackstraw_MiniBatchKmeans <- function(dat,
                   "]."))
           }
           p.F[MiniBatchKmeans.output$cluster ==
-              i] <- empPvals(F.obs[MiniBatchKmeans.output$cluster ==
+              i] <- qvalue::empPvals(F.obs[MiniBatchKmeans.output$cluster ==
               i], F.null[[i]])
       }
     }

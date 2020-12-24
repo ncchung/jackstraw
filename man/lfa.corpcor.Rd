@@ -18,7 +18,7 @@ lfa.corpcor(x, d, ltrace = FALSE)
 The last column is always an intercept term.
 }
 \description{
-Estimate populatoin structure in genome-wide genotype matrices.
+Estimate population structure in genome-wide genotype matrices.
 }
 \details{
 It performs the logistic factor analysis, similar to \code{lfa} function in the lfa package.
@@ -39,6 +39,7 @@ prob = exp(BL)/(1+exp(BL))
 
 dat = matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 out = lfa.corpcor(x=dat, d=2)
+
 }
 \seealso{
 \link{jackstraw_lfa}

@@ -5,8 +5,6 @@
 #' @param LF_null Null logistic factors.
 #' @author Wei Hao
 #'
-#' @importFrom lfa af
-#'
 #' @keywords internal
 devdiff <- function(X, LF_alt,
     LF_null = NULL) {
@@ -17,8 +15,8 @@ devdiff <- function(X, LF_alt,
 
     m <- nrow(X)
 
-    F_alt <- af(X, LF_alt)
-    F_null <- af(X, LF_null)
+    F_alt <- lfa::af(X, LF_alt)
+    F_null <- lfa::af(X, LF_null)
 
     sapply(1:m, function(i) {
         devdiff_snp(X[i, ], F_alt[i,
@@ -44,10 +42,6 @@ devdiff_snp <- function(snp, p1, p0) {
 #' @param LF_null Null logistic factors.
 #' @author Wei Hao
 #'
-#' @importFrom lfa af
-#' @importFrom lfa af_snp
-#' @importFrom parallel mclapply
-#'
 #' @keywords internal
 devdiff_parallel <- function(X,
     LF_alt, LF_null = NULL, numcores = 1) {
@@ -60,8 +54,8 @@ devdiff_parallel <- function(X,
 
     devdiff_parallel_snp <- function(snp,
         LF_alt, LF_null) {
-        p0 <- af_snp(snp, LF_null)
-        p1 <- af_snp(snp, LF_alt)
+        p0 <- lfa::af_snp(snp, LF_null)
+        p1 <- lfa::af_snp(snp, LF_alt)
 
         devalt <- sum(snp * log(p1) +
             (2 - snp) * log(1 -
@@ -74,7 +68,7 @@ devdiff_parallel <- function(X,
     }
 
 
-    simplify2array(mclapply(1:m,
+    simplify2array( parallel::mclapply(1:m,
         function(i) {
             devdiff_parallel_snp(X[i,
                 ], LF_alt, LF_null)
@@ -88,8 +82,6 @@ devdiff_parallel <- function(X,
 #' @param LF_null Null logistic factors.
 #' @author Wei Hao
 #'
-#' @importFrom lfa af
-#'
 #' @keywords internal
 pseudo_Rsq <- function(X, LF_alt,
     LF_null = NULL) {
@@ -100,8 +92,8 @@ pseudo_Rsq <- function(X, LF_alt,
 
     m <- nrow(X)
 
-    F_alt <- af(X, LF_alt)
-    F_null <- af(X, LF_null)
+    F_alt <- lfa::af(X, LF_alt)
+    F_null <- lfa::af(X, LF_null)
 
     sapply(1:m, function(i) {
         mcfadden_Rsq_snp(X[i, ],
@@ -134,13 +126,11 @@ mcfadden_Rsq_snp <- function(snp,
 #' @param LF Observed logistic factors.
 #' @author Wei Hao
 #'
-#' @importFrom lfa af
-#'
 #' @keywords internal
 efron_Rsq <- function(X, LF) {
     m <- nrow(X)
 
-    F <- af(X, LF)
+    F <- lfa::af(X, LF)
 
     sapply(1:m, function(i) {
         efron_Rsq_snp(X[i, ], F[i,

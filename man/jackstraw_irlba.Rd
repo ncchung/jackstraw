@@ -33,7 +33,7 @@ jackstraw_irlba(
 
 \item{seed}{a numeric seed for the random number generator.}
 
-\item{...}{additional arguments to \code{irlba}.}
+\item{...}{additional arguments to \code{\link[irlba]{irlba}}.}
 }
 \value{
 \code{jackstraw_irlba} returns a list consisting of
@@ -42,7 +42,7 @@ jackstraw_irlba(
 \item{null.stat}{\code{s*B} null F-test statistics}
 }
 \description{
-Test association between the observed variables and their latent variables captured by principal components (PCs). PCs are computed using the augmented implicitly restarted Lanczos bidiagonalization algorithm (IRLBA; see \code{irlba}).
+Test association between the observed variables and their latent variables captured by principal components (PCs). PCs are computed using the augmented implicitly restarted Lanczos bidiagonalization algorithm (IRLBA; see \code{\link[irlba]{irlba}}).
 }
 \details{
 This function computes \code{m} p-values of linear association between \code{m} variables and their PCs.
@@ -84,6 +84,7 @@ out = jackstraw_irlba(dat, r=1)
 \dontrun{
 ## out = jackstraw_irlba(dat, r=1, s=10, B=1000, seed=5678)
 }
+
 }
 \references{
 Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{http://bioinformatics.oxfordjournals.org/content/31/4/545}

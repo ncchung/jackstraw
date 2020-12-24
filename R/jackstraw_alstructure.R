@@ -21,18 +21,23 @@
 #' \item{obs.stat}{\code{m} observed devs}
 #' \item{null.stat}{\code{s*B} null devs}
 #'
-#' @importFrom corpcor fast.svd
-#' @importFrom qvalue empPvals
-#' @importFrom alstructure alstructure
-#' @export jackstraw_alstructure
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #'
 #' @seealso  \link{jackstraw_pca} \link{jackstraw}
-jackstraw_alstructure <- function(dat,
-    FUN = function(x) t(alstructure(x, d_hat = r, svd_method = "truncated_svd", tol = 0.001, max_iters = 1000)$Q_hat[, , drop = FALSE]),
-    devR = FALSE, r = NULL, r1 = NULL, s = NULL,
-    B = NULL, covariate = NULL,
-    verbose = TRUE, seed = NULL) {
+#' 
+#' @export
+jackstraw_alstructure <- function(
+                                  dat,
+                                  FUN = function(x) t( alstructure::alstructure(x, d_hat = r, svd_method = "truncated_svd", tol = 0.001, max_iters = 1000)$Q_hat[, , drop = FALSE] ),
+                                  devR = FALSE,
+                                  r = NULL,
+                                  r1 = NULL,
+                                  s = NULL,
+                                  B = NULL,
+                                  covariate = NULL,
+                                  verbose = TRUE,
+                                  seed = NULL
+                                  ) {
     if (!is.null(seed))
         set.seed(seed)
 
@@ -132,7 +137,7 @@ jackstraw_alstructure <- function(dat,
             cat(paste(i, " "))
     }
 
-    p.value <- empPvals(as.vector(obs), as.vector(null))
+    p.value <- qvalue::empPvals(as.vector(obs), as.vector(null))
 
     return(list(call = match.call(),
         p.value = p.value, obs.stat = obs,

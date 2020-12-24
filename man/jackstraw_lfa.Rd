@@ -6,7 +6,7 @@
 \usage{
 jackstraw_lfa(
   dat,
-  FUN = function(x) lfa(x, r)[, , drop = FALSE],
+  FUN = function(x) lfa::lfa(x, r)[, , drop = FALSE],
   devR = FALSE,
   r = NULL,
   r1 = NULL,
@@ -20,7 +20,7 @@ jackstraw_lfa(
 \arguments{
 \item{dat}{a genotype matrix with \code{m} rows as variables and \code{n} columns as observations.}
 
-\item{FUN}{a function to use for LFA (by default, it uses the lfagen package)}
+\item{FUN}{a function to use for LFA (by default, it uses the lfa package)}
 
 \item{devR}{use a R function to compute deviance. By default, FALSE (uses C++).}
 
@@ -55,23 +55,24 @@ This function uses logistic factor analysis (LFA) from Wei et al. (2014). Partic
 set.seed(1234)
 \dontrun{
 ## simulate genotype data from a logistic factor model: drawing rbinom from logit(BL)
-m=5000; n=100; pi0=.9
-m0 = round(m*pi0)
-m1 = m-round(m*pi0)
-B = matrix(0, nrow=m, ncol=1)
-B[1:m1,] = matrix(runif(m1*n, min=-.5, max=.5), nrow=m1, ncol=1)
-L = matrix(rnorm(n), nrow=1, ncol=n)
-BL = B \%*\% L
-prob = exp(BL)/(1+exp(BL))
+m <- 5000; n <- 100; pi0 <- .9
+m0 <- round(m*pi0)
+m1 <- m - round(m*pi0)
+B <- matrix(0, nrow=m, ncol=1)
+B[1:m1,] <- matrix(runif(m1*n, min=-.5, max=.5), nrow=m1, ncol=1)
+L <- matrix(rnorm(n), nrow=1, ncol=n)
+BL <- B \%*\% L
+prob <- exp(BL)/(1+exp(BL))
 
-dat = matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
+dat <- matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 
 ## apply the jackstraw_lfa
-out = jackstraw_lfa(dat, 2)
+out <- jackstraw_lfa(dat, 2)
 
 ## apply the jackstraw_lfa using self-contained R functions
-out = jackstraw_lfa(dat, FUN = function(x) lfa.corpcor(x, 2)[, , drop = FALSE], r = 2, devR = TRUE)
+out <- jackstraw_lfa(dat, FUN = function(x) lfa.corpcor(x, 2)[, , drop = FALSE], r = 2, devR = TRUE)
 }
+
 }
 \seealso{
 \link{jackstraw_pca} \link{jackstraw} \link{jackstraw_subspace}

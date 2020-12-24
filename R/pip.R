@@ -5,34 +5,32 @@
 #' @param pvalue a vector of p-values.
 #' @param group a vector of group indicators (optional).
 #' @param pi0 a vector of pi0 values (optional)
-#' @param verbose print a progress
-#' @param ... optional arguments to control a local FDR estimation.
+#' @param ... optional arguments for \code{\link[qvalue]{lfdr}} to control a local FDR estimation.
 #'
 #' @return \code{pip} returns a vector of posterior inclusion probabilities
 #'
-#' @export pip
-#'
-#' @importFrom qvalue lfdr
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
+#' 
+#' @export
 pip <- function(pvalue, group = NULL, pi0 = NULL,
     ...) {
     if(is.null(pi0)) {
         message("Using qvalue::pi0est to estimate pi0 values.")
         if(is.null(group)) {
-            prob <- 1 - lfdr(pvalue, ...)
+            prob <- 1 - qvalue::lfdr(pvalue, ...)
         } else {
             k <- length(unique(group))
             prob <- vector("numeric",
                 length = length(pvalue))
             for (i in 1:k) {
                 prob[group == i] <- 1 -
-                    lfdr(pvalue[group == i], ...)
+                    qvalue::lfdr(pvalue[group == i], ...)
             }
         }
     } else {
         message(paste0("Using pi0 values:", pi0))
         if(is.null(group)) {
-            prob <- 1 - lfdr(pvalue, ...)
+            prob <- 1 - qvalue::lfdr(pvalue, ...)
         } else {
             k <- length(unique(group))
             if(length(pi0) == 1) {
@@ -44,7 +42,7 @@ pip <- function(pvalue, group = NULL, pi0 = NULL,
                            length = length(pvalue))
             for (i in 1:k) {
                 prob[group == i] <- 1 -
-                    lfdr(pvalue[group == i], pi0=pi0[i], ...)
+                    qvalue::lfdr(pvalue[group == i], pi0=pi0[i], ...)
             }
         }
     }

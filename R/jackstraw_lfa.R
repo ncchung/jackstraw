@@ -6,7 +6,7 @@
 #' (the full model with \code{r} LFs vs. the intercept-only model) is used to assess association.
 #'
 #' @param dat a genotype matrix with \code{m} rows as variables and \code{n} columns as observations.
-#' @param FUN a function to use for LFA (by default, it uses the lfagen package)
+#' @param FUN a function to use for LFA (by default, it uses the lfa package)
 #' @param devR use a R function to compute deviance. By default, FALSE (uses C++).
 #' @param r a number of significant LFs.
 #' @param r1 a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).
@@ -21,10 +21,6 @@
 #' \item{obs.stat}{\code{m} observed devs}
 #' \item{null.stat}{\code{s*B} null devs}
 #'
-#' @importFrom corpcor fast.svd
-#' @importFrom qvalue empPvals
-#' @importFrom lfa lfa
-#' @export jackstraw_lfa
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #'
 #' @seealso  \link{jackstraw_pca} \link{jackstraw} \link{jackstraw_subspace}
@@ -33,32 +29,40 @@
 #' set.seed(1234)
 #' \dontrun{
 #' ## simulate genotype data from a logistic factor model: drawing rbinom from logit(BL)
-#' m=5000; n=100; pi0=.9
-#' m0 = round(m*pi0)
-#' m1 = m-round(m*pi0)
-#' B = matrix(0, nrow=m, ncol=1)
-#' B[1:m1,] = matrix(runif(m1*n, min=-.5, max=.5), nrow=m1, ncol=1)
-#' L = matrix(rnorm(n), nrow=1, ncol=n)
-#' BL = B %*% L
-#' prob = exp(BL)/(1+exp(BL))
+#' m <- 5000; n <- 100; pi0 <- .9
+#' m0 <- round(m*pi0)
+#' m1 <- m - round(m*pi0)
+#' B <- matrix(0, nrow=m, ncol=1)
+#' B[1:m1,] <- matrix(runif(m1*n, min=-.5, max=.5), nrow=m1, ncol=1)
+#' L <- matrix(rnorm(n), nrow=1, ncol=n)
+#' BL <- B %*% L
+#' prob <- exp(BL)/(1+exp(BL))
 #'
-#' dat = matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
+#' dat <- matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 #'
 #' ## apply the jackstraw_lfa
-#' out = jackstraw_lfa(dat, 2)
+#' out <- jackstraw_lfa(dat, 2)
 #'
 #' ## apply the jackstraw_lfa using self-contained R functions
-#' out = jackstraw_lfa(dat, FUN = function(x) lfa.corpcor(x, 2)[, , drop = FALSE], r = 2, devR = TRUE)
+#' out <- jackstraw_lfa(dat, FUN = function(x) lfa.corpcor(x, 2)[, , drop = FALSE], r = 2, devR = TRUE)
 #' }
-jackstraw_lfa <- function(dat,
-    FUN = function(x) lfa(x, r)[,
-        , drop = FALSE], devR = FALSE,
-    r = NULL, r1 = NULL, s = NULL,
-    B = NULL, covariate = NULL,
-    verbose = TRUE, seed = NULL) {
+#' 
+#' @export
+jackstraw_lfa <- function(
+                          dat,
+                          FUN = function(x) lfa::lfa(x, r)[, , drop = FALSE],
+                          devR = FALSE,
+                          r = NULL,
+                          r1 = NULL,
+                          s = NULL,
+                          B = NULL,
+                          covariate = NULL,
+                          verbose = TRUE,
+                          seed = NULL
+                          ) {
     if (!is.null(seed))
         set.seed(seed)
-
+    
     m <- dim(dat)[1]
     n <- dim(dat)[2]
     if (is.null(s)) {
@@ -133,7 +137,7 @@ jackstraw_lfa <- function(dat,
         if (!is.null(r0)) LFr0.js <- LFr.js[, r0, drop = FALSE]
 
         if (devR == FALSE) {
-            ## jackstraw:::devdiff originally from lfagen
+            ## jackstraw:::devdiff originally from lfa
             null[, i] <- devdiff(s.nulls,
                 LF_alt = cbind(LFr.js, covariate),
                 LF_null = cbind(LFr0.js,matrix(1, n, 1), covariate))
@@ -148,7 +152,7 @@ jackstraw_lfa <- function(dat,
             cat(paste(i, " "))
     }
 
-    p.value <- empPvals(as.vector(obs), as.vector(null))
+    p.value <- qvalue::empPvals(as.vector(obs), as.vector(null))
 
     return(list(call = match.call(),
         p.value = p.value, obs.stat = obs,

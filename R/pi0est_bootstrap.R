@@ -4,18 +4,15 @@
 #' Try \code{qvalue::pi0est} or other pi0 estimation methods. This function is preserved because in the newer qvalue package (version > 2.0), the bootstrap method is replaced by a closed form solution.
 #' In practice, the closed form solution may fail due to a very small pi0 (e.g., generally small p-values) or others.
 #'
-#' @param pvalue a vector of p-values.
+#' @param p a vector of p-values.
 #' @param lambda the value of the tuning parameter to estimate pi0 (optional)
 #' @param robust an indicator of whether it is desired to make the estimate more robust for small p-values and a direct finite sample estimate of pFDR (optional)
-#' @param verbose print a progress
-#' @param ... optional arguments to control a local FDR estimation.
 #'
 #' @return \code{pi0est_bootstrap} returns a pi0 estimate
 #'
-#' @export pi0est_bootstrap
-#'
-#' @importFrom qvalue lfdr
 #' @author John D. Storey, Alan Dabney
+#' 
+#' @export
 pi0est_bootstrap <- function(p=NULL, lambda=seq(0,0.90,0.05), robust=FALSE) {
     if(min(p)<0 || max(p)>1) {
         print("ERROR: p-values not in valid range.")

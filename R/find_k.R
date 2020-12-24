@@ -15,7 +15,7 @@
 #' This package also provides an alternative methods in \code{permutationPA}.
 #' Through a resampling-based Parallel Analysis, it finds a number of significant components.
 #'
-#' @export find_k
+#' @export
 find_k <- function() {
   print("See ? find_k for helpful functions.")
   return(NULL)
@@ -38,7 +38,7 @@ find_k <- function() {
 #' \item{r}{an estimated number of significant principal components based on thresholding p-values at \code{threshold}}
 #'
 #' @references Buja A and Eyuboglu N. (1992) Remarks on parrallel analysis. Multivariate Behavioral Research, 27(4), 509-540
-#' @export permutationPA
+#' @export
 permutationPA <- function(dat,
                           B = 100, threshold = 0.05,
                           verbose = TRUE, seed = NULL) {
@@ -47,7 +47,7 @@ permutationPA <- function(dat,
   n <- ncol(dat)
   m <- nrow(dat)
 
-  uu <- fast.svd(dat, tol = 0)
+  uu <- corpcor::fast.svd(dat, tol = 0)
   ndf <- n - 1
   dstat <- uu$d[1:ndf]^2/sum(uu$d[1:ndf]^2)
   dstat0 <- matrix(0, nrow = B,
@@ -59,7 +59,7 @@ permutationPA <- function(dat,
       cat(paste(i, " "))
     dat0 <- t(apply(dat, 1,
                     sample, replace = FALSE))
-    uu0 <- fast.svd(dat0, tol = 0)
+    uu0 <- corpcor::fast.svd(dat0, tol = 0)
     dstat0[i, ] <- uu0$d[1:ndf]^2/sum(uu0$d[1:ndf]^2)
   }
   p <- rep(1, n)

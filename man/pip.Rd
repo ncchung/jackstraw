@@ -13,9 +13,7 @@ pip(pvalue, group = NULL, pi0 = NULL, ...)
 
 \item{pi0}{a vector of pi0 values (optional)}
 
-\item{...}{optional arguments to control a local FDR estimation.}
-
-\item{verbose}{print a progress}
+\item{...}{optional arguments for \code{\link[qvalue]{lfdr}} to control a local FDR estimation.}
 }
 \value{
 \code{pip} returns a vector of posterior inclusion probabilities

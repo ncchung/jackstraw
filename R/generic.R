@@ -7,29 +7,29 @@ FSTAT <- function(dat, LV, ALV = NULL,
 
     if (is.null(ALV)) {
         if (is.null(covariate)) {
-            model.alt <- model.matrix(seq(n) ~
+            model.alt <- stats::model.matrix(seq(n) ~
                 LV)
-            model.null <- model.matrix(seq(n) ~
+            model.null <- stats::model.matrix(seq(n) ~
                 1)
         }
         if (!is.null(covariate)) {
-            model.alt <- model.matrix(seq(n) ~
+            model.alt <- stats::model.matrix(seq(n) ~
                 LV + covariate)
-            model.null <- model.matrix(seq(n) ~
+            model.null <- stats::model.matrix(seq(n) ~
                 1 + covariate)
         }
     } else if (is.matrix(ALV) ||
         is.vector(ALV)) {
         if (is.null(covariate)) {
-            model.alt <- model.matrix(seq(n) ~
+            model.alt <- stats::model.matrix(seq(n) ~
                 LV + ALV)
-            model.null <- model.matrix(seq(n) ~
+            model.null <- stats::model.matrix(seq(n) ~
                 1 + ALV)
         }
         if (!is.null(covariate)) {
-            model.alt <- model.matrix(seq(n) ~
+            model.alt <- stats::model.matrix(seq(n) ~
                 LV + ALV + covariate)
-            model.null <- model.matrix(seq(n) ~
+            model.null <- stats::model.matrix(seq(n) ~
                 1 + ALV + covariate)
         }
     } else {
@@ -46,7 +46,7 @@ FSTAT <- function(dat, LV, ALV = NULL,
     if (!parametric) {
         return(list(fstat = fstat))
     } else {
-        fstat.pval <- 1 - pf(fstat,
+        fstat.pval <- 1 - stats::pf(fstat,
             ncol(model.alt) - ncol(model.null),
             n - ncol(model.alt))
         return(list(fstat = fstat,

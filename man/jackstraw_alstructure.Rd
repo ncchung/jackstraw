@@ -6,8 +6,8 @@
 \usage{
 jackstraw_alstructure(
   dat,
-  FUN = function(x) t(alstructure(x, d_hat = r, svd_method = "truncated_svd", tol =
-    0.001, max_iters = 1000)$Q_hat[, , drop = FALSE]),
+  FUN = function(x) t(alstructure::alstructure(x, d_hat = r, svd_method =
+    "truncated_svd", tol = 0.001, max_iters = 1000)$Q_hat[, , drop = FALSE]),
   devR = FALSE,
   r = NULL,
   r1 = NULL,

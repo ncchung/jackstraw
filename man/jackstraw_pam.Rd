@@ -66,6 +66,7 @@ dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 pam.dat <- pam(dat, k=2)
 jackstraw.out <- jackstraw_pam(dat, pam.dat = pam.dat)
 }
+
 }
 \references{
 Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}

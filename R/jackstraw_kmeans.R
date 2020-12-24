@@ -27,9 +27,6 @@
 #' \item{F.null}{F null statistics between null variables and cluster centers, from the jackstraw method.}
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
-#' @export jackstraw_kmeans
-#' @importFrom qvalue empPvals
-#' @importFrom methods is
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 #' @examples
@@ -39,6 +36,8 @@
 #' kmeans.dat <- kmeans(dat, centers=2, nstart = 10, iter.max = 100)
 #' jackstraw.out <- jackstraw_kmeans(dat, kmeans.dat)
 #' }
+#' 
+#' @export
 jackstraw_kmeans <- function(dat,
     kmeans.dat, s = NULL, B = NULL, center = FALSE,
     covariate = NULL, match = TRUE, pool = TRUE,
@@ -59,7 +58,7 @@ jackstraw_kmeans <- function(dat,
     }
 
     ## sanity check
-    if (!is(kmeans.dat,"kmeans")) {
+    if (!methods::is(kmeans.dat,"kmeans")) {
       stop("`kmeans.dat` must be an object of class `kmeans`. See ?kmeans.")
     }
     k <- nrow(kmeans.dat$centers)
@@ -107,7 +106,7 @@ jackstraw_kmeans <- function(dat,
         }
 
         # re-cluster the jackstraw data
-        kmeans.null <- kmeans(jackstraw.dat,
+        kmeans.null <- stats::kmeans(jackstraw.dat,
             centers = kmeans.dat$centers,
             ...)
 
@@ -116,7 +115,7 @@ jackstraw_kmeans <- function(dat,
 		    jck.centers <- kmeans.null$centers
 		    rownames(jck.centers) <- paste0("jck",1:k)
 		    # min euclidean dist to match jck.centers with obs.centers
-		    jck.clmatch <- apply(jck.centers, 1, function(y) which.min(apply(obs.centers, 1, function(x,y) dist(rbind(x,y)),y)))
+		    jck.clmatch <- apply(jck.centers, 1, function(y) which.min(apply(obs.centers, 1, function(x,y) stats::dist(rbind(x,y)),y)))
 		    if(verbose) message("Numeric identities of clusters are matched according to min euclidean distances.")
 
 	        for (i in 1:k) {
@@ -146,7 +145,7 @@ jackstraw_kmeans <- function(dat,
     # compute p-values
     p.F <- vector("numeric", m)
     if(pool) {
-      p.F <- empPvals(F.obs, as.vector(unlist(F.null)))
+      p.F <- qvalue::empPvals(F.obs, as.vector(unlist(F.null)))
     } else {
       for (i in 1:k) {
           # warn about a relatively low
@@ -159,7 +158,7 @@ jackstraw_kmeans <- function(dat,
                   i, "] is [", length(F.null[[i]]),
                   "]."))
           }
-          p.F[kmeans.dat$cluster == i] <- empPvals(F.obs[kmeans.dat$cluster == i], F.null[[i]])
+          p.F[kmeans.dat$cluster == i] <- qvalue::empPvals(F.obs[kmeans.dat$cluster == i], F.null[[i]])
       }
     }
 

@@ -81,6 +81,7 @@ out = jackstraw_pca(dat, r=1)
 ## For example, set s and B for a balance between speed of the algorithm and accuracy of p-values
 ## out = jackstraw_pca(dat, r=1, s=10, B=1000, seed=5678)
 }
+
 }
 \references{
 Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{http://bioinformatics.oxfordjournals.org/content/31/4/545}

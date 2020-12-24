@@ -28,10 +28,6 @@
 #' \item{F.null}{F null statistics between null variables and cluster medoids, from the jackstraw method.}
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
-#' @export jackstraw_pam
-#' @importFrom cluster pam
-#' @importFrom methods is
-#' @importFrom qvalue empPvals
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 #' @examples
@@ -42,6 +38,8 @@
 #' pam.dat <- pam(dat, k=2)
 #' jackstraw.out <- jackstraw_pam(dat, pam.dat = pam.dat)
 #' }
+#' 
+#' @export
 jackstraw_pam <- function(dat,
     pam.dat, s = NULL, B = NULL, center = TRUE,
     covariate = NULL, verbose = FALSE, pool = TRUE,
@@ -62,7 +60,7 @@ jackstraw_pam <- function(dat,
     }
 
     ## sanity check
-    if (!is(pam.dat,"pam")) {
+    if (!methods::is(pam.dat,"pam")) {
         stop("`pam.dat` must be an object of class `pam`. See ?pam.object.")
     }
     k <- nrow(pam.dat$medoids)
@@ -108,7 +106,7 @@ jackstraw_pam <- function(dat,
         }
 
         # re-cluster the jackstraw data
-        pam.null <- pam(jackstraw.dat, k=k,
+        pam.null <- cluster::pam(jackstraw.dat, k=k,
             medoids = pam.dat$id.med,
             ...)
 
@@ -132,7 +130,7 @@ jackstraw_pam <- function(dat,
     # compute p-values
     p.F <- vector("numeric", m)
     if(pool) {
-      p.F <- empPvals(F.obs, as.vector(unlist(F.null)))
+      p.F <- qvalue::empPvals(F.obs, as.vector(unlist(F.null)))
     } else {
       for (i in 1:k) {
           # warn about a relatively low
@@ -144,7 +142,7 @@ jackstraw_pam <- function(dat,
                   "]."))
           }
           p.F[pam.dat$clustering ==
-              i] <- empPvals(F.obs[pam.dat$clustering ==
+              i] <- qvalue::empPvals(F.obs[pam.dat$clustering ==
               i], F.null[[i]])
       }
     }

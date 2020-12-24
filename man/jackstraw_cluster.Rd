@@ -9,7 +9,7 @@ jackstraw_cluster(
   k,
   cluster = NULL,
   centers = NULL,
-  algorithm = function(x, centers) kmeans(x, centers, ...),
+  algorithm = function(x, centers) stats::kmeans(x, centers, ...),
   s = 1,
   B = 1000,
   center = TRUE,
@@ -29,7 +29,7 @@ jackstraw_cluster(
 
 \item{centers}{a matrix of all cluster centers.}
 
-\item{algorithm}{a clustering algorithm to use, where an output must include `cluster` and `centers`. For exact specification, see \code{kmeans}.}
+\item{algorithm}{a clustering algorithm to use, where an output must include `cluster` and `centers`. For exact specification, see \code{\link[stats]{kmeans}}.}
 
 \item{s}{a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.}
 

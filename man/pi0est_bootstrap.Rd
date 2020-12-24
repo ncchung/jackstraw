@@ -7,15 +7,11 @@
 pi0est_bootstrap(p = NULL, lambda = seq(0, 0.9, 0.05), robust = FALSE)
 }
 \arguments{
+\item{p}{a vector of p-values.}
+
 \item{lambda}{the value of the tuning parameter to estimate pi0 (optional)}
 
 \item{robust}{an indicator of whether it is desired to make the estimate more robust for small p-values and a direct finite sample estimate of pFDR (optional)}
-
-\item{pvalue}{a vector of p-values.}
-
-\item{verbose}{print a progress}
-
-\item{...}{optional arguments to control a local FDR estimation.}
 }
 \value{
 \code{pi0est_bootstrap} returns a pi0 estimate
