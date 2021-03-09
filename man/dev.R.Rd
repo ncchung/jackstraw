@@ -11,7 +11,8 @@ dev.R(dat, LFr1, LFr0 = NULL, p = FALSE)
 
 \item{LFr1}{alternative logistic factors (an output from lfa or lfa.corpcor)}
 
-\item{LFr0}{null logistic factors (an output from lfa or lfa.corpcor)}
+\item{LFr0}{null logistic factors (an output from lfa or lfa.corpcor).
+If `NULL` (default), intercept-only model is used here.}
 
 \item{p}{estimate p-values (by default, 'FALSE')}
 }

@@ -7,14 +7,15 @@
 jackstraw_cluster(
   dat,
   k,
-  cluster = NULL,
-  centers = NULL,
-  algorithm = function(x, centers) stats::kmeans(x, centers, ...),
+  cluster,
+  centers,
+  algorithm = function(x, centers, ...) stats::kmeans(x, centers, ...),
   s = 1,
   B = 1000,
   center = TRUE,
   noise = NULL,
   covariate = NULL,
+  pool = TRUE,
   verbose = FALSE,
   seed = NULL,
   ...
@@ -41,11 +42,13 @@ jackstraw_cluster(
 
 \item{covariate}{a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.}
 
+\item{pool}{a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.}
+
 \item{verbose}{a logical specifying to print the computational progress. By default, \code{FALSE}.}
 
 \item{seed}{a seed for the random number generator.}
 
-\item{...}{optional arguments to control the clustering algorithm.}
+\item{...}{additional, optional arguments to `algorithm`.}
 }
 \value{
 \code{jackstraw_cluster} returns a list consisting of

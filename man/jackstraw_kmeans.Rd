@@ -27,7 +27,7 @@ jackstraw_kmeans(
 
 \item{B}{a number of resampling iterations.}
 
-\item{center}{a logical specifying to center the rows. By default, \code{TRUE}.}
+\item{center}{a logical specifying to center the rows of the null samples. By default, \code{TRUE}.}
 
 \item{covariate}{a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.}
 

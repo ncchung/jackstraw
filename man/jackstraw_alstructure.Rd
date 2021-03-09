@@ -6,10 +6,9 @@
 \usage{
 jackstraw_alstructure(
   dat,
-  FUN = function(x) t(alstructure::alstructure(x, d_hat = r, svd_method =
-    "truncated_svd", tol = 0.001, max_iters = 1000)$Q_hat[, , drop = FALSE]),
+  r,
+  FUN = function(x) t(alstructure::alstructure(x, d_hat = r)$Q_hat),
   devR = FALSE,
-  r = NULL,
   r1 = NULL,
   s = NULL,
   B = NULL,
@@ -21,11 +20,11 @@ jackstraw_alstructure(
 \arguments{
 \item{dat}{a genotype matrix with \code{m} rows as variables and \code{n} columns as observations.}
 
+\item{r}{a number of significant LFs.}
+
 \item{FUN}{a function to ALStructure}
 
 \item{devR}{use a R function to compute deviance. By default, FALSE (uses C++).}
-
-\item{r}{a number of significant LFs.}
 
 \item{r1}{a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).}
 

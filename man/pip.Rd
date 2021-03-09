@@ -4,14 +4,19 @@
 \alias{pip}
 \title{Compute posterior inclusion probabilities (PIPs)}
 \usage{
-pip(pvalue, group = NULL, pi0 = NULL, ...)
+pip(pvalue, group = NULL, pi0 = NULL, verbose = TRUE, ...)
 }
 \arguments{
 \item{pvalue}{a vector of p-values.}
 
-\item{group}{a vector of group indicators (optional).}
+\item{group}{a vector of group indicators (optional).
+If provided, PIP analysis is stratified.
+Assumes groups are in 1:k where k is the number of unique groups.}
 
-\item{pi0}{a vector of pi0 values (optional)}
+\item{pi0}{a vector of pi0 values (optional).
+Its length has to be either 1 or equal the number of groups.}
+
+\item{verbose}{If TRUE, reports information.}
 
 \item{...}{optional arguments for \code{\link[qvalue]{lfdr}} to control a local FDR estimation.}
 }

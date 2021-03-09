@@ -6,8 +6,8 @@
 \usage{
 jackstraw_pca(
   dat,
-  r1 = NULL,
   r = NULL,
+  r1 = NULL,
   s = NULL,
   B = NULL,
   covariate = NULL,
@@ -18,9 +18,9 @@ jackstraw_pca(
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}
 
-\item{r1}{a numeric vector of principal components of interest. Choose a subset of \code{r} significant PCs to be used.}
-
 \item{r}{a number (a positive integer) of significant principal components. See \link{permutationPA} and other methods.}
+
+\item{r1}{a numeric vector of principal components of interest. Choose a subset of \code{r} significant PCs to be used.}
 
 \item{s}{a number (a positive integer) of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.}
 

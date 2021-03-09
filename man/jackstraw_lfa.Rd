@@ -6,9 +6,9 @@
 \usage{
 jackstraw_lfa(
   dat,
-  FUN = function(x) lfa::lfa(x, r)[, , drop = FALSE],
+  r,
+  FUN = function(x) lfa::lfa(x, r),
   devR = FALSE,
-  r = NULL,
   r1 = NULL,
   s = NULL,
   B = NULL,
@@ -20,11 +20,11 @@ jackstraw_lfa(
 \arguments{
 \item{dat}{a genotype matrix with \code{m} rows as variables and \code{n} columns as observations.}
 
+\item{r}{a number of significant LFs.}
+
 \item{FUN}{a function to use for LFA (by default, it uses the lfa package)}
 
 \item{devR}{use a R function to compute deviance. By default, FALSE (uses C++).}
-
-\item{r}{a number of significant LFs.}
 
 \item{r1}{a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).}
 
@@ -52,7 +52,6 @@ This function uses logistic factor analysis (LFA) from Wei et al. (2014). Partic
 (the full model with \code{r} LFs vs. the intercept-only model) is used to assess association.
 }
 \examples{
-set.seed(1234)
 \dontrun{
 ## simulate genotype data from a logistic factor model: drawing rbinom from logit(BL)
 m <- 5000; n <- 100; pi0 <- .9
@@ -67,10 +66,10 @@ prob <- exp(BL)/(1+exp(BL))
 dat <- matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 
 ## apply the jackstraw_lfa
-out <- jackstraw_lfa(dat, 2)
+out <- jackstraw_lfa(dat, r = 2)
 
 ## apply the jackstraw_lfa using self-contained R functions
-out <- jackstraw_lfa(dat, FUN = function(x) lfa.corpcor(x, 2)[, , drop = FALSE], r = 2, devR = TRUE)
+out <- jackstraw_lfa(dat, r = 2, FUN = function(x) lfa.corpcor(x, 2)[, , drop = FALSE], devR = TRUE)
 }
 
 }

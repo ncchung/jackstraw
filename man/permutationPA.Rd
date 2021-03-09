@@ -19,8 +19,8 @@ permutationPA(dat, B = 100, threshold = 0.05, verbose = TRUE, seed = NULL)
 }
 \value{
 \code{permutationPA} returns
-\item{p}{a list of p-values for significance of principal components}
 \item{r}{an estimated number of significant principal components based on thresholding p-values at \code{threshold}}
+\item{p}{a list of p-values for significance of principal components}
 }
 \description{
 Estimate a number of significant principal components from a permutation test.

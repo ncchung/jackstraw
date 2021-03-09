@@ -43,70 +43,96 @@
 #' }
 #' 
 #' @export
-jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
-    kmeans.dat, s = NULL, B = NULL, center = TRUE,
-    covariate = NULL, verbose = FALSE,
-    pool = TRUE, seed = NULL, ...) {
-    if (is.null(seed))
-        set.seed(seed)
+jackstraw_kmeanspp <- function(
+                               dat,
+                               kmeans.dat,
+                               s = NULL,
+                               B = NULL,
+                               center = TRUE,
+                               covariate = NULL,
+                               verbose = FALSE,
+                               pool = TRUE,
+                               seed = NULL,
+                               ...
+                               ) {
+    # check mandatory data
+    if ( missing( dat ) )
+        stop( '`dat` is required!' )
+    if ( missing( kmeans.dat ) )
+        stop( '`kmeans.dat` is required!' )
+    if ( !is.matrix( dat ) )
+        stop( '`dat` must be a matrix!' )
+    if ( !methods::is( kmeans.dat, "k-means clustering" ) )
+        stop( "`kmeans.dat` must be an object of class `k-means clustering`. See ?ClusterR::KMeans_rcpp." )
+    
     m <- nrow(dat)
     n <- ncol(dat)
+    
+    # if there are covariates, the dimensions must agree
+    # covariate can be either a vector or a matrix, test both cases
+    if ( !is.null( covariate ) ) {
+        if ( is.matrix( covariate ) ) {
+            if ( nrow( covariate ) != n )
+                stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
+        } else {
+            if ( length( covariate ) != n ) 
+                stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
+        }
+    }
+
+    if (is.null(seed))
+        set.seed(seed)
+    
     if (is.null(s)) {
-      s <- round(m/10)
-      message(paste0("A number of null variables (s) to be permuted is not specified: s=round(0.10*m)=",
-                     s, "."))
+        s <- round(m/10)
+        if (verbose)
+            message( "A number of null variables (s) to be permuted is not specified: s=round(0.10*m)=", s, "." )
     }
     if (is.null(B)) {
-      B <- round(m * 10/s)
-      message(paste0("A number of resampling iterations (B) is not specified: B=round(m*10/s)=",
-                     B, "."))
+        B <- round(m * 10/s)
+        if (verbose)
+            message( "A number of resampling iterations (B) is not specified: B=round(m*10/s)=", B, "." )
     }
 
-    ## sanity check
-    if (!methods::is(kmeans.dat,"k-means clustering")) {
-      stop("`kmeans.dat` must be an object of class `k-means clustering`. See ?ClusterR::KMeans_rcpp.")
-    }
     k <- nrow(kmeans.dat$centroids)
 
-    if (verbose == TRUE) {
-        cat(paste0("\nComputating null statistics (",
-            B, " total iterations): "))
-    }
+    if (verbose)
+        cat(paste0("\nComputating null statistics (", B, " total iterations): "))
 
     # compute the observed
     # statistics between rows and
     # cluster centers
-    F.obs <- vector("numeric",
-        m)
+    F.obs <- vector("numeric", m)
     for (i in 1:k) {
-        F.obs[kmeans.dat$clusters ==
-            i] <- FSTAT(dat[kmeans.dat$clusters ==
-            i, , drop = FALSE],
-            LV = t(kmeans.dat$centroids[i,
-                , drop = FALSE]),
-            covariate = covariate)$fstat
+        F.obs[kmeans.dat$clusters == i] <- FSTAT(
+            dat[kmeans.dat$clusters == i, , drop = FALSE],
+            LV = t(kmeans.dat$centroids[i, , drop = FALSE]),
+            covariate = covariate
+        )$fstat
     }
 
     # set-up empty matrices for
     # null statistics
     F.null <- vector("list", length = k)
     for (j in 1:B) {
-        if (verbose == TRUE) {
+        if (verbose)
             cat(paste(j, " "))
-        }
-
+        
         jackstraw.dat <- dat
         # randomly choose s variables
         # to permute
         ind <- sample(seq(m), s)
-        jackstraw.dat[ind, ] <- apply(dat[ind,
-            , drop = FALSE], 1,
-            function(x) sample(x,
-                replace = TRUE))
-        if(center == TRUE) {
-          jackstraw.dat[ind, ] <- t(scale(t(jackstraw.dat[ind,
-              ]), center = TRUE, scale = FALSE))
-        }
+        jackstraw.dat[ind, ] <- apply(
+            dat[ind, , drop = FALSE],
+            1,
+            function(x) sample(x, replace = TRUE)
+        )
+        if (center)
+            jackstraw.dat[ind, ] <- t(scale(
+                t( jackstraw.dat[ ind, , drop = FALSE ] ),
+                center = TRUE,
+                scale = FALSE
+            ))
 
         # re-cluster the jackstraw data
         kmeans.null <- ClusterR::KMeans_rcpp(jackstraw.dat,clusters=k,
@@ -150,7 +176,12 @@ jackstraw_kmeanspp <- jackstraw_KMeans_rcpp <- function(dat,
       }
     }
 
-    return(list(call = match.call(),
-        F.obs = F.obs, F.null = F.null,
-        p.F = p.F))
+    return(
+        list(
+            call = match.call(),
+            F.obs = F.obs,
+            F.null = F.null,
+            p.F = p.F
+        )
+    )
 }

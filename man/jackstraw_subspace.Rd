@@ -6,8 +6,8 @@
 \usage{
 jackstraw_subspace(
   dat,
+  r,
   FUN,
-  r = NULL,
   r1 = NULL,
   s = NULL,
   B = NULL,
@@ -20,9 +20,9 @@ jackstraw_subspace(
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}
 
-\item{FUN}{optionally, provide a specfic function to estimate LVs. Must output \code{r} estimated LVs in a \code{n*r} matrix.}
-
 \item{r}{a number of significant latent variables.}
+
+\item{FUN}{Provide a specfic function to estimate LVs. Must output \code{r} estimated LVs in a \code{n*r} matrix.}
 
 \item{r1}{a numeric vector of latent variables of interest.}
 

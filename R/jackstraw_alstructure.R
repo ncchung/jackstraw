@@ -6,9 +6,9 @@
 #' (the full model with \code{r} LFs vs. the intercept-only model) is used to assess association.
 #'
 #' @param dat a genotype matrix with \code{m} rows as variables and \code{n} columns as observations.
+#' @param r a number of significant LFs.
 #' @param FUN a function to ALStructure
 #' @param devR use a R function to compute deviance. By default, FALSE (uses C++).
-#' @param r a number of significant LFs.
 #' @param r1 a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations. There will be a total of \code{s*B} null statistics.
@@ -28,9 +28,9 @@
 #' @export
 jackstraw_alstructure <- function(
                                   dat,
-                                  FUN = function(x) t( alstructure::alstructure(x, d_hat = r, svd_method = "truncated_svd", tol = 0.001, max_iters = 1000)$Q_hat[, , drop = FALSE] ),
+                                  r,
+                                  FUN = function(x) t( alstructure::alstructure(x, d_hat = r)$Q_hat ), # alstructure params: , max_iters = 1000, tol = 0.001, svd_method = "truncated_svd"
                                   devR = FALSE,
-                                  r = NULL,
                                   r1 = NULL,
                                   s = NULL,
                                   B = NULL,
@@ -38,25 +38,46 @@ jackstraw_alstructure <- function(
                                   verbose = TRUE,
                                   seed = NULL
                                   ) {
+    # check mandatory data
+    if ( missing( dat ) )
+        stop( '`dat` is required!' )
+    if ( missing( r ) )
+        stop( '`r` is required!' )
+    if ( !is.matrix( dat ) )
+        stop( '`dat` must be a matrix!' )
+
+    # more validations of mandatory parameters
+    m <- nrow(dat)
+    n <- ncol(dat)
+    if ( !(r > 0 && r < n) )
+        stop( "`r` is not in valid range between `1` and `n-1` (`n` is number of individuals)." )
+
+    # if there are covariates, the dimensions must agree
+    # covariate can be either a vector or a matrix, test both cases
+    if ( !is.null( covariate ) ) {
+        if ( is.matrix( covariate ) ) {
+            if ( nrow( covariate ) != n )
+                stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
+        } else {
+            if ( length( covariate ) != n ) 
+                stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
+        }
+    }
+
     if (!is.null(seed))
         set.seed(seed)
 
-    m <- dim(dat)[1]
-    n <- dim(dat)[2]
     if (is.null(s)) {
         s <- round(m/10)
-        message(paste0("A number of null variables (s) to be permuted is not specified: s=round(0.10*m)=",
-            s, "."))
+        if (verbose)
+            message("A number of null variables (s) to be permuted is not specified: s=round(0.10*m)=", s, ".")
     }
     if (is.null(B)) {
         B <- round(m * 10/s)
-        message(paste0("A number of resampling iterations (B) is not specified: B=round(m*10/s)=",
-            B, "."))
+        if (verbose)
+            message("A number of resampling iterations (B) is not specified: B=round(m*10/s)=", B, ".")
     }
 
-    if (!(r > 0 && r < n)) {
-        stop("r is not in valid range between 1 and n-1.")
-    }
     if (is.null(r1))
         r1 <- 1:r
     if (all(seq(r) %in% r1)) {
@@ -77,69 +98,78 @@ jackstraw_alstructure <- function(
     LFr <- FUN(dat)
     LFr1 <- LFr[, r1, drop = FALSE]
     if (r != ncol(LFr))
-        stop(paste0("The number of latent variables ",
-            r, "is not equal to the number of column(s) provided by ",
-            FUN))
+        stop( "The number of latent variables ", r, "is not equal to the number of column(s) provided by `FUN`" )
+    
     if (!is.null(r0))
         LFr0 <- LFr[, r0, drop = FALSE]
 
-    if (devR == FALSE) {
+    if (!devR) {
         ## see jackstraw:::devdiff
-        obs <- devdiff(dat,
-                       LF_alt = cbind(LFr, covariate),
-                       LF_null = cbind(LFr0, matrix(1, n, 1), covariate))
+        obs <- devdiff(
+            dat,
+            LF_alt = cbind(LFr, covariate),
+            LF_null = cbind(LFr0, matrix(1, n, 1), covariate)
+        )
     } else {
         ## compute a deviance from R base
-        obs <- dev.R(dat,
-                     LFr1 = cbind(LFr1, covariate),
-                     LFr0 = cbind(LFr0, covariate))
+        obs <- dev.R(
+            dat,
+            LFr1 = cbind(LFr1, covariate),
+            LFr0 = cbind(LFr0, covariate)
+        )
     }
 
     # Estimate null association
     # statistics
-    null <- matrix(0, nrow = s,
-        ncol = B)
+    null <- matrix(0, nrow = s, ncol = B)
     LFr0.js <- NULL
 
-    if (verbose == TRUE)
-        cat(paste0("\nComputating null statistics (",
-            B, " total iterations): "))
+    if (verbose)
+        cat(paste0("\nComputating null statistics (", B, " total iterations): "))
     for (i in 1:B) {
-        random.s <- sample(1:m,
-            size = s, replace = FALSE)
-        s.nulls <- t(apply(dat[random.s,
-            , drop = FALSE], 1,
-            function(x) sample(x)))
+        random.s <- sample(1:m, size = s, replace = FALSE)
+        s.nulls <- t(apply(
+            dat[random.s, , drop = FALSE],
+            1,
+            function(x) sample(x)
+        ))
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls
 
         LFr.js <- FUN(jackstraw.dat)
-        LFr1.js <- LFr.js[, r1,
-            drop = FALSE]
+        LFr1.js <- LFr.js[, r1, drop = FALSE]
         if (!is.null(r0))
-            LFr0.js <- LFr.js[,
-                r0, drop = FALSE]
+            LFr0.js <- LFr.js[, r0, drop = FALSE]
 
-        if (devR == FALSE) {
+        if (!devR) {
             ## see jackstraw:::devdiff
-            null[, i] <- devdiff(s.nulls,
+            null[, i] <- devdiff(
+                s.nulls,
                 LF_alt = cbind(LFr.js, covariate),
-                LF_null = cbind(LFr0.js, matrix(1, n, 1), covariate))
+                LF_null = cbind(LFr0.js, matrix(1, n, 1), covariate)
+            )
         } else {
             ## uses a deviance computation
             ## function from R base
-            null[, i] <- dev.R(s.nulls,
+            null[, i] <- dev.R(
+                s.nulls,
                 LFr1 = cbind(LFr1.js, covariate),
-                LFr0 = cbind(LFr0.js, covariate))
+                LFr0 = cbind(LFr0.js, covariate)
+            )
         }
 
-        if (verbose == TRUE)
+        if ( verbose )
             cat(paste(i, " "))
     }
 
     p.value <- qvalue::empPvals(as.vector(obs), as.vector(null))
 
-    return(list(call = match.call(),
-        p.value = p.value, obs.stat = obs,
-        null.stat = null))
+    return(
+        list(
+            call = match.call(),
+            p.value = p.value,
+            obs.stat = obs,
+            null.stat = null
+        )
+    )
 }

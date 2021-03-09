@@ -93,7 +93,8 @@ lfa.corpcor <- function(x, d, ltrace = FALSE) {
 #'
 #' @param dat a matrix with \code{m} rows and \code{n} columns.
 #' @param LFr1 alternative logistic factors (an output from lfa or lfa.corpcor)
-#' @param LFr0 null logistic factors (an output from lfa or lfa.corpcor)
+#' @param LFr0 null logistic factors (an output from lfa or lfa.corpcor).
+#' If `NULL` (default), intercept-only model is used here.
 #' @param p estimate p-values (by default, 'FALSE')
 #'
 #' @return When {p=FALSE} (by default), \code{dev.R} returns a vector of \code{m} deviances.
@@ -104,18 +105,18 @@ lfa.corpcor <- function(x, d, ltrace = FALSE) {
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 dev.R <- function(dat, LFr1, LFr0 = NULL, p = FALSE) {
     n <- ncol(dat)
-    # if(is.null(LFr0)) LFr0 = 1
     if (is.null(LFr0))
         LFr0 <- matrix(1, n, 1)
 
-    obs1 <- apply(dat, 1, function(x) stats::glm(cbind(x,
-        2 - x) ~ LFr1, family = stats::binomial(link = "logit"))$deviance)
-    obs0 <- apply(dat, 1, function(x) stats::glm(cbind(x,
-        2 - x) ~ LFr0, family = stats::binomial(link = "logit"))$deviance)
+    # these runs can produce warnings, silence them or this gets super annoying, especially in tests
+    obs1 <- apply(dat, 1, function(x) suppressWarnings( stats::glm(cbind(x,
+        2 - x) ~ LFr1, family = stats::binomial(link = "logit"))$deviance) )
+    obs0 <- apply(dat, 1, function(x) suppressWarnings( stats::glm(cbind(x,
+        2 - x) ~ LFr0, family = stats::binomial(link = "logit"))$deviance) )
 
     dev <- obs0 - obs1
 
-    if (p == TRUE) {
+    if ( p ) {
         p.value <- 1 - stats::pchisq(dev,
             ncol(LFr1) - ncol(LFr0))
         return(list(p.value = p.value,

@@ -25,8 +25,8 @@
 #' If \code{B} is not supplied, \code{B} is set to \code{m*10/s}.
 #'
 #' @param dat a data matrix with \code{m} rows as variables and \code{n} columns as observations.
-#' @param r1 a numeric vector of principal components of interest. Choose a subset of \code{r} significant PCs to be used.
 #' @param r a number (a positive integer) of significant principal components. See \link{permutationPA} and other methods.
+#' @param r1 a numeric vector of principal components of interest. Choose a subset of \code{r} significant PCs to be used.
 #' @param s a number (a positive integer) of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number (a positive integer) of resampling iterations. There will be a total of \code{s*B} null statistics.
 #' @param covariate a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).
@@ -63,34 +63,61 @@
 #' }
 #' 
 #' @export
-jackstraw_rpca <- jackstraw_rsvd <- function(dat,
-    r1 = NULL, r = NULL, s = NULL,
-    B = NULL, covariate = NULL,
-    verbose = TRUE, seed = NULL, ...) {
-    m <- dim(dat)[1]
-    n <- dim(dat)[2]
-    if (is.null(s)) {
-        s <- round(m/10)
-        message(paste0("A number of null variables (s) to be permuted is not specified: s=round(0.10*m)=",
-            s, "."))
+jackstraw_rpca <- function(
+                           dat,
+                           r = NULL,
+                           r1 = NULL,
+                           s = NULL,
+                           B = NULL,
+                           covariate = NULL,
+                           verbose = TRUE,
+                           seed = NULL,
+                           ...
+                           ) {
+    # check mandatory data
+    if ( missing( dat ) )
+        stop( '`dat` is required!' )
+    if ( !is.matrix( dat ) )
+        stop( '`dat` must be a matrix!' )
+
+    m <- nrow(dat)
+    n <- ncol(dat)
+
+    # if there are covariates, the dimensions must agree
+    # covariate can be either a vector or a matrix, test both cases
+    if ( !is.null( covariate ) ) {
+        if ( is.matrix( covariate ) ) {
+            if ( nrow( covariate ) != n )
+                stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
+        } else {
+            if ( length( covariate ) != n ) 
+                stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
+        }
     }
-    if (is.null(B)) {
-        B <- round(m * 10/s)
-        message(paste0("A number of resampling iterations (B) is not specified: B=round(m*10/s)=",
-            B, "."))
-    }
-    if (!is.null(seed))
-        set.seed(seed)
+
     if (is.null(r)) {
         warning("The number of significant PCs (r) is missing; this is strongly advised to determine r using appropriate statistical and graphical criteria.")
-        r <- permutationPA(dat = dat,
-            threshold = 0.05, verbose = verbose)$r
-        message(paste0("Permutation Parallel Analysis, with a threshold of 0.05, estimated r = ",
-            r, "."))
+        r <- permutationPA(dat = dat, threshold = 0.05, verbose = verbose)$r
+        message( "Permutation Parallel Analysis, with a threshold of 0.05, estimated r = ", r, "." )
     }
     if (!(r > 0 && r < n)) {
         stop("r is not in valid range between 1 and n-1.")
     }
+    
+    if (is.null(s)) {
+        s <- round(m/10)
+        if (verbose)
+            message( "A number of null variables (s) to be permuted is not specified: s=round(0.10*m)=", s, "." )
+    }
+    if (is.null(B)) {
+        B <- round(m * 10/s)
+        if (verbose)
+            message( "A number of resampling iterations (B) is not specified: B=round(m*10/s)=", B, "." )
+    }
+    
+    if (!is.null(seed))
+        set.seed(seed)
+    
     if (is.null(r1))
         r1 <- 1:r
     if (all(seq(r) %in% r1)) {
@@ -106,47 +133,56 @@ jackstraw_rpca <- jackstraw_rsvd <- function(dat,
     svd.dat <- rsvd::rsvd(dat, k=r, ...)
     LV <- svd.dat$v[, r1, drop = FALSE]
     if (!is.null(r0))
-        ALV <- svd.dat$v[, r0,
-            drop = FALSE]
+        ALV <- svd.dat$v[, r0, drop = FALSE]
 
-    obs <- FSTAT(dat = dat, LV = LV,
-        ALV = ALV, covariate = covariate)$fstat
+    obs <- FSTAT(
+        dat = dat,
+        LV = LV,
+        ALV = ALV,
+        covariate = covariate
+    )$fstat
 
     # Estimate null association
     # statistics
-    null <- matrix(0, nrow = s,
-        ncol = B)
+    null <- matrix(0, nrow = s, ncol = B)
     ALV.js <- NULL
 
-    if (verbose == TRUE)
-        cat(paste0("\nComputating null statistics (",
-            B, " total iterations): "))
+    if ( verbose )
+        cat(paste0("\nComputating null statistics (", B, " total iterations): "))
+    
     for (i in 1:B) {
-        random.s <- sample(1:m,
-            size = s, replace = FALSE)
-        s.nulls <- t(apply(dat[random.s,
-            , drop = FALSE], 1,
-            function(x) sample(x)))
+        random.s <- sample(1:m, size = s, replace = FALSE)
+        s.nulls <- t(apply(
+            dat[random.s, , drop = FALSE],
+            1,
+            function(x) sample(x)
+        ))
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls
 
         svd.jackstraw.dat <- rsvd::rsvd(jackstraw.dat, k=r, ...)
-        LV.js <- svd.jackstraw.dat$v[,
-            r1, drop = FALSE]
+        LV.js <- svd.jackstraw.dat$v[, r1, drop = FALSE]
         if (!is.null(r0))
-            ALV.js <- svd.jackstraw.dat$v[,
-                r0, drop = FALSE]
-        null[, i] <- FSTAT(dat = s.nulls,
-            LV = LV.js, ALV = ALV.js,
-            covariate = covariate)$fstat
+            ALV.js <- svd.jackstraw.dat$v[, r0, drop = FALSE]
+        null[, i] <- FSTAT(
+            dat = s.nulls,
+            LV = LV.js,
+            ALV = ALV.js,
+            covariate = covariate
+        )$fstat
 
-        if (verbose == TRUE)
+        if ( verbose )
             cat(paste(i, " "))
     }
 
     p.value <- qvalue::empPvals(as.vector(obs), as.vector(null))
 
-    return(list(call = match.call(),
-        p.value = p.value, obs.stat = obs,
-        null.stat = null))
+    return(
+        list(
+            call = match.call(),
+            p.value = p.value,
+            obs.stat = obs,
+            null.stat = null
+        )
+    )
 }
