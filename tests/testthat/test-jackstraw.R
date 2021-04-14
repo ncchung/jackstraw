@@ -64,6 +64,8 @@ test_that( "pip works", {
     pvalue <- runif( m )
     group <- sample( d, m, replace = TRUE )
     pi0 <- runif( d )
+    # to prevent some qvalue-specific errors, ensure one p-value is 1
+    pvalue[1] <- 1
 
     # try some errors on purpose
     # only pvalue is mandatory
@@ -115,15 +117,15 @@ test_that( "pip works", {
     # expect_true( all( prob <= 0 ) ) # not true!
 })
 
-test_that("dev.R and devdiff works", {
+test_that("devdiff works", {
     # these are not "silent"
     # # Warning message:
     # # glm.fit: fitted probabilities numerically 0 or 1 occurred
     # we must use `suppressWarnings`, otherwise these warnings show up as testing errors
 
-    # version without p-values
-    suppressWarnings(
-        dev <- dev.R( X, LF1, LF0 )
+    # now use devdiff, should give the same answer
+    expect_silent(
+        dev <- devdiff( X, LF1, LF0 )
     )
     # what do we expect from this?
     # ideally there are no negatives, but it turns out there are
@@ -131,28 +133,6 @@ test_that("dev.R and devdiff works", {
     expect_true( is.numeric( dev ) )
     # no missing cases
     expect_true( !anyNA( dev ) )
-
-    # now use devdiff, should give the same answer
-    expect_silent(
-        dev2 <- devdiff( X, LF1, LF0 )
-    )
-    expect_equal( dev2, dev )
-    
-    # repeat dev.R version but with p-values
-    suppressWarnings(
-        obj <- dev.R( X, LF1, LF0, p = TRUE )
-    )
-    # the deviance should be the same either way
-    expect_equal( obj$dev, dev )
-    # look at the p-values
-    # negative deviances result in p-values of 1, so that works out
-    # have numbers
-    expect_true( is.numeric( obj$p.value ) )
-    # no missing cases
-    expect_true( !anyNA( obj$p.value ) )
-    # expected p-value range
-    expect_true( all( obj$p.value >= 0 ) )
-    expect_true( all( obj$p.value <= 1 ) )
 })
 
 test_that( "RSS works" , {
@@ -341,12 +321,9 @@ test_that( "jackstraw_lfa works", {
     
     # perform a basic run
 
-    ## # compare to other version of same run by fixing seed
-    ## seed <- 1
-    
     # make it silent so we can focus on problem messages
     expect_silent(
-        obj <- jackstraw_lfa( X, r = d, s = s, B = B, verbose = FALSE ) # , seed = seed
+        obj <- jackstraw_lfa( X, r = d, s = s, B = B, verbose = FALSE )
     )
     # check basic jackstraw return object
     test_jackstraw_return_val( obj, s, B )
@@ -372,16 +349,6 @@ test_that( "jackstraw_lfa works", {
     # bad fits cause errors randomly, which are rare but over 100 loci it gets less rare
     # also, things get very slow
     
-    ## # repeat with dev.R version
-    ## expect_silent(
-    ##     obj2 <- jackstraw_lfa( X, r = d, s = s, B = B, verbose = FALSE, seed = seed, devR = TRUE )
-    ## )
-    ## # remove "call" for these comparisons
-    ## obj$call <- NULL
-    ## obj2$call <- NULL
-    ## # these should match perfectly now
-    ## expect_equal( obj2, obj )
-
     # test version with covariates
     expect_silent(
         obj <- jackstraw_lfa( X, r = d, s = s, B = B, covariate = covariate, verbose = FALSE )

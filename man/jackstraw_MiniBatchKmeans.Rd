@@ -12,7 +12,6 @@ jackstraw_MiniBatchKmeans(
   center = TRUE,
   covariate = NULL,
   verbose = FALSE,
-  seed = NULL,
   batch_size = floor(nrow(dat)/100),
   initializer = "kmeans++",
   pool = TRUE,
@@ -33,8 +32,6 @@ jackstraw_MiniBatchKmeans(
 \item{covariate}{a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.}
 
 \item{verbose}{a logical specifying to print the computational progress. By default, \code{FALSE}.}
-
-\item{seed}{a seed for the random number generator.}
 
 \item{batch_size}{the size of the mini batches.}
 
@@ -63,7 +60,6 @@ and protects against an anti-conservative bias.
 \examples{
 \dontrun{
 library(ClusterR)
-set.seed(1234)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = 2, batch_size = 300,
 initializer = "kmeans++")

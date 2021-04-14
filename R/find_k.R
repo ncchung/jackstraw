@@ -31,7 +31,6 @@ find_k <- function() {
 #' @param B a number (a positive integer) of resampling iterations.
 #' @param threshold a numeric value between 0 and 1 to threshold p-values.
 #' @param verbose a logical indicator as to whether to print the progress.
-#' @param seed a seed for the random number generator.
 #'
 #' @return \code{permutationPA} returns
 #' \item{r}{an estimated number of significant principal components based on thresholding p-values at \code{threshold}}
@@ -43,8 +42,7 @@ permutationPA <- function(
                           dat,
                           B = 100,
                           threshold = 0.05,
-                          verbose = TRUE,
-                          seed = NULL
+                          verbose = TRUE
                           ) {
     # check mandatory data
     if ( missing( dat ) )
@@ -55,9 +53,6 @@ permutationPA <- function(
     n <- ncol(dat)
     m <- nrow(dat)
 
-    if (!is.null(seed))
-        set.seed(seed)
-    
     uu <- corpcor::fast.svd(dat, tol = 0)
     ndf <- n - 1
     # looks like a sort of variance explained

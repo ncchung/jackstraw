@@ -19,7 +19,6 @@
 #' @param match a logical specifying to match the observed clusters and jackstraw clusters using minimum Euclidean distances.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
-#' @param seed a seed for the random number generator.
 #' @param ... optional arguments to control the k-means clustering algorithm (refers to \code{kmeans}).
 #'
 #' @return \code{jackstraw_kmeans} returns a list consisting of
@@ -31,7 +30,6 @@
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 #' @examples
 #' \dontrun{
-#' set.seed(1234)
 #' dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 #' kmeans.dat <- kmeans(dat, centers=2, nstart = 10, iter.max = 100)
 #' jackstraw.out <- jackstraw_kmeans(dat, kmeans.dat)
@@ -48,7 +46,6 @@ jackstraw_kmeans <- function(
                              match = TRUE,
                              pool = TRUE,
                              verbose = FALSE,
-                             seed = NULL,
                              ...
                              ) {
     # check mandatory data
@@ -76,9 +73,6 @@ jackstraw_kmeans <- function(
         }
     }
 
-    if (is.null(seed))
-        set.seed(seed)
-    
     if (is.null(s)) {
         s <- round(m/10)
         if (verbose)

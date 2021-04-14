@@ -30,46 +30,6 @@ devdiff <- function(X, LF_alt,
     )
 }
 
-#' Difference in Deviances, in Parallel
-#'
-#' @param X a data matrix.
-#' @param LF_alt Observed logistic factors.
-#' @param LF_null Null logistic factors.
-#' @author Wei Hao
-#'
-#' @keywords internal
-devdiff_parallel <- function(X,
-    LF_alt, LF_null = NULL, numcores = 1) {
-    if (is.null(LF_null)) {
-        LF_null <- matrix(1, ncol(X),
-            1)
-    }
-
-    m <- nrow(X)
-
-    devdiff_parallel_snp <- function(snp,
-        LF_alt, LF_null) {
-        p0 <- lfa::af_snp(snp, LF_null)
-        p1 <- lfa::af_snp(snp, LF_alt)
-
-        devalt <- sum(snp * log(p1) +
-            (2 - snp) * log(1 -
-                p1))
-        devnull <- sum(snp * log(p0) +
-            (2 - snp) * log(1 -
-                p0))
-
-        -2 * (devnull - devalt)
-    }
-
-
-    simplify2array( parallel::mclapply(1:m,
-        function(i) {
-            devdiff_parallel_snp(X[i,
-                ], LF_alt, LF_null)
-        }, mc.cores = numcores))
-}
-
 #' Mcfadden's Pseudo R-sqaured
 #'
 #' @param X a data matrix.

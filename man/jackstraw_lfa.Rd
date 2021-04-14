@@ -8,13 +8,11 @@ jackstraw_lfa(
   dat,
   r,
   FUN = function(x) lfa::lfa(x, r),
-  devR = FALSE,
   r1 = NULL,
   s = NULL,
   B = NULL,
   covariate = NULL,
-  verbose = TRUE,
-  seed = NULL
+  verbose = TRUE
 )
 }
 \arguments{
@@ -23,8 +21,6 @@ jackstraw_lfa(
 \item{r}{a number of significant LFs.}
 
 \item{FUN}{a function to use for LFA (by default, it uses the lfa package)}
-
-\item{devR}{use a R function to compute deviance. By default, FALSE (uses C++).}
 
 \item{r1}{a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).}
 
@@ -35,8 +31,6 @@ jackstraw_lfa(
 \item{covariate}{a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).}
 
 \item{verbose}{a logical specifying to print the computational progress.}
-
-\item{seed}{a seed for the random number generator.}
 }
 \value{
 \code{jackstraw_lfa} returns a list consisting of
@@ -67,9 +61,6 @@ dat <- matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 
 ## apply the jackstraw_lfa
 out <- jackstraw_lfa(dat, r = 2)
-
-## apply the jackstraw_lfa using self-contained R functions
-out <- jackstraw_lfa(dat, r = 2, FUN = function(x) lfa.corpcor(x, 2)[, , drop = FALSE], devR = TRUE)
 }
 
 }

@@ -20,7 +20,6 @@
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
-#' @param seed a seed for the random number generator.
 #' @param ... optional arguments to control the k-means clustering algorithm (refers to \code{kmeans}).
 #'
 #' @return \code{jackstraw_pam} returns a list consisting of
@@ -33,7 +32,6 @@
 #' @examples
 #' \dontrun{
 #' library(cluster)
-#' set.seed(1234)
 #' dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 #' pam.dat <- pam(dat, k=2)
 #' jackstraw.out <- jackstraw_pam(dat, pam.dat = pam.dat)
@@ -49,7 +47,6 @@ jackstraw_pam <- function(
                           covariate = NULL,
                           verbose = FALSE,
                           pool = TRUE,
-                          seed = NULL,
                           ...
                           ) {
     # check mandatory data
@@ -77,9 +74,6 @@ jackstraw_pam <- function(
         }
     }
 
-    if (is.null(seed))
-        set.seed(seed)
-    
     if (is.null(s)) {
         s <- round(m/10)
         if (verbose)

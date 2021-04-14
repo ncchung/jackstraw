@@ -22,7 +22,6 @@
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
-#' @param seed a seed for the random number generator.
 #' @param ... optional arguments to control the k-means clustering algorithm (refers to \code{ClusterR::KMeans_rcpp}).
 #'
 #' @return \code{jackstraw_kmeanspp} returns a list consisting of
@@ -34,7 +33,6 @@
 #' @references Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
 #' @examples
 #' \dontrun{
-#' set.seed(1234)
 #' library(ClusterR)
 #' dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 #' kmeans.dat <- KMeans_rcpp(dat,  clusters = 10, num_init = 1,
@@ -52,7 +50,6 @@ jackstraw_kmeanspp <- function(
                                covariate = NULL,
                                verbose = FALSE,
                                pool = TRUE,
-                               seed = NULL,
                                ...
                                ) {
     # check mandatory data
@@ -80,9 +77,6 @@ jackstraw_kmeanspp <- function(
         }
     }
 
-    if (is.null(seed))
-        set.seed(seed)
-    
     if (is.null(s)) {
         s <- round(m/10)
         if (verbose)

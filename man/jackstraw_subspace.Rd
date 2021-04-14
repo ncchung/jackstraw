@@ -13,8 +13,7 @@ jackstraw_subspace(
   B = NULL,
   covariate = NULL,
   noise = NULL,
-  verbose = TRUE,
-  seed = NULL
+  verbose = TRUE
 )
 }
 \arguments{
@@ -35,8 +34,6 @@ jackstraw_subspace(
 \item{noise}{specify a parametric distribution to generate a noise term. If \code{NULL}, a non-parametric jackstraw test is performed.}
 
 \item{verbose}{a logical specifying to print the computational progress.}
-
-\item{seed}{a seed for the random number generator.}
 }
 \value{
 \code{jackstraw_subspace} returns a list consisting of
@@ -57,7 +54,6 @@ This function allows you to specify a parametric distribution of a noise term. I
 are replaced by synthetic null variables generated from a specified distribution.
 }
 \examples{
-set.seed(1234)
 ## simulate data from a latent variable model: Y = BL + E
 B = c(rep(1,50),rep(-1,50), rep(0,900))
 L = rnorm(20)

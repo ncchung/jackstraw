@@ -8,13 +8,11 @@
 #' @param dat a genotype matrix with \code{m} rows as variables and \code{n} columns as observations.
 #' @param r a number of significant LFs.
 #' @param FUN a function to ALStructure
-#' @param devR use a R function to compute deviance. By default, FALSE (uses C++).
 #' @param r1 a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations. There will be a total of \code{s*B} null statistics.
 #' @param covariate a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).
 #' @param verbose a logical specifying to print the computational progress.
-#' @param seed a seed for the random number generator.
 #'
 #' @return \code{jackstraw_alstructure} returns a list consisting of
 #' \item{p.value}{\code{m} p-values of association tests between variables and their LFs}
@@ -30,13 +28,11 @@ jackstraw_alstructure <- function(
                                   dat,
                                   r,
                                   FUN = function(x) t( alstructure::alstructure(x, d_hat = r)$Q_hat ), # alstructure params: , max_iters = 1000, tol = 0.001, svd_method = "truncated_svd"
-                                  devR = FALSE,
                                   r1 = NULL,
                                   s = NULL,
                                   B = NULL,
                                   covariate = NULL,
-                                  verbose = TRUE,
-                                  seed = NULL
+                                  verbose = TRUE
                                   ) {
     # check mandatory data
     if ( missing( dat ) )
@@ -63,9 +59,6 @@ jackstraw_alstructure <- function(
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
-
-    if (!is.null(seed))
-        set.seed(seed)
 
     if (is.null(s)) {
         s <- round(m/10)
@@ -103,21 +96,11 @@ jackstraw_alstructure <- function(
     if (!is.null(r0))
         LFr0 <- LFr[, r0, drop = FALSE]
 
-    if (!devR) {
-        ## see jackstraw:::devdiff
-        obs <- devdiff(
-            dat,
-            LF_alt = cbind(LFr, covariate),
-            LF_null = cbind(LFr0, matrix(1, n, 1), covariate)
-        )
-    } else {
-        ## compute a deviance from R base
-        obs <- dev.R(
-            dat,
-            LFr1 = cbind(LFr1, covariate),
-            LFr0 = cbind(LFr0, covariate)
-        )
-    }
+    obs <- devdiff(
+        dat,
+        LF_alt = cbind(LFr, covariate),
+        LF_null = cbind(LFr0, matrix(1, n, 1), covariate)
+    )
 
     # Estimate null association
     # statistics
@@ -141,22 +124,11 @@ jackstraw_alstructure <- function(
         if (!is.null(r0))
             LFr0.js <- LFr.js[, r0, drop = FALSE]
 
-        if (!devR) {
-            ## see jackstraw:::devdiff
-            null[, i] <- devdiff(
-                s.nulls,
-                LF_alt = cbind(LFr.js, covariate),
-                LF_null = cbind(LFr0.js, matrix(1, n, 1), covariate)
-            )
-        } else {
-            ## uses a deviance computation
-            ## function from R base
-            null[, i] <- dev.R(
-                s.nulls,
-                LFr1 = cbind(LFr1.js, covariate),
-                LFr0 = cbind(LFr0.js, covariate)
-            )
-        }
+        null[, i] <- devdiff(
+            s.nulls,
+            LF_alt = cbind(LFr.js, covariate),
+            LF_null = cbind(LFr0.js, matrix(1, n, 1), covariate)
+        )
 
         if ( verbose )
             cat(paste(i, " "))

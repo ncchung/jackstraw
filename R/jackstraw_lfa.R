@@ -8,13 +8,11 @@
 #' @param dat a genotype matrix with \code{m} rows as variables and \code{n} columns as observations.
 #' @param r a number of significant LFs.
 #' @param FUN a function to use for LFA (by default, it uses the lfa package)
-#' @param devR use a R function to compute deviance. By default, FALSE (uses C++).
 #' @param r1 a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations. There will be a total of \code{s*B} null statistics.
 #' @param covariate a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).
 #' @param verbose a logical specifying to print the computational progress.
-#' @param seed a seed for the random number generator.
 #'
 #' @return \code{jackstraw_lfa} returns a list consisting of
 #' \item{p.value}{\code{m} p-values of association tests between variables and their LFs}
@@ -41,9 +39,6 @@
 #'
 #' ## apply the jackstraw_lfa
 #' out <- jackstraw_lfa(dat, r = 2)
-#'
-#' ## apply the jackstraw_lfa using self-contained R functions
-#' out <- jackstraw_lfa(dat, r = 2, FUN = function(x) lfa.corpcor(x, 2)[, , drop = FALSE], devR = TRUE)
 #' }
 #' 
 #' @export
@@ -51,13 +46,11 @@ jackstraw_lfa <- function(
                           dat,
                           r,
                           FUN = function(x) lfa::lfa(x, r),
-                          devR = FALSE,
                           r1 = NULL,
                           s = NULL,
                           B = NULL,
                           covariate = NULL,
-                          verbose = TRUE,
-                          seed = NULL
+                          verbose = TRUE
                           ) {
     # check mandatory data
     if ( missing( dat ) )
@@ -85,9 +78,6 @@ jackstraw_lfa <- function(
         }
     }
 
-    if (!is.null(seed))
-        set.seed(seed)
-    
     if (is.null(s)) {
         s <- round(m/10)
         if (verbose)
@@ -123,21 +113,11 @@ jackstraw_lfa <- function(
     if (!is.null(r0))
         LFr0 <- LFr[, r0, drop = FALSE]
 
-    if ( devR ) {
-        ## uses a deviance computation from R base
-        obs <- dev.R(
-            dat,
-            LFr1 = cbind( LFr1, covariate ),
-            LFr0 = cbind( LFr0, covariate )
-        )
-    } else {
-        ## jackstraw:::devdiff
-        obs <- devdiff(
-            dat,
-            LF_alt = cbind(LFr, covariate),
-            LF_null = cbind(LFr0, matrix(1, n, 1), covariate)
-        )
-    }
+    obs <- devdiff(
+        dat,
+        LF_alt = cbind(LFr, covariate),
+        LF_null = cbind(LFr0, matrix(1, n, 1), covariate)
+    )
     
     # Estimate null association
     # statistics
@@ -161,21 +141,11 @@ jackstraw_lfa <- function(
         if (!is.null(r0))
             LFr0.js <- LFr.js[, r0, drop = FALSE]
 
-        if ( devR ) {
-            ## deviance computation from R base
-            null[, i] <- dev.R(
-                s.nulls,
-                LFr1 = cbind(LFr1.js, covariate),
-                LFr0 = cbind(LFr0.js, covariate)
-            )
-        } else {
-            ## jackstraw:::devdiff originally from lfa
-            null[, i] <- devdiff(
-                s.nulls,
-                LF_alt = cbind(LFr.js, covariate),
-                LF_null = cbind(LFr0.js, matrix(1, n, 1), covariate)
-            )
-        }
+        null[, i] <- devdiff(
+            s.nulls,
+            LF_alt = cbind(LFr.js, covariate),
+            LF_null = cbind(LFr0.js, matrix(1, n, 1), covariate)
+        )
 
         if ( verbose )
             cat(paste(i, " "))

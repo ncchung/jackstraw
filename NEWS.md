@@ -38,3 +38,15 @@ Exclusive list of functions without unit tests (all are redundant with other pac
 - Internal, no exported backward dependencies:
   - `getp` (redundant with `qvalue::empPvals`)
   - `devdiff_parallel` (redundant with `gcatest::gcat.stat`)
+
+# 2021-04-14 - jackstraw 1.3.4.9000
+
+- Functions `jackstraw_pca`, `jackstraw_rpca`, `jackstraw_irlba`:  Corrected documentation (parameter `r1` was incorrectly described as `PC` in parts of the documentation.  Thanks to Djordje Bajić (GitHub username `djbajic`) for reporting this error!
+- Removed option `seed` from all functions that had it.  For the same behavior, call `set.seed(seed)` before calling the function.
+- Functions `jackstraw_lfa` and `jackstraw_alstructure`: removed `devR` option.
+- Removed redundant functions
+  - `lfa.corpcor`: same as `lfa::lfa` with option `override = TRUE`
+  - `pi0est_bootstrap`: redundant with `qvalue::pi0est` with option `pi0.method = 'bootstrap'`
+  - `dev.R` (internal; functionality implemented in package `gcatest`)
+  - `devdiff_parallel` (internal; redundant with `gcatest::gcat.stat`)
+  - `getp` (internal; redundant with `qvalue::empPvals`)

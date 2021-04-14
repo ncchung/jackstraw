@@ -13,7 +13,6 @@ jackstraw_kmeanspp(
   covariate = NULL,
   verbose = FALSE,
   pool = TRUE,
-  seed = NULL,
   ...
 )
 }
@@ -33,8 +32,6 @@ jackstraw_kmeanspp(
 \item{verbose}{a logical specifying to print the computational progress. By default, \code{FALSE}.}
 
 \item{pool}{a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.}
-
-\item{seed}{a seed for the random number generator.}
 
 \item{...}{optional arguments to control the k-means clustering algorithm (refers to \code{ClusterR::KMeans_rcpp}).}
 }
@@ -62,7 +59,6 @@ The input data (\code{dat}) must be of a class `matrix`.
 }
 \examples{
 \dontrun{
-set.seed(1234)
 library(ClusterR)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 kmeans.dat <- KMeans_rcpp(dat,  clusters = 10, num_init = 1,

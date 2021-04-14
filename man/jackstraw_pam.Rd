@@ -13,7 +13,6 @@ jackstraw_pam(
   covariate = NULL,
   verbose = FALSE,
   pool = TRUE,
-  seed = NULL,
   ...
 )
 }
@@ -33,8 +32,6 @@ jackstraw_pam(
 \item{verbose}{a logical specifying to print the computational progress. By default, \code{FALSE}.}
 
 \item{pool}{a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.}
-
-\item{seed}{a seed for the random number generator.}
 
 \item{...}{optional arguments to control the k-means clustering algorithm (refers to \code{kmeans}).}
 }
@@ -61,7 +58,6 @@ The input data (\code{dat}) must be of a class `matrix`.
 \examples{
 \dontrun{
 library(cluster)
-set.seed(1234)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 pam.dat <- pam(dat, k=2)
 jackstraw.out <- jackstraw_pam(dat, pam.dat = pam.dat)

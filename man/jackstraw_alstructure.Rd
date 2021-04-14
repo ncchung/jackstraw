@@ -8,13 +8,11 @@ jackstraw_alstructure(
   dat,
   r,
   FUN = function(x) t(alstructure::alstructure(x, d_hat = r)$Q_hat),
-  devR = FALSE,
   r1 = NULL,
   s = NULL,
   B = NULL,
   covariate = NULL,
-  verbose = TRUE,
-  seed = NULL
+  verbose = TRUE
 )
 }
 \arguments{
@@ -23,8 +21,6 @@ jackstraw_alstructure(
 \item{r}{a number of significant LFs.}
 
 \item{FUN}{a function to ALStructure}
-
-\item{devR}{use a R function to compute deviance. By default, FALSE (uses C++).}
 
 \item{r1}{a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).}
 
@@ -35,8 +31,6 @@ jackstraw_alstructure(
 \item{covariate}{a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).}
 
 \item{verbose}{a logical specifying to print the computational progress.}
-
-\item{seed}{a seed for the random number generator.}
 }
 \value{
 \code{jackstraw_alstructure} returns a list consisting of

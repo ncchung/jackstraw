@@ -11,8 +11,7 @@ jackstraw_pca(
   s = NULL,
   B = NULL,
   covariate = NULL,
-  verbose = TRUE,
-  seed = NULL
+  verbose = TRUE
 )
 }
 \arguments{
@@ -29,8 +28,6 @@ jackstraw_pca(
 \item{covariate}{a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).}
 
 \item{verbose}{a logical specifying to print the computational progress.}
-
-\item{seed}{a numeric seed for the random number generator.}
 }
 \value{
 \code{jackstraw_pca} returns a list consisting of
@@ -50,11 +47,11 @@ Provide the data matrix, with \code{m} variables as rows and \code{n} observatio
 Given that there are \code{r} significant PCs, this function tests for linear association between
 \code{m} varibles and their \code{r} PCs.
 
-You could specify a subset of significant PCs that you are interested in (\code{PC}). If \code{PC} is given,
-then this function computes statistical significance of association between \code{m} variables and \code{PC},
+You could specify a subset of significant PCs that you are interested in (\code{r1}). If \code{r1} is given,
+then this function computes statistical significance of association between \code{m} variables and \code{r1},
 while adjusting for other PCs (i.e., significant PCs that are not your interest).
 For example, if you want to identify variables associated with 1st and 2nd PCs,
-when your data contains three significant PCs, set \code{r=3} and \code{PC=c(1,2)}.
+when your data contains three significant PCs, set \code{r=3} and \code{r1=c(1,2)}.
 
 Please take a careful look at your data and use appropriate graphical and statistical criteria
 to determine a number of significant PCs, \code{r}. The number of significant PCs depends on the data structure and the context.
@@ -66,7 +63,6 @@ If \code{B} is not supplied, \code{B} is set to \code{m*10/s}.
 }
 \examples{
 \dontrun{
-set.seed(1234)
 ## simulate data from a latent variable model: Y = BL + E
 B = c(rep(1,50),rep(-1,50), rep(0,900))
 L = rnorm(20)
@@ -79,7 +75,7 @@ out = jackstraw_pca(dat, r=1)
 
 ## Use optional arguments
 ## For example, set s and B for a balance between speed of the algorithm and accuracy of p-values
-## out = jackstraw_pca(dat, r=1, s=10, B=1000, seed=5678)
+## out = jackstraw_pca(dat, r=1, s=10, B=1000)
 }
 
 }

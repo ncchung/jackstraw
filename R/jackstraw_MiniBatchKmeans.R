@@ -18,7 +18,6 @@
 #' @param batch_size the size of the mini batches.
 #' @param initializer the method of initialization. By default, \code{kmeans++}.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
-#' @param seed a seed for the random number generator.
 #' @param ... optional arguments to control the Mini Batch K-means clustering algorithm (refers to \code{ClusterR::MiniBatchKmeans}).
 #'
 #' @return \code{jackstraw_MiniBatchKmeans} returns a list consisting of
@@ -31,7 +30,6 @@
 #' @examples
 #' \dontrun{
 #' library(ClusterR)
-#' set.seed(1234)
 #' dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 #' MiniBatchKmeans.output <- MiniBatchKmeans(data=dat, clusters = 2, batch_size = 300,
 #' initializer = "kmeans++")
@@ -48,7 +46,6 @@ jackstraw_MiniBatchKmeans <- function(
                                       center = TRUE,
                                       covariate = NULL,
                                       verbose = FALSE,
-                                      seed = NULL,
                                       batch_size = floor(nrow(dat)/100),
                                       initializer = 'kmeans++',
                                       pool = TRUE,
@@ -79,9 +76,6 @@ jackstraw_MiniBatchKmeans <- function(
         }
     }
 
-    if (is.null(seed))
-        set.seed(seed)
-    
     if (is.null(s)) {
         s <- round(m/10)
         if (verbose)

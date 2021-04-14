@@ -17,7 +17,6 @@ jackstraw_cluster(
   covariate = NULL,
   pool = TRUE,
   verbose = FALSE,
-  seed = NULL,
   ...
 )
 }
@@ -45,8 +44,6 @@ jackstraw_cluster(
 \item{pool}{a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.}
 
 \item{verbose}{a logical specifying to print the computational progress. By default, \code{FALSE}.}
-
-\item{seed}{a seed for the random number generator.}
 
 \item{...}{additional, optional arguments to `algorithm`.}
 }

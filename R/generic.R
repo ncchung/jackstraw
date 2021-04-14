@@ -86,24 +86,3 @@ RSS <- function(dat, mod) {
     rss <- rowSums( res^2 )
     return( rss )
 }
-
-# NOTE: unused, delete???
-getp <- function(lr, lr0) {
-    # Get resampled p-values,
-    # pulling across variables
-    # (e.g., genes) lr: observed
-    # statistics lr0: null
-    # statistics (i.e. from
-    # resampled residuals)
-
-    m <- length(lr)
-    v <- c(rep(TRUE, m), rep(FALSE,
-        length(lr0)))
-    v <- v[rev(order(c(lr, lr0)))]
-    u <- 1:length(v)
-    w <- 1:m
-    p <- ((u[v == TRUE] - w) +
-        1)/(length(lr0) + 2)
-    p <- p[rank(-lr)]
-    return(p)
-}

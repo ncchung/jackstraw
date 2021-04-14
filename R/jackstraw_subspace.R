@@ -19,7 +19,6 @@
 #' @param B a number of resampling iterations.
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param verbose a logical specifying to print the computational progress.
-#' @param seed a seed for the random number generator.
 #'
 #' @return \code{jackstraw_subspace} returns a list consisting of
 #' \item{p.value}{\code{m} p-values of association tests between variables and their principal components}
@@ -33,7 +32,6 @@
 #' @seealso \link{jackstraw_pca} \link{jackstraw}
 #'
 #' @examples
-#' set.seed(1234)
 #' ## simulate data from a latent variable model: Y = BL + E
 #' B = c(rep(1,50),rep(-1,50), rep(0,900))
 #' L = rnorm(20)
@@ -54,8 +52,7 @@ jackstraw_subspace <- function(
                                B = NULL, 
                                covariate = NULL,
                                noise = NULL,
-                               verbose = TRUE, 
-                               seed = NULL
+                               verbose = TRUE
                                ) {
     # check mandatory data
     if ( missing( dat ) )
@@ -87,9 +84,6 @@ jackstraw_subspace <- function(
         }
     }
 
-    if (!is.null(seed)) 
-        set.seed(seed)
-    
     if (is.null(s)) {
         s <- round(m/10)
         if (verbose)

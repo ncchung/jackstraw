@@ -4,7 +4,7 @@
 \alias{permutationPA}
 \title{Permutation Parallel Analysis}
 \usage{
-permutationPA(dat, B = 100, threshold = 0.05, verbose = TRUE, seed = NULL)
+permutationPA(dat, B = 100, threshold = 0.05, verbose = TRUE)
 }
 \arguments{
 \item{dat}{a data matrix with \code{m} rows as variables and \code{n} columns as observations.}
@@ -14,8 +14,6 @@ permutationPA(dat, B = 100, threshold = 0.05, verbose = TRUE, seed = NULL)
 \item{threshold}{a numeric value between 0 and 1 to threshold p-values.}
 
 \item{verbose}{a logical indicator as to whether to print the progress.}
-
-\item{seed}{a seed for the random number generator.}
 }
 \value{
 \code{permutationPA} returns

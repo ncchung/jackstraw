@@ -14,7 +14,6 @@ jackstraw_kmeans(
   match = TRUE,
   pool = TRUE,
   verbose = FALSE,
-  seed = NULL,
   ...
 )
 }
@@ -36,8 +35,6 @@ jackstraw_kmeans(
 \item{pool}{a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.}
 
 \item{verbose}{a logical specifying to print the computational progress. By default, \code{FALSE}.}
-
-\item{seed}{a seed for the random number generator.}
 
 \item{...}{optional arguments to control the k-means clustering algorithm (refers to \code{kmeans}).}
 }
@@ -61,7 +58,6 @@ The input data (\code{dat}) must be of a class `matrix`.
 }
 \examples{
 \dontrun{
-set.seed(1234)
 dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 kmeans.dat <- kmeans(dat, centers=2, nstart = 10, iter.max = 100)
 jackstraw.out <- jackstraw_kmeans(dat, kmeans.dat)

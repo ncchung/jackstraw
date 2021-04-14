@@ -26,7 +26,6 @@
 #' @param covariate a model matrix of covariates with \code{n} observations. Must include an intercept in the first column.
 #' @param pool a logical specifying to pool the null statistics across all clusters. By default, \code{TRUE}.
 #' @param verbose a logical specifying to print the computational progress. By default, \code{FALSE}.
-#' @param seed a seed for the random number generator.
 #' @param ... additional, optional arguments to `algorithm`.
 #'
 #' @return \code{jackstraw_cluster} returns a list consisting of
@@ -51,7 +50,6 @@ jackstraw_cluster <- function(
                               covariate = NULL,
                               pool = TRUE,
                               verbose = FALSE,
-                              seed = NULL, 
                               ...
                               ) {
     # check mandatory data
@@ -91,9 +89,6 @@ jackstraw_cluster <- function(
         }
     }
 
-    if (is.null(seed)) 
-        set.seed(seed)
-    
     algorithm <- match.fun(algorithm)
     
     # compute the observed

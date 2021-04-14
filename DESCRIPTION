@@ -1,7 +1,7 @@
 Package: jackstraw
 Type: Package
 Title: Statistical Inference for Unsupervised Learning
-Version: 1.3.3
+Version: 1.3.4.9000
 Author: Neo Christopher Chung <nchchung@gmail.com>, John D. Storey
     <jstorey@princeton.edu>, Wei Hao <whao@princeton.edu>, Alejandro Ochoa <alejandro.ochoa@duke.edu>
 Maintainer: Neo Christopher Chung <nchchung@gmail.com>, Alejandro Ochoa <alejandro.ochoa@duke.edu>
