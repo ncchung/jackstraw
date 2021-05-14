@@ -46,13 +46,14 @@ To solve this problem, please install these two packages manually using the foll
 source("https://bioconductor.org/biocLite.R")
 biocLite('qvalue')
 ```
-For now, the current GitHub version of `jackstraw` depends on updates for `lfa` and `gcatest` present only on these forked GitHub repos:
+For now, the current GitHub version of `jackstraw` depends on updates for `lfa`, `gcatest`, and `genio` present only on these GitHub repositories:
 ```R
 library(devtools)
 install_github("alexviiia/lfa")
 install_github("alexviiia/gcatest")
+install_github("OchoaLab/genio")
 ```
-Eventually, the Bioconductor versions of `lfa` and `gcatest` will have these updates; sorry for the temporary inconvenience.
+Eventually, the Bioconductor versions of `lfa` and `gcatest` and CRAN version of `genio` will have these updates; sorry for the temporary inconvenience.
 
 <!-- ```R -->
 <!-- source("https://bioconductor.org/biocLite.R") -->
