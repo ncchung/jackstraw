@@ -122,7 +122,7 @@ jackstraw_cluster <- function(
         jackstraw.dat <- dat
         # randomly choose s variables
         # to permute
-        ind <- sample(seq(m), s)
+        ind <- sample.int( m, s )
         if (!is.null(noise)) {
             jackstraw.dat[ind, ] <- matrix(noise(n * s), nrow = s, ncol = n)
         } else {

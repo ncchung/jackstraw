@@ -27,16 +27,36 @@ install_github("ncchung/jackstraw")
 ```
 
 #### Troubleshooting
-Some of dependencies may fail to automatically install, particularlay [lfa](https://bioconductor.org/packages/release/bioc/html/lfa.html) and [qvalue](https://bioconductor.org/packages/release/bioc/html/qvalue.html) from Bioconductor. This would result in a warning similar to:
+
+Bioconductor dependencies may fail to automatically install, namely:
+
+- [lfa](https://bioconductor.org/packages/release/bioc/html/lfa.html)
+- [gcatest](https://bioconductor.org/packages/release/bioc/html/gcatest.html)
+- [qvalue](https://bioconductor.org/packages/release/bioc/html/qvalue.html)
+
+This would result in a warning similar to:
 ```R
 Error: package or namespace load failed for ‘jackstraw’ in loadNamespace(j <- i[[1L]], c(lib.loc, .libPaths()), versionCheck = vI[[j]]):
  there is no package called ‘lfa’
 ```
 
-Then, please install these two packages manually using the following command:
+To solve this problem, please install these two packages manually using the following command:
 ```R
+# install qvalue from Bioconductor
 source("https://bioconductor.org/biocLite.R")
-biocLite(c('lfa', 'qvalue'))
+biocLite('qvalue')
 ```
+For now, the current GitHub version of `jackstraw` depends on updates for `lfa` and `gcatest` present only on these forked GitHub repos:
+```R
+library(devtools)
+install_github("alexviiia/lfa")
+install_github("alexviiia/gcatest")
+```
+Eventually, the Bioconductor versions of `lfa` and `gcatest` will have these updates; sorry for the temporary inconvenience.
+
+<!-- ```R -->
+<!-- source("https://bioconductor.org/biocLite.R") -->
+<!-- biocLite(c('lfa', 'gcatest', 'qvalue')) -->
+<!-- ``` -->
 
 Thanks to [idc9](https://github.com/idc9) for raising [this issue](https://github.com/ncchung/jackstraw/issues/2).

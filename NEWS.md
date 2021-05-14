@@ -50,3 +50,13 @@ Exclusive list of functions without unit tests (all are redundant with other pac
   - `dev.R` (internal; functionality implemented in package `gcatest`)
   - `devdiff_parallel` (internal; redundant with `gcatest::gcat.stat`)
   - `getp` (internal; redundant with `qvalue::empPvals`)
+
+# 2021-05-14 - jackstraw 1.3.5.9000
+
+- Function `jackstraw_lfa` now accepts genotypes input as `BEDMatrix` objects.
+  In this case, the function operates on a low-memory mode, keeping data on disk rather than memory as much as possible, and writes permuted data into temporary files as well.
+  To enable this mode, the `BEDMatrix` and `genio` packages are now dependencies.
+  Note only `jackstraw_lfa` supports `BEDMatrix` because `lfa` supports it too (most recent fork; see below).
+- Removed function `devdiff`, which is redundant (and replaced internally) with `gcatest::delta_deviance_lf`, a function that supports more special cases, including genotypes accessed through a `BEDMatrix` object.
+  The only internal dependencies were `jackstraw_lfa` and `jackstraw_alstructure`.
+- Updated `README.md` to instruct users to install the most updated forks of `lfa` and `gcatest` on GitHub (under username `alexviiia`), rather than the Bioconductor versions that are lacking critical updates.

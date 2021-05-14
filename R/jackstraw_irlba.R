@@ -146,14 +146,11 @@ jackstraw_irlba <- function(
         cat(paste0("\nComputating null statistics (", B, " total iterations): "))
     
     for (i in 1:B) {
-        random.s <- sample( 1:m, size = s, replace = FALSE )
+        random.s <- sample.int( m, s )
 
-        s.nulls <- t(apply(
-            dat[random.s, , drop = FALSE],
-            1,
-            function(x) sample(x)
-        ))
-
+        s.nulls <- dat[random.s, , drop = FALSE]
+        s.nulls <- t( apply( s.nulls, 1, sample ) )
+        
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls
 

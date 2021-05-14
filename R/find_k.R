@@ -65,7 +65,7 @@ permutationPA <- function(
     for (i in 1:B) {
         if ( verbose )
             cat(paste(i, " "))
-        dat0 <- t( apply( dat, 1, sample, replace = FALSE ) )
+        dat0 <- t( apply( dat, 1, sample ) )
         uu0 <- corpcor::fast.svd(dat0, tol = 0)
         dstat0[i, ] <- uu0$d[1:ndf]^2/sum(uu0$d[1:ndf]^2)
     }

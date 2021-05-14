@@ -1,35 +1,3 @@
-#' Difference in Deviances
-#'
-#' @param X a data matrix.
-#' @param LF_alt Observed logistic factors.
-#' @param LF_null Null logistic factors.
-#' @author Wei Hao
-#'
-#' @keywords internal
-devdiff <- function(X, LF_alt,
-    LF_null = NULL) {
-    if (is.null(LF_null)) {
-        LF_null <- matrix(1, ncol(X),
-            1)
-    }
-
-    m <- nrow(X)
-
-    F_alt <- lfa::af(X, LF_alt)
-    F_null <- lfa::af(X, LF_null)
-
-    sapply(
-        1:m,
-        function(i) {
-            -gcatest:::delta_deviance_snp(
-                           X[i, ],
-                           F_alt[i, ],
-                           F_null[i, ]
-                       )
-        }
-    )
-}
-
 #' Mcfadden's Pseudo R-sqaured
 #'
 #' @param X a data matrix.

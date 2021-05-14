@@ -96,12 +96,13 @@ jackstraw_alstructure <- function(
     if (!is.null(r0))
         LFr0 <- LFr[, r0, drop = FALSE]
 
-    obs <- devdiff(
-        dat,
-        LF_alt = cbind(LFr, covariate),
-        LF_null = cbind(LFr0, matrix(1, n, 1), covariate)
-    )
-
+    # NOTE: there are some issues here, see `jacsktraw_lfa` for notes
+    obs <- gcatest::delta_deviance_lf(
+                        X = dat,
+                        LF0 = cbind(LFr0, matrix(1, n, 1), covariate),
+                        LF1 = cbind(LFr, covariate)
+                    )
+    
     # Estimate null association
     # statistics
     null <- matrix(0, nrow = s, ncol = B)
@@ -110,12 +111,9 @@ jackstraw_alstructure <- function(
     if (verbose)
         cat(paste0("\nComputating null statistics (", B, " total iterations): "))
     for (i in 1:B) {
-        random.s <- sample(1:m, size = s, replace = FALSE)
-        s.nulls <- t(apply(
-            dat[random.s, , drop = FALSE],
-            1,
-            function(x) sample(x)
-        ))
+        random.s <- sample.int( m, s )
+        s.nulls <- dat[ random.s, , drop = FALSE ]
+        s.nulls <- t( apply( s.nulls, 1, sample ) )
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls
 
@@ -124,11 +122,11 @@ jackstraw_alstructure <- function(
         if (!is.null(r0))
             LFr0.js <- LFr.js[, r0, drop = FALSE]
 
-        null[, i] <- devdiff(
-            s.nulls,
-            LF_alt = cbind(LFr.js, covariate),
-            LF_null = cbind(LFr0.js, matrix(1, n, 1), covariate)
-        )
+        null[, i] <- gcatest::delta_deviance_lf(
+                            X = s.nulls,
+                            LF0 = cbind(LFr0.js, matrix(1, n, 1), covariate),
+                            LF1 = cbind(LFr.js, covariate)
+                        )
 
         if ( verbose )
             cat(paste(i, " "))

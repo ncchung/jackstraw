@@ -137,15 +137,12 @@ jackstraw_subspace <- function(
         if ( verbose )
             cat(paste(i, " "))
 
-        random.s <- sample( 1:m, size = s, replace = FALSE )
+        random.s <- sample.int( m, s )
         if (!is.null(noise)) {
             s.nulls <- matrix( noise(n * s), nrow = s, ncol = n )
         } else {
-            s.nulls <- t(apply(
-                dat[random.s, , drop = FALSE], 
-                1,
-                function(x) sample(x)
-            ))
+            s.nulls <- dat[ random.s, , drop = FALSE ]
+            s.nulls <- t( apply( s.nulls, 1, sample ) )
         }
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls

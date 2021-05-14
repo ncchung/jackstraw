@@ -112,7 +112,7 @@ jackstraw_pam <- function(
         jackstraw.dat <- dat
         # randomly choose s variables
         # to permute
-        ind <- sample(seq(m), s)
+        ind <- sample.int( m, s )
         jackstraw.dat[ind, ] <- apply(
             dat[ind, , drop = FALSE],
             1,
