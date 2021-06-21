@@ -36,7 +36,7 @@
 #' m0 <- round(m*pi0)
 #' m1 <- m - round(m*pi0)
 #' B <- matrix(0, nrow=m, ncol=1)
-#' B[1:m1,] <- matrix(runif(m1*n, min=-.5, max=.5), nrow=m1, ncol=1)
+#' B[1:m1,] <- matrix(runif(m1*n, min=-.5, max=.5), nrow=m1, ncol=n)
 #' L <- matrix(rnorm(n), nrow=1, ncol=n)
 #' BL <- B %*% L
 #' prob <- exp(BL)/(1+exp(BL))
@@ -53,7 +53,7 @@
 #' # run jackstraw!
 #' out <- jackstraw_lfa(dat_BM, r = 2)
 #' }
-#' 
+#'
 #' @export
 jackstraw_lfa <- function(
                           dat,
@@ -93,7 +93,7 @@ jackstraw_lfa <- function(
         n <- ncol( dat )
     } else
         stop( '`dat` must be a matrix or BEDMatrix object!  Observed class: ', class( dat ) )
-    
+
     # more validations of mandatory parameters
     if ( !(r > 0 && r < n) )
         stop( "`r` is not in valid range between `1` and `n-1` (`n` is number of individuals)." )
@@ -105,7 +105,7 @@ jackstraw_lfa <- function(
             if ( nrow( covariate ) != n )
                 stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
         } else {
-            if ( length( covariate ) != n ) 
+            if ( length( covariate ) != n )
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
@@ -144,7 +144,7 @@ jackstraw_lfa <- function(
     # create null LFs if `r1` is non-trivial (otherwise LFr0 is NULL)
     if (!is.null(r0))
         LFr0 <- LFr[ , r0, drop = FALSE ]
-    
+
     # NOTE: this `gcatest` function supports BEDMatrix as input `X`/`dat`!
     # both LF models get the same covariates appended (as they should be)
     # the resulting matrices are never `NULL` (that is not handled by this `gcatest` function).
@@ -154,7 +154,7 @@ jackstraw_lfa <- function(
                         LF0 = cbind(LFr0, matrix(1, n, 1), covariate),
                         LF1 = cbind(LFr, covariate)
                     )
-    
+
     # Estimate null association
     # statistics
     null <- matrix(0, nrow = s, ncol = B)
@@ -179,7 +179,7 @@ jackstraw_lfa <- function(
             jackstraw.dat <- dat
             jackstraw.dat[random_s, ] <- s.nulls
         }
-        
+
         # get LFs for this random data
         LFr.js <- FUN(jackstraw.dat)
         # dimensions are not rechecked here, it's just assumed that they are correct
@@ -198,7 +198,7 @@ jackstraw_lfa <- function(
             invisible( file.remove( objBM$file_full ) )
             invisible( file.remove( objBM$file_rand ) )
         }
-        
+
         if ( verbose )
             cat(paste(i, " "))
     }
@@ -226,7 +226,7 @@ jackstraw_BEDMatrix <- function( dat, random_s, m_chunk = 1000 ) {
     # check class, for now makes sense to only support BEDMatrix
     if ( !( 'BEDMatrix' %in% class( dat ) ) )
         stop( '`dat` must be class "BEDMatrix"!' )
-    
+
     # dimensions are transposed for this object
     n_ind <- nrow( dat )
     m_loci <- ncol( dat )
@@ -236,12 +236,12 @@ jackstraw_BEDMatrix <- function( dat, random_s, m_chunk = 1000 ) {
     # ordering also helps make sense of some internal validations that are not possible otherwise
     # this list will be shortened as we advance in the loop, for efficiency in big `s` cases
     random_s <- sort( random_s )
-    
+
     # create two temporary files to write modified genotype data to
     # both paths have BED extension only (will save additional time by skipping BIM and FAM, which are completely useless in this setting)
     file_full <- tempfile( 'jackstraw_BEDMatrix_full', fileext = '.bed' )
     file_rand <- tempfile( 'jackstraw_BEDMatrix_rand', fileext = '.bed' )
-    
+
     # start writing in chunks for balance of memory usage and speed
     i_chunk <- 1
     while ( i_chunk <= m_loci ) {
@@ -264,14 +264,14 @@ jackstraw_BEDMatrix <- function( dat, random_s, m_chunk = 1000 ) {
             # map to indexes in the current chunk
             # this simple subtraction gives the correct indexes
             random_s_chunk <- random_s_chunk - i_chunk + 1
-            
+
             # extract that data
             dat_rand <- dat_chunk[ random_s_chunk, , drop = FALSE ]
             # now permute it
             dat_rand <- t( apply( dat_rand, 1, sample ) )
             # overwrite those cases immediately
             dat_chunk[ random_s_chunk, ] <- dat_rand
-            
+
             # write this random data to plink BED
             genio::write_bed(
                        file_rand,
@@ -284,7 +284,7 @@ jackstraw_BEDMatrix <- function( dat, random_s, m_chunk = 1000 ) {
             # remove cases that fell in the chunk that was just processed
             random_s <- random_s[ random_s > i_chunk_max ]
         }
-        
+
         # write full data to plink BED
         genio::write_bed(
                    file_full,
@@ -301,7 +301,7 @@ jackstraw_BEDMatrix <- function( dat, random_s, m_chunk = 1000 ) {
     # provide dimensions for speed and also since BIM and FAM files are absent!
     dat_full <- BEDMatrix::BEDMatrix( file_full, n = n_ind, p = m_loci )
     dat_rand <- BEDMatrix::BEDMatrix( file_rand, n = n_ind, p = s )
-    
+
     # done, return necessary data!
     return(
         list(

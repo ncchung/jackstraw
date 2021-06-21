@@ -58,7 +58,7 @@ m <- 5000; n <- 100; pi0 <- .9
 m0 <- round(m*pi0)
 m1 <- m - round(m*pi0)
 B <- matrix(0, nrow=m, ncol=1)
-B[1:m1,] <- matrix(runif(m1*n, min=-.5, max=.5), nrow=m1, ncol=1)
+B[1:m1,] <- matrix(runif(m1*n, min=-.5, max=.5), nrow=m1, ncol=n)
 L <- matrix(rnorm(n), nrow=1, ncol=n)
 BL <- B \%*\% L
 prob <- exp(BL)/(1+exp(BL))
