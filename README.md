@@ -12,18 +12,11 @@ https://academic.oup.com/bioinformatics/article/36/10/3107/5788523
 *Chung, N.C.* and *Storey, J.D.* (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554
 https://academic.oup.com/bioinformatics/article/31/4/545/2748186
 
-# Installation
+# Stable Version on CRAN
 
 To use a stable version from CRAN:
 ```R
 install.packages("jackstraw")
-```
-
-To use a development version from GitHub:
-```R
-install.packages("devtools")
-library("devtools")
-install_github("ncchung/jackstraw")
 ```
 
 #### Troubleshooting
@@ -34,7 +27,7 @@ Bioconductor dependencies may fail to automatically install, namely:
 - [gcatest](https://bioconductor.org/packages/release/bioc/html/gcatest.html)
 - [qvalue](https://bioconductor.org/packages/release/bioc/html/qvalue.html)
 
-This would result in a warning similar to:
+This would result in a [warning](https://github.com/ncchung/jackstraw/issues/2).:
 ```R
 Error: package or namespace load failed for ‘jackstraw’ in loadNamespace(j <- i[[1L]], c(lib.loc, .libPaths()), versionCheck = vI[[j]]):
  there is no package called ‘lfa’
@@ -46,18 +39,23 @@ To solve this problem, please install these two packages manually using the foll
 source("https://bioconductor.org/biocLite.R")
 biocLite('qvalue')
 ```
-For now, the current GitHub version of `jackstraw` depends on updates for `lfa`, `gcatest`, and `genio` present only on these GitHub repositories:
+
+# Development Version on GitHub
+
+This package is in active development. 
+
+To install the jackstraw from GitHub:
+```R
+install.packages("devtools")
+library("devtools")
+install_github("ncchung/jackstraw")
+```
+
+The current GitHub version of `jackstraw` depends on updates for `lfa`, `gcatest`, and `genio` present only on these GitHub repositories:
 ```R
 library(devtools)
-install_github("alexviiia/lfa")
+install_github("StoreyLab/lfa")
 install_github("alexviiia/gcatest")
 install_github("OchoaLab/genio")
 ```
 Eventually, the Bioconductor versions of `lfa` and `gcatest` and CRAN version of `genio` will have these updates; sorry for the temporary inconvenience.
-
-<!-- ```R -->
-<!-- source("https://bioconductor.org/biocLite.R") -->
-<!-- biocLite(c('lfa', 'gcatest', 'qvalue')) -->
-<!-- ``` -->
-
-Thanks to [idc9](https://github.com/idc9) for raising [this issue](https://github.com/ncchung/jackstraw/issues/2).
