@@ -48,10 +48,11 @@ library("devtools")
 install_github("ncchung/jackstraw")
 ```
 
-The current GitHub version of `jackstraw` depends on updates for `lfa`, `gcatest`, and `genio` present only on these GitHub repositories:
+The current GitHub version of `jackstraw` depends on updates for `lfa`, `alstructure`, `gcatest`, and `genio` present only on these GitHub repositories:
 ```R
 library(devtools)
 install_github("StoreyLab/lfa")
+install_github("storeylab/alstructure")
 install_github("alexviiia/gcatest")
 install_github("OchoaLab/genio")
 ```
