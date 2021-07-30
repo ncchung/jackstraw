@@ -21,11 +21,7 @@ install.packages("jackstraw")
 
 #### Troubleshooting
 
-Bioconductor dependencies may fail to automatically install, namely:
-
-- [lfa](https://bioconductor.org/packages/release/bioc/html/lfa.html)
-- [gcatest](https://bioconductor.org/packages/release/bioc/html/gcatest.html)
-- [qvalue](https://bioconductor.org/packages/release/bioc/html/qvalue.html)
+Bioconductor dependencies may fail to automatically install, e.g., [lfa](https://bioconductor.org/packages/release/bioc/html/lfa.html), [gcatest](https://bioconductor.org/packages/release/bioc/html/gcatest.html), [qvalue](https://bioconductor.org/packages/release/bioc/html/qvalue.html)
 
 This would result in a [warning](https://github.com/ncchung/jackstraw/issues/2).:
 ```R
@@ -33,11 +29,12 @@ Error: package or namespace load failed for ‘jackstraw’ in loadNamespace(j <
  there is no package called ‘lfa’
 ```
 
-To solve this problem, please install these two packages manually using the following command:
+To solve this problem, please install them manually.
 ```R
-# install qvalue from Bioconductor
-source("https://bioconductor.org/biocLite.R")
-biocLite('qvalue')
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(c('qvalue','gcatest','qvalue'))
 ```
 
 # Development Version on GitHub
