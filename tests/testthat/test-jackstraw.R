@@ -955,8 +955,9 @@ test_that( "pseudo_Rsq works", {
 
 test_that( "empPvals handles NAs correctly", {
     # `qvalue::empPvals` actually it doesn't, but it's easy to fix with a minor hack, wrapped around internal `empPvals`
+    m <- 100
     obs <- c(NA, 0.01, 0.001)
-    null <- runif( 100 )
+    null <- runif( m )
     expect_silent(
         pvals <- empPvals( obs, null )
     )
@@ -964,6 +965,18 @@ test_that( "empPvals handles NAs correctly", {
     expect_equal( length( pvals ), length( obs ) )
     expect_true( is.na( pvals[1] ) )
     expect_true( !anyNA( pvals[2:3] ) )
+
+    # a bigger random test
+    # 20% are NAs
+    obs <- runif( m )
+    obs[ sample.int( m, 0.2 * m ) ] <- NA
+    expect_silent(
+        pvals <- empPvals( obs, null )
+    )
+    # actual tests
+    expect_equal( length( pvals ), length( obs ) )
+    expect_true( all( is.na( pvals[ is.na( obs ) ] ) ) )
+    expect_true( !anyNA( pvals[ !is.na( obs ) ] ) )
 })
 
 # first write test genotypes somewhere
