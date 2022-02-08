@@ -160,7 +160,7 @@ jackstraw_subspace <- function(
         )$fstat
     }
     
-    p.value <- qvalue::empPvals(as.vector(obs), as.vector(null))
+    p.value <- empPvals( obs, null )
     
     return(
         list(

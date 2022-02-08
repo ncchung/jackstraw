@@ -153,20 +153,15 @@ jackstraw_kmeanspp <- function(
     # compute p-values
     p.F <- vector("numeric", m)
     if(pool) {
-      p.F <- qvalue::empPvals(F.obs, as.vector(unlist(F.null)))
+      p.F <- empPvals( F.obs, unlist( F.null ) )
     } else {
       for (i in 1:k) {
           # warn about a relatively low
           # number of null statistics
-          if (length(F.null[[i]]) <
-              (B * s/k * 0.1)) {
-              warning(paste0("The number of empirical null statistics for the cluster [",
-                  i, "] is [", length(F.null[[i]]),
-                  "]."))
+          if (length(F.null[[i]]) < (B * s/k * 0.1)) {
+              warning( "The number of empirical null statistics for the cluster [", i, "] is [", length(F.null[[i]]), "].")
           }
-          p.F[kmeans.dat$cluster ==
-              i] <- qvalue::empPvals(F.obs[kmeans.dat$clusters ==
-              i], F.null[[i]])
+          p.F[ kmeans.dat$cluster == i] <- empPvals( F.obs[kmeans.dat$clusters == i], F.null[[i]] )
       }
     }
 

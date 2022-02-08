@@ -143,7 +143,7 @@ jackstraw_pam <- function(
                     F.null[[i]],
                     FSTAT(
                         dat = jackstraw.dat[ind.i, , drop = FALSE],
-                        LV = t( pam.null$medoids[i, , drop = FALSE] ),
+                        LV = t( pam.null$medoids[i, , drop = FALSE] ), # colinearity here (in toy cases)???
                         covariate = covariate
                     )$fstat
                 )
@@ -154,14 +154,14 @@ jackstraw_pam <- function(
     # compute p-values
     p.F <- vector("numeric", m)
     if (pool) {
-        p.F <- qvalue::empPvals(F.obs, as.vector(unlist(F.null)))
+        p.F <- empPvals( F.obs, unlist( F.null ) )
     } else {
         for (i in 1:k) {
             # warn about a relatively low
             # number of null statistics
             if (length(F.null[[i]]) < (B * s/k * 0.1))
                 warning( "The number of empirical null statistics for the cluster [", i, "] is [", length(F.null[[i]]), "].")
-            p.F[pam.dat$clustering == i] <- qvalue::empPvals(F.obs[pam.dat$clustering == i], F.null[[i]])
+            p.F[pam.dat$clustering == i] <- empPvals( F.obs[pam.dat$clustering == i], F.null[[i]] )
         }
     }
     

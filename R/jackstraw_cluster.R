@@ -168,7 +168,7 @@ jackstraw_cluster <- function(
     # compute p-values
     p.F <- vector("numeric", m)
     if (pool) {
-        p.F <- qvalue::empPvals(F.obs, as.vector(unlist(F.null)))
+        p.F <- empPvals( F.obs, unlist( F.null ) )
     } else {
         for (i in 1:k) {
             # warn about a relatively low
@@ -179,7 +179,7 @@ jackstraw_cluster <- function(
             if (length(F.null[[i]]) < (B * s/k * 0.1))
                 warning( "The number of empirical null statistics for the cluster [", i, "] is [", length(F.null[[i]]), "]." )
             
-            p.F[cluster == i] <- qvalue::empPvals(F.obs[cluster == i], F.null[[i]])
+            p.F[cluster == i] <- empPvals( F.obs[ cluster == i ], F.null[[ i ]] )
         }
     }
     

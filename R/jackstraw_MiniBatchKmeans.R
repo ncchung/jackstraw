@@ -160,7 +160,7 @@ jackstraw_MiniBatchKmeans <- function(
     # compute p-values
     p.F <- vector("numeric", m)
     if (pool) {
-        p.F <- qvalue::empPvals(F.obs, as.vector(unlist(F.null)))
+        p.F <- empPvals( F.obs, unlist( F.null ) )
     } else {
         for (i in 1:k) {
             # warn about a relatively low
@@ -168,7 +168,7 @@ jackstraw_MiniBatchKmeans <- function(
             if (length(F.null[[i]]) < (B * s/k * 0.1))
                 warning( "The number of empirical null statistics for the cluster [", i, "] is [", length(F.null[[i]]), "].")
             
-            p.F[MiniBatchKmeans.output$cluster == i] <- qvalue::empPvals(F.obs[MiniBatchKmeans.output$cluster == i], F.null[[i]])
+            p.F[MiniBatchKmeans.output$cluster == i] <- empPvals( F.obs[MiniBatchKmeans.output$cluster == i], F.null[[i]] )
         }
     }
     

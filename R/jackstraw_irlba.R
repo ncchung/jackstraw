@@ -136,10 +136,8 @@ jackstraw_irlba <- function(
         covariate = covariate
     )$fstat
     
-    # Estimate null association
-    # statistics
-    null <- matrix(0, nrow = s,
-        ncol = B)
+    # Estimate null association statistics
+    null <- matrix( 0, nrow = s, ncol = B )
     ALV.js <- NULL
 
     if ( verbose )
@@ -172,7 +170,7 @@ jackstraw_irlba <- function(
             cat(paste(i, " "))
     }
 
-    p.value <- qvalue::empPvals(as.vector(obs), as.vector(null))
+    p.value <- empPvals( obs, null )
 
     return(
         list(

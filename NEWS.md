@@ -1,4 +1,4 @@
-# 2020-12-23 - jackstraw 1.3.2
+# jackstraw 1.3.2 (2020-12-23)
 
 * Fixed lots of minor things that caused `check` errors
   * Vignette: minor edits to fix recent build errors
@@ -6,7 +6,7 @@
   * Corrected function arguments and usage discrepancies.
 * Added this `NEWS.md` file to track changes to the package.
 
-# 2021-03-09 - jackstraw 1.3.3
+# jackstraw 1.3.3 (2021-03-09)
 
 Overview:
 
@@ -39,7 +39,7 @@ Exclusive list of functions without unit tests (all are redundant with other pac
   - `getp` (redundant with `qvalue::empPvals`)
   - `devdiff_parallel` (redundant with `gcatest::gcat.stat`)
 
-# 2021-04-14 - jackstraw 1.3.4.9000
+# jackstraw 1.3.4.9000 (2021-04-14)
 
 - Functions `jackstraw_pca`, `jackstraw_rpca`, `jackstraw_irlba`:  Corrected documentation (parameter `r1` was incorrectly described as `PC` in parts of the documentation.  Thanks to Djordje Bajić (GitHub username `djbajic`) for reporting this error!
 - Removed option `seed` from all functions that had it.  For the same behavior, call `set.seed(seed)` before calling the function.
@@ -51,7 +51,7 @@ Exclusive list of functions without unit tests (all are redundant with other pac
   - `devdiff_parallel` (internal; redundant with `gcatest::gcat.stat`)
   - `getp` (internal; redundant with `qvalue::empPvals`)
 
-# 2021-05-14 - jackstraw 1.3.5.9000
+# jackstraw 1.3.5.9000 (2021-05-14)
 
 - Function `jackstraw_lfa` now accepts genotypes input as `BEDMatrix` objects.
   In this case, the function operates on a low-memory mode, keeping data on disk rather than memory as much as possible, and writes permuted data into temporary files as well.
@@ -60,3 +60,10 @@ Exclusive list of functions without unit tests (all are redundant with other pac
 - Removed function `devdiff`, which is redundant (and replaced internally) with `gcatest::delta_deviance_lf`, a function that supports more special cases, including genotypes accessed through a `BEDMatrix` object.
   The only internal dependencies were `jackstraw_lfa` and `jackstraw_alstructure`.
 - Updated `README.md` to instruct users to install the most updated forks of `lfa` and `gcatest` on GitHub (under username `alexviiia`), rather than the Bioconductor versions that are lacking critical updates.
+
+# jackstraw 1.3.6.9000 (2022-02-08)
+
+- All `jackstraw_*` functions now return `NA` p-values for `NA` statistics.
+  - Before `NA` statistics resulted in p-values of 1 instead, which is what `qvalue::empPvals` returns.  Now an internal wrapper function ensures the desired behavior.
+- Removed two `jackstraw_pam` toy example unit tests that failed often due to colinearity.
+- Reformatted this `NEWS.md` slightly to improve its automatic parsing.
