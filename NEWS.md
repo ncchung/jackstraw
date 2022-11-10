@@ -71,9 +71,10 @@ Exclusive list of functions without unit tests (all are redundant with other pac
 # jackstraw 1.3.7 (2022-11-10)
 
 - Temporary changes for CRAN resubmission
+  - Removed `jackstraw_alstructure` because dependency `alstructure` is not on CRAN or Bioconductor.
   - Removed BEDMatrix functionality for function `jackstraw_lfa` because the latest versions of the dependencies `lfa` and `gcatest` on Bioconductor do not support BEDMatrix (the development versions that do support BEDMatrix are on GitHub only).
   - Removed `lfa` and `gcatest` devel version requirements.
-  - Added internal functions `delta_deviance_lf.R`, `delta_deviance_snp.R`, `delta_deviance_snp_lf.R`, which are copies of the `gcatest` functions of the same name (available on development version only, hence this copying)
+  - Added internal functions `delta_deviance_lf`, `delta_deviance_snp`, `delta_deviance_snp_lf`, which are copies of the `gcatest` functions of the same name (available on development version only, hence this copying)
 - Made testing a bit more lenient towards some NA cases
 - Minor non-code edits
   - Spell checked documentation

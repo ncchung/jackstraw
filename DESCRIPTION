@@ -21,7 +21,6 @@ Imports:
 	lfa,
 	gcatest,
 	parallel,
-	alstructure,
 	genio (>= 1.0.15.9000)
 Suggests:
     knitr,
