@@ -34,7 +34,7 @@ To solve this problem, please install them manually.
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install(c('qvalue','gcatest','qvalue'))
+BiocManager::install(c('lfa','gcatest','qvalue'))
 ```
 
 # Development Version on GitHub
@@ -47,12 +47,3 @@ install.packages("devtools")
 library("devtools")
 install_github("ncchung/jackstraw")
 ```
-
-The current GitHub version of `jackstraw` depends on updates for `lfa`, `gcatest`, and `alstructure` present only on these GitHub repositories:
-```R
-library(devtools)
-install_github("StoreyLab/lfa")
-install_github("storeylab/alstructure")
-install_github("alexviiia/gcatest")
-```
-Eventually, the Bioconductor versions of `lfa` and `gcatest` will have these updates; sorry for the temporary inconvenience.

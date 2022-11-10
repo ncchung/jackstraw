@@ -16,9 +16,7 @@ jackstraw_lfa(
 )
 }
 \arguments{
-\item{dat}{either a genotype matrix with \code{m} rows as variables and \code{n} columns as observations, or a BEDMatrix object (see package \code{BEDMatrix}, these objects are transposed compared to the above but this works fine as-is, see example, no need to modify a \code{BEDMatrix} input).
-A BEDMatrix input triggers a low-memory mode where permutted data is also written and processed from disk, whereas a regular matrix input stores permutations in memory.
-The tradeoff is BEDMatrix version typically runs considerably slower, but enables analysis of very large data that is otherwise impossible.}
+\item{dat}{a genotype matrix with \code{m} rows as variables and \code{n} columns as observations.}
 
 \item{r}{a number of significant LFs.}
 
@@ -44,12 +42,8 @@ The tradeoff is BEDMatrix version typically runs considerably slower, but enable
 Test association between the observed variables and their latent variables captured by logistic factors (LFs).
 }
 \details{
-This function uses logistic factor analysis (LFA) from Wei et al. (2014).
+This function uses logistic factor analysis (LFA) from Hao et al. (2016).
 Particularly, the deviance in logistic regression (the full model with \code{r} LFs vs. the intercept-only model) is used to assess significance.
-
-The random outputs of the regular matrix versus the BEDMatrix versions are equal in distribution.
-However, fixing a seed and providing the same data to both versions does not result in the same exact outputs.
-This is because the BEDMatrix version permutes loci in a different order by necessity.
 }
 \examples{
 \dontrun{
@@ -67,13 +61,6 @@ dat <- matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 
 ## apply the jackstraw_lfa
 out <- jackstraw_lfa(dat, r = 2)
-
-# if you had very large genotype data in plink BED/BIM/FAM files,
-# use BEDMatrix and save memory by reading from disk (at the expense of speed)
-library(BEDMatrix)
-dat_BM <- BEDMatrix( 'filepath' ) # assumes filepath.bed, .bim and .fam exist
-# run jackstraw!
-out <- jackstraw_lfa(dat_BM, r = 2)
 }
 
 }

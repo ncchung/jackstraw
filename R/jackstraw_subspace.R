@@ -12,7 +12,7 @@
 #'
 #' @param dat a data matrix with \code{m} rows as variables and \code{n} columns as observations.
 #' @param r a number of significant latent variables.
-#' @param FUN Provide a specfic function to estimate LVs. Must output \code{r} estimated LVs in a \code{n*r} matrix.
+#' @param FUN Provide a specific function to estimate LVs. Must output \code{r} estimated LVs in a \code{n*r} matrix.
 #' @param noise specify a parametric distribution to generate a noise term. If \code{NULL}, a non-parametric jackstraw test is performed.
 #' @param r1 a numeric vector of latent variables of interest.
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.

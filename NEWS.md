@@ -27,7 +27,7 @@ Additional details:
     - `lfa`, `alstructure`, `subspace` versions: `r` does not have a default value and it is mandatory.
 - Functions `jackstraw_kmeans`, `jackstraw_kmeanspp`, `jackstraw_MiniBatchKmeans`, `jackstraw_pam`, `jackstraw_cluster`:
   - Debugged `s = 1` edge case: null data used to be centered incorrectly.
-    Bug only occured in combination with `center = TRUE` (default).
+    Bug only occurred in combination with `center = TRUE` (default).
 - Internal (unexported) function `RSS` now returns actual residual sum of squares.  This change does not affect any exported functions that use it.  Previously `RSS` calculated a normalized version (equal to `1 - R^2`), but this normalization canceled out in `FSTAT` (its only downstream use), so the normalization had no user-facing effect.
 
 Exclusive list of functions without unit tests (all are redundant with other packages, so they are candidates for removal in the near future):
@@ -67,3 +67,12 @@ Exclusive list of functions without unit tests (all are redundant with other pac
   - Before `NA` statistics resulted in p-values of 1 instead, which is what `qvalue::empPvals` returns.  Now an internal wrapper function ensures the desired behavior.
 - Removed two `jackstraw_pam` toy example unit tests that failed often due to colinearity.
 - Reformatted this `NEWS.md` slightly to improve its automatic parsing.
+
+# jackstraw 1.3.7 (2022-11-10)
+
+- Temporary changes for CRAN resubmission
+  - Removed BEDMatrix functionality for function `jackstraw_lfa` because the latest versions of the dependencies `lfa` and `gcatest` on Bioconductor do not support BEDMatrix (the development versions that do support BEDMatrix are on GitHub only).
+  - Removed `lfa` and `gcatest` devel version requirements.
+  - Added internal functions `delta_deviance_lf.R`, `delta_deviance_snp.R`, `delta_deviance_snp_lf.R`, which are copies of the `gcatest` functions of the same name (available on development version only, hence this copying)
+- Made testing a bit more lenient towards some NA cases
+- Spell checked documentation

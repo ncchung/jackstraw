@@ -21,7 +21,7 @@ jackstraw_subspace(
 
 \item{r}{a number of significant latent variables.}
 
-\item{FUN}{Provide a specfic function to estimate LVs. Must output \code{r} estimated LVs in a \code{n*r} matrix.}
+\item{FUN}{Provide a specific function to estimate LVs. Must output \code{r} estimated LVs in a \code{n*r} matrix.}
 
 \item{r1}{a numeric vector of latent variables of interest.}
 

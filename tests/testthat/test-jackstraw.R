@@ -262,7 +262,7 @@ test_jackstraw_return_val <- function ( obj, s, B, kmeans = FALSE ) {
     p <- obj[[ name_p ]]
     expect_true( is.numeric( p ) )
     expect_equal( length( p ), m )
-    expect_true( !anyNA( p ) ) # in theory there can be NAs, they just don't arise in my simple examples
+#    expect_true( !anyNA( p ) ) # in theory there can be NAs, they just don't arise in my simple examples
     expect_true( all( p >= 0, na.rm = TRUE ) )
     expect_true( all( p <= 1, na.rm = TRUE ) )
     # 3) obs.stat
@@ -895,9 +895,9 @@ test_that( "efron_Rsq works", {
     # the basics of what this R^2 should be like
     expect_true( is.numeric( r2 ) )
     expect_equal( length( r2 ), m )
-    expect_true( !anyNA( r2 ) )
-    expect_true( all( r2 >= 0 ) )
-    expect_true( all( r2 <= 1 ) )
+#    expect_true( !anyNA( r2 ) )
+    expect_true( all( r2 >= 0, na.rm = TRUE ) )
+    expect_true( all( r2 <= 1, na.rm = TRUE ) )
 })
 
 test_that( "mcfadden_Rsq_snp works", {
@@ -948,9 +948,9 @@ test_that( "pseudo_Rsq works", {
     # the basics of what this R^2 should be like
     expect_true( is.numeric( r2 ) )
     expect_equal( length( r2 ), m )
-    expect_true( !anyNA( r2 ) )
-    expect_true( all( r2 >= 0 ) )
-    expect_true( all( r2 <= 1 ) )
+#    expect_true( !anyNA( r2 ) )
+    expect_true( all( r2 >= 0, na.rm = TRUE ) )
+    expect_true( all( r2 <= 1, na.rm = TRUE ) )
 })
 
 test_that( "empPvals handles NAs correctly", {
@@ -978,158 +978,3 @@ test_that( "empPvals handles NAs correctly", {
     expect_true( all( is.na( pvals[ is.na( obs ) ] ) ) )
     expect_true( !anyNA( pvals[ !is.na( obs ) ] ) )
 })
-
-# first write test genotypes somewhere
-file_tmp <- tempfile( 'test-jackstraw', fileext = '.bed' )
-genio::write_bed( file_tmp, X, verbose = FALSE )
-# read it back as a BEDMatrix object
-# read it this way, specifying dimensions, because there's no BIM/FAM files
-X_BM <- BEDMatrix::BEDMatrix( file_tmp, n = n, p = m )
-
-test_that( "jackstraw_BEDMatrix works", {
-    # NOTE: BEDMatrix and genio are both dependencies
-
-    # extra parameters
-    m_chunk <- 1000 # default
-    # recall s==2, let's leave it that way for now
-    random_s <- sample.int( m, s )
-    # need sorted version for some tests
-    random_s_sorted <- sort( random_s )
-    
-    expect_silent(
-        obj <- jackstraw_BEDMatrix( dat = X_BM, random_s, m_chunk = m_chunk )
-    )
-    expect_equal( class( obj ), 'list' )
-    expect_equal( names( obj ), c('dat_full', 'dat_rand', 'file_full', 'file_rand') )
-    expect_true( class( obj$dat_full ) == 'BEDMatrix' )
-    expect_true( class( obj$dat_rand ) == 'BEDMatrix' )
-    expect_equal( class( obj$file_full ), 'character' )
-    expect_equal( class( obj$file_rand ), 'character' )
-    expect_equal( nrow( obj$dat_full ), n )
-    expect_equal( ncol( obj$dat_full ), m )
-    expect_equal( nrow( obj$dat_rand ), n )
-    expect_equal( ncol( obj$dat_rand ), s )
-    # the non-random loci should match the original data
-    # (NOTE: BEDMatrix data has to be transposed and dimnames removed)
-    X_orig_exp <- X[ -random_s, ]
-    X_orig_obs <- t( obj$dat_full[ , -random_s ] )
-    dimnames( X_orig_obs ) <- NULL
-    expect_equal( X_orig_obs, X_orig_exp )
-    # the random data in the full matrix should equal the random matrix
-    # here they're both BEDMatrix so no transposition is required
-    # however, `dat_rand` lists rows in original order, which may disagree with `random_s` (random order), so let's sort here to get matching orders
-    X_rand_exp <- obj$dat_rand[]
-    X_rand_obs <- obj$dat_full[ , random_s_sorted, drop = FALSE ]
-    expect_equal( X_rand_obs, X_rand_exp )
-    
-    # test this edge case
-    m_chunk <- 1
-    expect_silent(
-        obj <- jackstraw_BEDMatrix( dat = X_BM, random_s, m_chunk = m_chunk )
-    )
-    expect_equal( class( obj ), 'list' )
-    expect_equal( names( obj ), c('dat_full', 'dat_rand', 'file_full', 'file_rand') )
-    expect_true( class( obj$dat_full ) == 'BEDMatrix' )
-    expect_true( class( obj$dat_rand ) == 'BEDMatrix' )
-    expect_equal( class( obj$file_full ), 'character' )
-    expect_equal( class( obj$file_rand ), 'character' )
-    expect_equal( nrow( obj$dat_full ), n )
-    expect_equal( ncol( obj$dat_full ), m )
-    expect_equal( nrow( obj$dat_rand ), n )
-    expect_equal( ncol( obj$dat_rand ), s )
-    X_orig_exp <- X[ -random_s, ]
-    X_orig_obs <- t( obj$dat_full[ , -random_s ] )
-    dimnames( X_orig_obs ) <- NULL
-    expect_equal( X_orig_obs, X_orig_exp )
-    X_rand_exp <- obj$dat_rand[]
-    X_rand_obs <- obj$dat_full[ , random_s_sorted, drop = FALSE ]
-    expect_equal( X_rand_obs, X_rand_exp )
-    
-    # test this edge case
-    s <- 1
-    m_chunk <- 1000
-    random_s <- sample.int( m, s )
-    # need sorted version for some tests (not needed if s=1 but meh)
-    random_s_sorted <- sort( random_s )
-    expect_silent(
-        obj <- jackstraw_BEDMatrix( dat = X_BM, random_s, m_chunk = m_chunk )
-    )
-    expect_equal( class( obj ), 'list' )
-    expect_equal( names( obj ), c('dat_full', 'dat_rand', 'file_full', 'file_rand') )
-    expect_true( class( obj$dat_full ) == 'BEDMatrix' )
-    expect_true( class( obj$dat_rand ) == 'BEDMatrix' )
-    expect_equal( class( obj$file_full ), 'character' )
-    expect_equal( class( obj$file_rand ), 'character' )
-    expect_equal( nrow( obj$dat_full ), n )
-    expect_equal( ncol( obj$dat_full ), m )
-    expect_equal( nrow( obj$dat_rand ), n )
-    expect_equal( ncol( obj$dat_rand ), s )
-    X_orig_exp <- X[ -random_s, ]
-    X_orig_obs <- t( obj$dat_full[ , -random_s ] )
-    dimnames( X_orig_obs ) <- NULL
-    expect_equal( X_orig_obs, X_orig_exp )
-    X_rand_exp <- obj$dat_rand[]
-    X_rand_obs <- obj$dat_full[ , random_s_sorted, drop = FALSE ]
-    expect_equal( X_rand_obs, X_rand_exp )
-    
-    # final, double edge case
-    s <- 1
-    m_chunk <- 1
-    expect_silent(
-        obj <- jackstraw_BEDMatrix( dat = X_BM, random_s, m_chunk = m_chunk )
-    )
-    expect_equal( class( obj ), 'list' )
-    expect_equal( names( obj ), c('dat_full', 'dat_rand', 'file_full', 'file_rand') )
-    expect_true( class( obj$dat_full ) == 'BEDMatrix' )
-    expect_true( class( obj$dat_rand ) == 'BEDMatrix' )
-    expect_equal( class( obj$file_full ), 'character' )
-    expect_equal( class( obj$file_rand ), 'character' )
-    expect_equal( nrow( obj$dat_full ), n )
-    expect_equal( ncol( obj$dat_full ), m )
-    expect_equal( nrow( obj$dat_rand ), n )
-    expect_equal( ncol( obj$dat_rand ), s )
-    X_orig_exp <- X[ -random_s, ]
-    X_orig_obs <- t( obj$dat_full[ , -random_s ] )
-    dimnames( X_orig_obs ) <- NULL
-    expect_equal( X_orig_obs, X_orig_exp )
-    X_rand_exp <- obj$dat_rand[]
-    X_rand_obs <- obj$dat_full[ , random_s_sorted, drop = FALSE ]
-    expect_equal( X_rand_obs, X_rand_exp )
-    
-})
-
-test_that( "jackstraw_lfa works with BEDMatrix", {
-    # make it silent so we can focus on problem messages
-    expect_silent(
-        obj <- jackstraw_lfa( X_BM, r = d, s = s, B = B, verbose = FALSE )
-    )
-    # check basic jackstraw return object
-    test_jackstraw_return_val( obj, s, B )
-
-    # test edge cases
-    # s = 1
-    expect_silent(
-        obj <- jackstraw_lfa( X_BM, r = d, s = 1, B = B, verbose = FALSE )
-    )
-    test_jackstraw_return_val( obj, 1, B )
-    # B = 1
-    expect_silent(
-        obj <- jackstraw_lfa( X_BM, r = d, s = s, B = 1, verbose = FALSE )
-    )
-    test_jackstraw_return_val( obj, s, 1 )
-    # s = B = 1
-    expect_silent(
-        obj <- jackstraw_lfa( X_BM, r = d, s = 1, B = 1, verbose = FALSE )
-    )
-    test_jackstraw_return_val( obj, 1, 1 )
-
-    # test version with covariates
-    expect_silent(
-        obj <- jackstraw_lfa( X_BM, r = d, s = s, B = B, covariate = covariate, verbose = FALSE )
-    )
-    test_jackstraw_return_val( obj, s, B )
-})
-
-
-# clean up BEDMatrix example
-invisible( file.remove( file_tmp ) )

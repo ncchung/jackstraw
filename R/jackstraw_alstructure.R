@@ -16,8 +16,8 @@
 #'
 #' @return \code{jackstraw_alstructure} returns a list consisting of
 #' \item{p.value}{\code{m} p-values of association tests between variables and their LFs}
-#' \item{obs.stat}{\code{m} observed devs}
-#' \item{null.stat}{\code{s*B} null devs}
+#' \item{obs.stat}{\code{m} observed deviances}
+#' \item{null.stat}{\code{s*B} null deviances}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #'
@@ -97,7 +97,7 @@ jackstraw_alstructure <- function(
         LFr0 <- LFr[, r0, drop = FALSE]
 
     # NOTE: there are some issues here, see `jacsktraw_lfa` for notes
-    obs <- gcatest::delta_deviance_lf(
+    obs <- delta_deviance_lf(
                         X = dat,
                         LF0 = cbind(LFr0, matrix(1, n, 1), covariate),
                         LF1 = cbind(LFr, covariate)
@@ -122,7 +122,7 @@ jackstraw_alstructure <- function(
         if (!is.null(r0))
             LFr0.js <- LFr.js[, r0, drop = FALSE]
 
-        null[, i] <- gcatest::delta_deviance_lf(
+        null[, i] <- delta_deviance_lf(
                             X = s.nulls,
                             LF0 = cbind(LFr0.js, matrix(1, n, 1), covariate),
                             LF1 = cbind(LFr.js, covariate)

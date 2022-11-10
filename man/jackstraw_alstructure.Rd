@@ -35,8 +35,8 @@ jackstraw_alstructure(
 \value{
 \code{jackstraw_alstructure} returns a list consisting of
 \item{p.value}{\code{m} p-values of association tests between variables and their LFs}
-\item{obs.stat}{\code{m} observed devs}
-\item{null.stat}{\code{s*B} null devs}
+\item{obs.stat}{\code{m} observed deviances}
+\item{null.stat}{\code{s*B} null deviances}
 }
 \description{
 Test association between the observed variables and population structure estimated by ALStructure.

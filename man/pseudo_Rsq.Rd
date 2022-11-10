@@ -2,7 +2,7 @@
 % Please edit documentation in R/likelihood.R
 \name{pseudo_Rsq}
 \alias{pseudo_Rsq}
-\title{Mcfadden's Pseudo R-sqaured}
+\title{Mcfadden's Pseudo R-squared}
 \usage{
 pseudo_Rsq(X, LF_alt, LF_null = NULL)
 }
@@ -14,7 +14,7 @@ pseudo_Rsq(X, LF_alt, LF_null = NULL)
 \item{LF_null}{Null logistic factors.}
 }
 \description{
-Mcfadden's Pseudo R-sqaured
+Mcfadden's Pseudo R-squared
 }
 \author{
 Wei Hao

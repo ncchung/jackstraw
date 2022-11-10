@@ -2,7 +2,7 @@
 % Please edit documentation in R/likelihood.R
 \name{efron_Rsq}
 \alias{efron_Rsq}
-\title{Efron's Pseudo R-sqaured}
+\title{Efron's Pseudo R-squared}
 \usage{
 efron_Rsq(X, LF)
 }
@@ -12,7 +12,7 @@ efron_Rsq(X, LF)
 \item{LF}{Observed logistic factors.}
 }
 \description{
-Efron's Pseudo R-sqaured
+Efron's Pseudo R-squared
 }
 \author{
 Wei Hao
