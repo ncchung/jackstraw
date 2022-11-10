@@ -4,7 +4,7 @@ Title: Statistical Inference for Unsupervised Learning
 Version: 1.3.7
 Author: Neo Christopher Chung <nchchung@gmail.com>, John D. Storey
     <jstorey@princeton.edu>, Wei Hao <whao@princeton.edu>, Alejandro Ochoa <alejandro.ochoa@duke.edu>
-Maintainer: Neo Christopher Chung <nchchung@gmail.com>, Alejandro Ochoa <alejandro.ochoa@duke.edu>
+Maintainer: Neo Christopher Chung <nchchung@gmail.com>
 Description: Test for association between the observed data and their systematic patterns of variations. Systematic patterns may be captured with latent variable modelings using principal component analysis (PCA), factor analysis (FA), and related methods. The jackstraw enables statistical testing for association between observed variables and latent variables, as captured by PCs or other estimates. Similarly, unsupervised clustering, such as K-means clustering, partition around medoids (PAM), and others, finds subpopulations in high-dimensional data. The jackstraw estimates statistical significance of cluster membership, with an application to unsupervised evaluation of cell identities in single cell RNA-seq. This package also implements posterior inclusion probabilities (PIPs) that can be used for feature selection of genes, cells, and others.
 LazyData: true
 Depends: R (>= 3.0.0)
@@ -37,5 +37,4 @@ Suggests:
 License: GPL-2
 Encoding: UTF-8
 RoxygenNote: 7.2.1
-VignetteBuilder: knitr
 Config/testthat/edition: 3

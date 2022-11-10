@@ -8,7 +8,7 @@
 A data frame with 3381 rows corresponding to single cells and 10 columns corresponding to the top 10 principal components
 }
 \source{
-Supplementary Data 1 from Zheng et al. (2017) \url{https://media.nature.com/original/nature-assets/ncomms/2017/170116/ncomms14049/extref/ncomms14049-s2.xlsx}
+Supplementary Data 1 from Zheng et al. (2017) \url{https://static-content.springer.com/esm/art\%3A10.1038\%2Fncomms14049/MediaObjects/41467_2017_BFncomms14049_MOESM829_ESM.xlsx}
 }
 \usage{
 Jurkat293T

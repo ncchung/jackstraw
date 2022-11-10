@@ -75,4 +75,8 @@ Exclusive list of functions without unit tests (all are redundant with other pac
   - Removed `lfa` and `gcatest` devel version requirements.
   - Added internal functions `delta_deviance_lf.R`, `delta_deviance_snp.R`, `delta_deviance_snp_lf.R`, which are copies of the `gcatest` functions of the same name (available on development version only, hence this copying)
 - Made testing a bit more lenient towards some NA cases
-- Spell checked documentation
+- Minor non-code edits
+  - Spell checked documentation
+  - Changed to single maintainer (Neo)
+  - Removed `VignetteBuilder: knitr` since there's no vignette anymore
+  - Fixed broken or outdated URLs

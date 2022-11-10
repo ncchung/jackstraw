@@ -70,7 +70,7 @@ The rows of \code{centers} correspond to \code{k} clusters, as well as available
 This function allows you to specify a parametric distribution of a noise term. It is an experimental feature.
 }
 \references{
-Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
+Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/10.1101/248633v1}
 }
 \author{
 Neo Christopher Chung \email{nchchung@gmail.com}

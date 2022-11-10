@@ -28,7 +28,7 @@ From \code{m} p-values, \link{pip} computes posterior inclusion probabilities, t
 \references{
 Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{http://bioinformatics.oxfordjournals.org/content/31/4/545}
 
-Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/early/2018/01/16/248633}
+Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/10.1101/248633v1}
 }
 \seealso{
 \link{jackstraw_pca} \link{jackstraw_subspace} \link{jackstraw_kmeans} \link{jackstraw_cluster}
