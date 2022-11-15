@@ -1,7 +1,7 @@
 Package: jackstraw
 Type: Package
 Title: Statistical Inference for Unsupervised Learning
-Version: 1.3.7
+Version: 1.3.8
 Author: Neo Christopher Chung <nchchung@gmail.com>, John D. Storey
     <jstorey@princeton.edu>, Wei Hao <whao@princeton.edu>, Alejandro Ochoa <alejandro.ochoa@duke.edu>
 Maintainer: Neo Christopher Chung <nchchung@gmail.com>
@@ -18,22 +18,11 @@ Imports:
 	rsvd,
 	ClusterR,
 	cluster,
-	lfa,
-	gcatest,
 	parallel,
 	genio (>= 1.0.15.9000)
 Suggests:
-    knitr,
-    rmarkdown,
-    ggplot2,
-    mutoss,
-    Matrix,
-    gridExtra,
-    cowplot,
-    scales,
-    formatR,
     testthat (>= 3.0.0)
 License: GPL-2
 Encoding: UTF-8
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
 Config/testthat/edition: 3

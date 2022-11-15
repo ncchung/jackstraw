@@ -81,3 +81,10 @@ Exclusive list of functions without unit tests (all are redundant with other pac
   - Changed to single maintainer (Neo)
   - Removed `VignetteBuilder: knitr` since there's no vignette anymore
   - Fixed broken or outdated URLs
+
+# jackstraw 1.3.8 (2022-11-15)
+
+- Temporarily removed exported function `jackstraw_lfa` and package dependencies `lfa` and `gcatest`, since `lfa` is having build errors on bioc-devel.
+  - Also removed internal functions `pseudo_Rsq`, `mcfadden_Rsq_snp`, `efron_Rsq`, `efron_Rsq_snp`, `delta_deviance_{lf,snp,snp_lf}.R` (all depended on `lfa`)
+- Removed many package suggested dependencies (`knitr`, `rmarkdown`, `ggplot2`, `mutoss`, `Matrix`, `gridExtra`, `cowplot`, `scales`, `formatR`) that were only used in a vignette currently not being built.
+- Reduced example dimensions for `jackstraw_irlba` by 5 to keep its runtime low.
