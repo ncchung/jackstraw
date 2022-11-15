@@ -17,9 +17,7 @@ Imports:
 	irlba,
 	rsvd,
 	ClusterR,
-	cluster,
-	parallel,
-	genio (>= 1.0.15.9000)
+	cluster
 Suggests:
     testthat (>= 3.0.0)
 License: GPL-2

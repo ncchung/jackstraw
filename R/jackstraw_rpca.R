@@ -45,9 +45,9 @@
 #'
 #' @examples
 #' ## simulate data from a latent variable model: Y = BL + E
-#' B = c(rep(1,50),rep(-1,50), rep(0,900))
+#' B = c(rep(1,10),rep(-1,10), rep(0,180))
 #' L = rnorm(20)
-#' E = matrix(rnorm(1000*20), nrow=1000)
+#' E = matrix(rnorm(200*20), nrow=200)
 #' dat = B %*% t(L) + E
 #' dat = t(scale(t(dat), center=TRUE, scale=TRUE))
 #'
@@ -57,7 +57,7 @@
 #' ## Use optional arguments
 #' ## For example, set s and B for a balance between speed of the algorithm and accuracy of p-values
 #' \dontrun{
-#' ## out = jackstraw_rpca(dat, r=1, s=10, B=1000)
+#' ## out = jackstraw_rpca(dat, r=1, s=10, B=200)
 #' }
 #' 
 #' @export
