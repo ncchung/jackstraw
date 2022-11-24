@@ -65,7 +65,7 @@ jackstraw.out <- jackstraw_pam(dat, pam.dat = pam.dat)
 
 }
 \references{
-Chung (2018) Statistical significance for cluster membership. biorxiv, doi:10.1101/248633 \url{https://www.biorxiv.org/content/10.1101/248633v1}
+Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
 }
 \author{
 Neo Christopher Chung \email{nchchung@gmail.com}

@@ -6,14 +6,14 @@
 \alias{jackstraw-package}
 \title{jackstraw: Statistical Inference for Unsupervised Learning}
 \description{
-Test for association between the observed data and their systematic patterns of variations. Systematic patterns may be captured with latent variable modelings using principal component analysis (PCA), factor analysis (FA), and related methods. The jackstraw enables statistical testing for association between observed variables and latent variables, as captured by PCs or other estimates. Similarly, unsupervised clustering, such as K-means clustering, partition around medoids (PAM), and others, finds subpopulations in high-dimensional data. The jackstraw estimates statistical significance of cluster membership, with an application to unsupervised evaluation of cell identities in single cell RNA-seq. This package also implements posterior inclusion probabilities (PIPs) that can be used for feature selection of genes, cells, and others.
+Test for association between the observed data and their estimated latent variables. Latent variable models such as principal component analysis (PCA), factor analysis (FA), and related methods can capture systematic patterns of variations in high-dimensional data, by low-dimensional embeddings. The jackstraw enables statistical testing for association between observed variables and latent variables, as estimated by principal components (PCs) or related estimates. Similarly, unsupervised clustering, such as K-means clustering, partition around medoids (PAM), and others, finds coherent groups in high-dimensional data. The jackstraw estimates statistical significance of cluster membership, by testing association between data and cluster centers. Clustering membership can be improved by using the resulting jackstraw p-values, with an application to unsupervised evaluation of cell identities in single cell RNA-seq. This package also implements posterior inclusion probabilities (PIPs) that can be used for feature selection of genes, cells, and others.
 }
 \details{
 The jackstraw package provides a resampling strategy and testing scheme to estimate statistical significance
 of association between the observed data and their latent variables. Depending on the data type and the analysis aim,
-the latent variables may be estimated by principal component analysis, K-means clustering, and related algorithms.
+the latent variables may be estimated by principal component analysis (PCA), K-means clustering, and related algorithms.
 The jackstraw methods learn over-fitting characteristics inherent in this circular analysis, where the observed data are used
-to estimate the latent variables and to again test against the estimated latent variables.
+to estimate the latent variables and used again to test against that estimated latent variables.
 
 The jackstraw tests enable us to identify the data features (i.e., variables or observations) that are
 driving systematic variation, in a completely unsupervised manner. Using \link{jackstraw_pca}, we can
