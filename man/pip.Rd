@@ -24,7 +24,9 @@ Its length has to be either 1 or equal the number of groups.}
 \code{pip} returns a vector of posterior inclusion probabilities
 }
 \description{
-Computes posterior probabilities that a feature is a true member of an assigned cluster
+From a set of p-values, computes posterior probabilities that a feature should be truly included.
+For example, membership inclusion in a given cluster can be improved by filtering low quality members.
+In using PCA and related methods, it helps select variables that are truly associated with given latent variables.
 }
 \author{
 Neo Christopher Chung \email{nchchung@gmail.com}
