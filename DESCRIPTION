@@ -20,7 +20,6 @@ Imports:
 	cluster,
 	lfa (>= 2.0.6.9000),
 	gcatest (>= 2.0.4.9000),
-	alstructure,
 	BEDMatrix,
 	genio (>= 1.0.15.9000)
 Suggests:

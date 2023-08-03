@@ -19,6 +19,22 @@
 #' \item{obs.stat}{\code{m} observed devs}
 #' \item{null.stat}{\code{s*B} null devs}
 #'
+#' @examples
+#' \dontrun{
+#' # load genotype data to analyze (not shown) into this variable
+#' X
+#' # choose the number of ancestries
+#' r <- 3
+#' 
+#' # load alstructure package (install from https://github.com/StoreyLab/alstructure)
+#' library(alstructure)
+#' # define the function this way, a function of the genotype matrix only
+#' FUN <- function(x) t( alstructure(x, d_hat = r)$Q_hat )
+#'
+#' # calculate p-values (and other statistics) for each SNP
+#' out <- jackstraw_alstructure( X, r, FUN )
+#' }
+#'
 #' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #'
@@ -28,7 +44,7 @@
 jackstraw_alstructure <- function(
                                   dat,
                                   r,
-                                  FUN = function(x) t( alstructure::alstructure(x, d_hat = r)$Q_hat ), # alstructure params: , max_iters = 1000, tol = 0.001, svd_method = "truncated_svd"
+                                  FUN,
                                   r1 = NULL,
                                   s = NULL,
                                   B = NULL,
@@ -40,9 +56,13 @@ jackstraw_alstructure <- function(
         stop( '`dat` is required!' )
     if ( missing( r ) )
         stop( '`r` is required!' )
+    if ( missing( FUN ) )
+        stop( '`FUN` is required!' )
     if ( !is.matrix( dat ) )
         stop( '`dat` must be a matrix!' )
-
+    if ( !is.function( FUN ) )
+        stop( '`FUN` must be a function!' )
+    
     # more validations of mandatory parameters
     m <- nrow(dat)
     n <- ncol(dat)

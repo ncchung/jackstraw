@@ -339,52 +339,64 @@ test_that( "jackstraw_lfa works", {
 
 })
 
-test_that("jackstraw_alstructure works", {
-    # cause errors due to missing required data
-    # must provide both dat = X and r = d for a minimal successful run
-    expect_error( jackstraw_alstructure( ) )
-    expect_error( jackstraw_alstructure( dat = X ) )
-    expect_error( jackstraw_alstructure( r = d ) )
-    # check that data is matrix
-    expect_error( jackstraw_alstructure( dat = 1:10, r = d ) )
-    # pass bad covariates on purpose
-    expect_error( jackstraw_alstructure( dat = X, r = d, covariate = 1 ) ) # scalar is bad
-    expect_error( jackstraw_alstructure( dat = X, r = d, covariate = covariate[-1] ) ) # length off by 1, vector
-    expect_error( jackstraw_alstructure( dat = X, r = d, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
-    expect_error( jackstraw_alstructure( dat = X, r = d, covariate = rbind( covariate ) ) ) # transposed matrix
+# run alstructure tests only if optional package is available
+if (suppressMessages(suppressWarnings(require(alstructure)))) {
     
-    # perform a basic run
+    test_that("jackstraw_alstructure works", {
+        # define function to pass (uses global `d`)
+        FUN <- function(x) t( alstructure(x, d_hat = d)$Q_hat )
+        
+        # cause errors due to missing required data
+        # must provide all of (dat = X, r = d, FUN = FUN) for a minimal successful run
+        expect_error( jackstraw_alstructure( ) )
+        expect_error( jackstraw_alstructure( dat = X ) )
+        expect_error( jackstraw_alstructure( r = d ) )
+        expect_error( jackstraw_alstructure( FUN = FUN ) )
+        expect_error( jackstraw_alstructure( dat = X, r = d ) )
+        expect_error( jackstraw_alstructure( dat = X, FUN = FUN ) )
+        expect_error( jackstraw_alstructure( r = d, FUN = FUN ) )
+        # check that data is matrix
+        expect_error( jackstraw_alstructure( dat = 1:10, r = d, FUN = FUN ) )
+        # pass bad covariates on purpose
+        expect_error( jackstraw_alstructure( dat = X, r = d, FUN = FUN, covariate = 1 ) ) # scalar is bad
+        expect_error( jackstraw_alstructure( dat = X, r = d, FUN = FUN, covariate = covariate[-1] ) ) # length off by 1, vector
+        expect_error( jackstraw_alstructure( dat = X, r = d, FUN = FUN, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
+        expect_error( jackstraw_alstructure( dat = X, r = d, FUN = FUN, covariate = rbind( covariate ) ) ) # transposed matrix
+        
+        # perform a basic run
 
-    # make it silent so we can focus on problem messages
-    expect_silent(
-        obj <- jackstraw_alstructure( X, r = d, s = s, B = B, verbose = FALSE )
-    )
-    # check basic jackstraw return object
-    test_jackstraw_return_val( obj, s, B )
+        # make it silent so we can focus on problem messages
+        expect_silent(
+            obj <- jackstraw_alstructure( X, r = d, FUN = FUN, s = s, B = B, verbose = FALSE )
+        )
+        # check basic jackstraw return object
+        test_jackstraw_return_val( obj, s, B )
 
-    # test edge cases
-    # s = 1
-    expect_silent(
-        obj <- jackstraw_alstructure( X, r = d, s = 1, B = B, verbose = FALSE )
-    )
-    test_jackstraw_return_val( obj, 1, B )
-    # B = 1
-    expect_silent(
-        obj <- jackstraw_alstructure( X, r = d, s = s, B = 1, verbose = FALSE )
-    )
-    test_jackstraw_return_val( obj, s, 1 )
-    # s = B = 1
-    expect_silent(
-        obj <- jackstraw_alstructure( X, r = d, s = 1, B = 1, verbose = FALSE )
-    )
-    test_jackstraw_return_val( obj, 1, 1 )
-    
-    # test version with covariates
-    expect_silent(
-        obj <- jackstraw_alstructure( X, r = d, s = s, B = B, covariate = covariate, verbose = FALSE )
-    )
-    test_jackstraw_return_val( obj, s, B )
-})
+        # test edge cases
+        # s = 1
+        expect_silent(
+            obj <- jackstraw_alstructure( X, r = d, FUN = FUN, s = 1, B = B, verbose = FALSE )
+        )
+        test_jackstraw_return_val( obj, 1, B )
+        # B = 1
+        expect_silent(
+            obj <- jackstraw_alstructure( X, r = d, FUN = FUN, s = s, B = 1, verbose = FALSE )
+        )
+        test_jackstraw_return_val( obj, s, 1 )
+        # s = B = 1
+        expect_silent(
+            obj <- jackstraw_alstructure( X, r = d, FUN = FUN, s = 1, B = 1, verbose = FALSE )
+        )
+        test_jackstraw_return_val( obj, 1, 1 )
+        
+        # test version with covariates
+        expect_silent(
+            obj <- jackstraw_alstructure( X, r = d, FUN = FUN, s = s, B = B, covariate = covariate, verbose = FALSE )
+        )
+        test_jackstraw_return_val( obj, s, B )
+    })
+
+}
 
 test_that("jackstraw_subspace works", {
     FUN <- function( x ) svd( x )$v[ , 1:d, drop = FALSE ]

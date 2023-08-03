@@ -7,7 +7,7 @@
 jackstraw_alstructure(
   dat,
   r,
-  FUN = function(x) t(alstructure::alstructure(x, d_hat = r)$Q_hat),
+  FUN,
   r1 = NULL,
   s = NULL,
   B = NULL,
@@ -44,6 +44,23 @@ Test association between the observed variables and population structure estimat
 \details{
 This function uses ALStructure from Cabreros and Storey (2019). A deviation \code{dev} in logistic regression
 (the full model with \code{r} LFs vs. the intercept-only model) is used to assess association.
+}
+\examples{
+\dontrun{
+# load genotype data to analyze (not shown) into this variable
+X
+# choose the number of ancestries
+r <- 3
+
+# load alstructure package (install from https://github.com/StoreyLab/alstructure)
+library(alstructure)
+# define the function this way, a function of the genotype matrix only
+FUN <- function(x) t( alstructure(x, d_hat = r)$Q_hat )
+
+# calculate p-values (and other statistics) for each SNP
+out <- jackstraw_alstructure( X, r, FUN )
+}
+
 }
 \references{
 Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}

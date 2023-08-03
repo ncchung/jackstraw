@@ -86,6 +86,7 @@ Exclusive list of functions without unit tests (all are redundant with other pac
 - Function `jackstraw_MiniBatchKmeans`: internally added `suppressWarnings` wrapper around `ClusterR::predict_MBatchKMeans` to silence a misleading deprecation warning.  The function as a whole is not deprecated, but its output for a case we don't use (fuzzy=TRUE) is changing in the future.  Warning message now being suppressed:
   - `predict_MBatchKMeans()` was deprecated in ClusterR 1.3.0.
   - Beginning from version 1.4.0, if the fuzzy parameter is TRUE the function 'predict_MBatchKMeans' will return only the probabilities, whereas currently it also returns the hard clusters
+- Removed strict dependence of the `alstructure` R package (on GitHub only), user now has to provide the function to apply to data for `jackstraw_alstructure` to work.
 - Documentation
   - Corrected citation links for two similar papers
   - Function documentation (.Rd files) was actually updated as described in the last version (last commit had source .R files edited but not their .Rd counterparts).
