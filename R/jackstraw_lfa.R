@@ -18,6 +18,7 @@
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations. There will be a total of \code{s*B} null statistics.
 #' @param covariate a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).
+#' @param permute_alleles If TRUE, alleles (rather than genotypes) are permuted, which results in a more Binomial synthetic null when data is highly structured.  Default FALSE.
 #' @param verbose a logical specifying to print the computational progress.
 #'
 #' @return \code{jackstraw_lfa} returns a list consisting of
@@ -63,6 +64,7 @@ jackstraw_lfa <- function(
                           s = NULL,
                           B = NULL,
                           covariate = NULL,
+                          permute_alleles = FALSE,
                           verbose = TRUE
                           ) {
     # check mandatory data
@@ -166,7 +168,7 @@ jackstraw_lfa <- function(
         # select the random subset of rows/loci to edit
         random_s <- sample.int( m, s )
         if ( is_BEDMatrix ) {
-            objBM <- jackstraw_BEDMatrix( dat, random_s )
+            objBM <- jackstraw_BEDMatrix( dat, random_s, permute_alleles = permute_alleles )
             # both of these are BEDMatrix objects
             jackstraw.dat <- objBM$dat_full
             # NOTE: the order of loci in this s.nulls is different than in the non-BEDMatrix version below (here `sort( random_s )` rather than `random_s` below), which doesn't affect the output p-values, but since the random steps are in a different order, even fixing a seed results in different random steps in BEDMatrix vs non-BEDMatrix versions.
@@ -174,7 +176,7 @@ jackstraw_lfa <- function(
         } else {
             # extract that data and permute it, returning a matrix
             s.nulls <- dat[ random_s, , drop = FALSE ]
-            s.nulls <- t( apply( s.nulls, 1, sample ) )
+            s.nulls <- t( apply( s.nulls, 1L, if ( permute_alleles ) permute_alleles_from_geno else sample ) )
             # make a copy of this whole data containing the random subset
             jackstraw.dat <- dat
             jackstraw.dat[random_s, ] <- s.nulls
@@ -217,7 +219,12 @@ jackstraw_lfa <- function(
 
 
 # internal function for creating jackstraw random samples on disk, via BEDMatrix
-jackstraw_BEDMatrix <- function( dat, random_s, m_chunk = 1000 ) {
+jackstraw_BEDMatrix <- function(
+                                dat,
+                                random_s,
+                                permute_alleles = FALSE,
+                                m_chunk = 1000
+                                ) {
     if ( missing( dat ) )
         stop( '`dat` is required!' )
     if ( missing( random_s ) )
@@ -263,12 +270,12 @@ jackstraw_BEDMatrix <- function( dat, random_s, m_chunk = 1000 ) {
         if ( length( random_s_chunk ) > 0 ) {
             # map to indexes in the current chunk
             # this simple subtraction gives the correct indexes
-            random_s_chunk <- random_s_chunk - i_chunk + 1
+            random_s_chunk <- random_s_chunk - i_chunk + 1L
 
             # extract that data
             dat_rand <- dat_chunk[ random_s_chunk, , drop = FALSE ]
             # now permute it
-            dat_rand <- t( apply( dat_rand, 1, sample ) )
+            dat_rand <- t( apply( dat_rand, 1L, if ( permute_alleles ) permute_alleles_from_geno else sample ) )
             # overwrite those cases immediately
             dat_chunk[ random_s_chunk, ] <- dat_rand
 

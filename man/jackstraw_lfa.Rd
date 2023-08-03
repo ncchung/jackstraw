@@ -12,6 +12,7 @@ jackstraw_lfa(
   s = NULL,
   B = NULL,
   covariate = NULL,
+  permute_alleles = FALSE,
   verbose = TRUE
 )
 }
@@ -31,6 +32,8 @@ The tradeoff is BEDMatrix version typically runs considerably slower, but enable
 \item{B}{a number of resampling iterations. There will be a total of \code{s*B} null statistics.}
 
 \item{covariate}{a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).}
+
+\item{permute_alleles}{If TRUE, alleles (rather than genotypes) are permuted, which results in a more Binomial synthetic null when data is highly structured.  Default FALSE.}
 
 \item{verbose}{a logical specifying to print the computational progress.}
 }

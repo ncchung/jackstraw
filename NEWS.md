@@ -103,3 +103,8 @@ Changes manually ported from latest CRAN branch:
   - Removed package dependency `parallel` which is not being used.
   - Removed many package suggested dependencies (`knitr`, `rmarkdown`, `ggplot2`, `mutoss`, `Matrix`, `gridExtra`, `cowplot`, `scales`, `formatR`) that were only used in a vignette currently not being built.
   - Reduced example dimensions for `jackstraw_irlba` and `jackstraw_rpca` by 5 to keep their runtime low.
+
+# jackstraw 1.3.11.9000 (2023-08-03)
+
+- Function `jackstraw_lfa` added option `permute_alleles`, to change default genotype permutation to an allele-level permutation algorithm that results in much more Binomial data, particularly when input data is highly structured.
+

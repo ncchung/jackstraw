@@ -233,6 +233,59 @@ test_that( "permutationPA works", {
     expect_true( all( obj$p <= 1 ) )
 })
 
+test_that( 'permute_alleles_from_geno works', {
+    # a toy example of extremely structured data, where everybody is homozygous for one or the other allele
+    # (recall n=10 in this toy data)
+    n2 <- n / 2L
+    x <- c( rep.int( 0L, n2 ), rep.int( 2L, n2 ) )
+    # permute data at allele level
+    expect_silent(
+        y <- permute_alleles_from_geno( x )
+    )
+    # we should see that lengths match
+    expect_equal( length( y ), n )
+    # and there are no missing values in this case
+    expect_true( !anyNA( y ) )
+    # confirm that everything is in desired range
+    expect_true( all( y %in% c(0L, 1L, 2L) ) )
+    # for this example, the case without heterozygotes is so rare (0.5^10 = 9.8e-4) let's demand that there be at least one heterozygote
+    expect_true( any( y == 1L ) )
+    # and sum of genotypes equals `n` (in this case true by construction, not true in general)
+    expect_equal( sum( y ), n )
+    
+    # now try on the simulated random data (all rows)
+    # vectorize so number of tests isn't too extreme
+    expect_silent(
+        Y <- t( apply( X, 1L, permute_alleles_from_geno ) )
+    )
+    # perform general tests, still allowing no missingness (not present in simulated data)
+    expect_equal( ncol( Y ), n )
+    expect_true( !anyNA( Y ) )
+    expect_true( all( Y %in% c(0L, 1L, 2L) ) )
+    # returning the same data is practically impossible if permutation is correct
+    expect_true( !all( Y == X ) )
+    # here test that the sums of input and output for each row match
+    expect_equal( rowSums( Y ), rowSums( X ) )
+
+    # we haven't performed tests with missingness in general, and the overall runtime is so high I don't think we want to do it broadly, but here let's just sprinkle random missingness (here there's absolute tolerance for bad things happening, like fixed rows, even rows full of NAs!)
+    X_miss <- X
+    # just a little bit of missingness
+    p_miss <- 0.1
+    # add missing values
+    X_miss[ sample( n*m, n*m*p_miss ) ] <- NA
+    # repeat earlier test!
+    expect_silent(
+        Y_miss <- t( apply( X_miss, 1L, permute_alleles_from_geno ) )
+    )
+    # perform general tests, now allowing missingness!
+    expect_equal( ncol( Y_miss ), n )
+    expect_true( all( Y %in% c(0L, 1L, 2L), na.rm = TRUE ) )
+    # returning the same data is practically impossible if permutation is correct
+    expect_true( !all( Y == X, na.rm = TRUE ) )
+    # here test that the sums of input and output for each row match
+    expect_equal( rowSums( Y, na.rm = TRUE ), rowSums( X, na.rm = TRUE ) )
+})
+
 test_jackstraw_return_val <- function ( obj, s, B, kmeans = FALSE ) {
     # all jackstraw variants return basically the same thing
     # globals used: m, d
@@ -334,6 +387,12 @@ test_that( "jackstraw_lfa works", {
     # test version with covariates
     expect_silent(
         obj <- jackstraw_lfa( X, r = d, s = s, B = B, covariate = covariate, verbose = FALSE )
+    )
+    test_jackstraw_return_val( obj, s, B )
+
+    # test version with allele-level permutation!
+    expect_silent(
+        obj <- jackstraw_lfa( X, r = d, s = s, B = B, permute_alleles = TRUE, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, s, B )
 
