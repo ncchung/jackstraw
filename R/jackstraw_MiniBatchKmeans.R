@@ -87,7 +87,13 @@ jackstraw_MiniBatchKmeans <- function(
             message( "A number of resampling iterations (B) is not specified: B=round(m*10/s)=", B, "." )
     }
 
-    MiniBatchKmeans.output$cluster = ClusterR::predict_MBatchKMeans( dat, MiniBatchKmeans.output$centroids )
+    # silence this warning, which is not a real deprecation (function is not getting replaced, and we're not using the troublesome case fuzzy=TRUE anyway (default is FALSE)).  Warning Message:
+    # - `predict_MBatchKMeans()` was deprecated in ClusterR 1.3.0.
+    # - i Beginning from version 1.4.0, if the fuzzy parameter is TRUE the function 'predict_MBatchKMeans' will return only the probabilities, whereas currently it also returns the hard clusters
+    # From NEWS: I added a deprecation warning in the ‘predict_MBatchKMeans()’ function because starting from version 1.4.0, if the ‘fuzzy’ parameter is TRUE then the function will return only the probabilities, whereas currently it also returns the hard clusters. Moreover, I added the ‘updated_output’ parameter which shows the new output format when set to TRUE.
+    suppressWarnings(
+        MiniBatchKmeans.output$cluster <- ClusterR::predict_MBatchKMeans( dat, MiniBatchKmeans.output$centroids )
+    )
     k <- clusters <- nrow( MiniBatchKmeans.output$centroids )
     
     if ( verbose )
@@ -138,7 +144,10 @@ jackstraw_MiniBatchKmeans <- function(
                                                    initializer = initializer,
                                                    ...
                                                )
-        jackstraw.MiniBatchKmeans$cluster = ClusterR::predict_MBatchKMeans(jackstraw.dat, jackstraw.MiniBatchKmeans$centroids)
+        # suppress warning as done earlier (explanation above)
+        suppressWarnings(
+            jackstraw.MiniBatchKmeans$cluster <- ClusterR::predict_MBatchKMeans(jackstraw.dat, jackstraw.MiniBatchKmeans$centroids)
+        )
 
         for (i in 1:k) {
             ind.i <- intersect(ind, which(jackstraw.MiniBatchKmeans$cluster == i))

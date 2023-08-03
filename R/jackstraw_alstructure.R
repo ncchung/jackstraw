@@ -19,7 +19,7 @@
 #' \item{obs.stat}{\code{m} observed devs}
 #' \item{null.stat}{\code{s*B} null devs}
 #'
-#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #'
 #' @seealso  \link{jackstraw_pca} \link{jackstraw}

@@ -8,7 +8,7 @@
 #'
 #' Provide the data matrix, with \code{m} variables as rows and \code{n} observations as columns.
 #' Given that there are \code{r} significant PCs, this function tests for linear association between
-#' \code{m} varibles and their \code{r} PCs.
+#' \code{m} variables and their \code{r} PCs.
 #'
 #' You could specify a subset of significant PCs that you are interested in (\code{r1}). If \code{r1} is given,
 #' then this function computes statistical significance of association between \code{m} variables and \code{r1},
@@ -38,7 +38,7 @@
 #' \item{null.stat}{\code{s*B} null F-test statistics}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
 #'
 #' @seealso \link{jackstraw} \link{jackstraw_subspace} \link{permutationPA}
 #'

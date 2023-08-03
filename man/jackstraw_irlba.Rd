@@ -48,7 +48,7 @@ and protects against an anti-conservative bias.
 
 Provide the data matrix, with \code{m} variables as rows and \code{n} observations as columns.
 Given that there are \code{r} significant PCs, this function tests for linear association between
-\code{m} varibles and their \code{r} PCs.
+\code{m} variables and their \code{r} PCs.
 
 You could specify a subset of significant PCs that you are interested in (\code{r1}). If \code{r1} is given,
 then this function computes statistical significance of association between \code{m} variables and \code{r1},
@@ -66,9 +66,9 @@ If \code{B} is not supplied, \code{B} is set to \code{m*10/s}.
 }
 \examples{
 ## simulate data from a latent variable model: Y = BL + E
-B = c(rep(1,50),rep(-1,50), rep(0,900))
+B = c(rep(1,10),rep(-1,10), rep(0,180))
 L = rnorm(20)
-E = matrix(rnorm(1000*20), nrow=1000)
+E = matrix(rnorm(200*20), nrow=200)
 dat = B \%*\% t(L) + E
 dat = t(scale(t(dat), center=TRUE, scale=TRUE))
 
@@ -78,12 +78,12 @@ out = jackstraw_irlba(dat, r=1)
 ## Use optional arguments
 ## For example, set s and B for a balance between speed of the algorithm and accuracy of p-values
 \dontrun{
-## out = jackstraw_irlba(dat, r=1, s=10, B=1000)
+## out = jackstraw_irlba(dat, r=1, s=10, B=200)
 }
 
 }
 \references{
-Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{http://bioinformatics.oxfordjournals.org/content/31/4/545}
+Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
 }
 \seealso{
 \link{jackstraw} \link{jackstraw_subspace} \link{permutationPA}

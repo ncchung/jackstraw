@@ -1,6 +1,8 @@
 #' Compute posterior inclusion probabilities (PIPs)
 #'
-#' Computes posterior probabilities that a feature is a true member of an assigned cluster
+#' From a set of p-values, computes posterior probabilities that a feature should be truly included.
+#' For example, membership inclusion in a given cluster can be improved by filtering low quality members.
+#' In using PCA and related methods, it helps select variables that are truly associated with given latent variables.
 #'
 #' @param pvalue a vector of p-values.
 #' @param group a vector of group indicators (optional).

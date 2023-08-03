@@ -27,7 +27,7 @@ Additional details:
     - `lfa`, `alstructure`, `subspace` versions: `r` does not have a default value and it is mandatory.
 - Functions `jackstraw_kmeans`, `jackstraw_kmeanspp`, `jackstraw_MiniBatchKmeans`, `jackstraw_pam`, `jackstraw_cluster`:
   - Debugged `s = 1` edge case: null data used to be centered incorrectly.
-    Bug only occured in combination with `center = TRUE` (default).
+    Bug only occurred in combination with `center = TRUE` (default).
 - Internal (unexported) function `RSS` now returns actual residual sum of squares.  This change does not affect any exported functions that use it.  Previously `RSS` calculated a normalized version (equal to `1 - R^2`), but this normalization canceled out in `FSTAT` (its only downstream use), so the normalization had no user-facing effect.
 
 Exclusive list of functions without unit tests (all are redundant with other packages, so they are candidates for removal in the near future):
@@ -61,9 +61,43 @@ Exclusive list of functions without unit tests (all are redundant with other pac
   The only internal dependencies were `jackstraw_lfa` and `jackstraw_alstructure`.
 - Updated `README.md` to instruct users to install the most updated forks of `lfa` and `gcatest` on GitHub (under username `alexviiia`), rather than the Bioconductor versions that are lacking critical updates.
 
+# jackstraw 1.3.5.9000 (2021-06-21)
+
+- Version was not bumped accidentally
+- Removed old vignette
+- Fixed a small error in jackstraw_lfa example
+
 # jackstraw 1.3.6.9000 (2022-02-08)
 
 - All `jackstraw_*` functions now return `NA` p-values for `NA` statistics.
   - Before `NA` statistics resulted in p-values of 1 instead, which is what `qvalue::empPvals` returns.  Now an internal wrapper function ensures the desired behavior.
 - Removed two `jackstraw_pam` toy example unit tests that failed often due to colinearity.
 - Reformatted this `NEWS.md` slightly to improve its automatic parsing.
+
+# jackstraw 1.3.9.9000 (2022-11-28)
+
+- Heavy updates to `README.md`
+- Updated summary in `DESCRIPTION`
+- Updated paper citations and URLs across function documentation
+- Bumped version to exceed CRAN versions (which are currently on a separate branch due to temporary issues with dependencies `lfa` and `gcatest`)
+
+# jackstraw 1.3.10.9000 (2023-08-03)
+
+- Function `jackstraw_MiniBatchKmeans`: internally added `suppressWarnings` wrapper around `ClusterR::predict_MBatchKMeans` to silence a misleading deprecation warning.  The function as a whole is not deprecated, but its output for a case we don't use (fuzzy=TRUE) is changing in the future.  Warning message now being suppressed:
+  - `predict_MBatchKMeans()` was deprecated in ClusterR 1.3.0.
+  - Beginning from version 1.4.0, if the fuzzy parameter is TRUE the function 'predict_MBatchKMeans' will return only the probabilities, whereas currently it also returns the hard clusters
+- Documentation
+  - Corrected citation links for two similar papers
+  - Function documentation (.Rd files) was actually updated as described in the last version (last commit had source .R files edited but not their .Rd counterparts).
+  - Added a recent missing `NEWS.md` entry
+
+Changes manually ported from latest CRAN branch:
+
+- Minor non-code edits
+  - Spell checked documentation
+  - Changed to single maintainer (Neo)
+  - Removed `VignetteBuilder: knitr` since there's no vignette anymore
+  - Fixed broken or outdated URLs
+  - Removed package dependency `parallel` which is not being used.
+  - Removed many package suggested dependencies (`knitr`, `rmarkdown`, `ggplot2`, `mutoss`, `Matrix`, `gridExtra`, `cowplot`, `scales`, `formatR`) that were only used in a vignette currently not being built.
+  - Reduced example dimensions for `jackstraw_irlba` and `jackstraw_rpca` by 5 to keep their runtime low.

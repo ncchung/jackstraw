@@ -1,6 +1,6 @@
 # NOTES:
 # - what's the difference between ALV and covariate?  Shouldn't they be merged at this point?
-# - `parametric = TRUE` is never used by any dependencies in this package
+# - `parametric = TRUE` is never used by any dependencies in this package (but popdiff paper uses it!)
 FSTAT <- function(dat, LV, ALV = NULL,
     covariate = NULL, parametric = FALSE) {
     # Calculate F-statistics and

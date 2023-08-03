@@ -1,9 +1,9 @@
 #' @details
 #' The jackstraw package provides a resampling strategy and testing scheme to estimate statistical significance
 #' of association between the observed data and their latent variables. Depending on the data type and the analysis aim,
-#' the latent variables may be estimated by principal component analysis, K-means clustering, and related algorithms.
+#' the latent variables may be estimated by principal component analysis (PCA), K-means clustering, and related algorithms.
 #' The jackstraw methods learn over-fitting characteristics inherent in this circular analysis, where the observed data are used
-#' to estimate the latent variables and to again test against the estimated latent variables.
+#' to estimate the latent variables and used again to test against those estimated latent variables.
 #'
 #' The jackstraw tests enable us to identify the data features (i.e., variables or observations) that are
 #' driving systematic variation, in a completely unsupervised manner. Using \link{jackstraw_pca}, we can
@@ -16,7 +16,7 @@
 #' From \code{m} p-values, \link{pip} computes posterior inclusion probabilities, that are useful for feature selection and visualization.
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
 #' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
 #'
 #' @seealso \link{jackstraw_pca} \link{jackstraw_subspace} \link{jackstraw_kmeans} \link{jackstraw_cluster}

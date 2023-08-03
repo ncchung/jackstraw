@@ -12,7 +12,7 @@
 #'
 #' @param dat a data matrix with \code{m} rows as variables and \code{n} columns as observations.
 #' @param r a number of significant latent variables.
-#' @param FUN Provide a specfic function to estimate LVs. Must output \code{r} estimated LVs in a \code{n*r} matrix.
+#' @param FUN Provide a specific function to estimate LVs. Must output \code{r} estimated LVs in a \code{n*r} matrix.
 #' @param noise specify a parametric distribution to generate a noise term. If \code{NULL}, a non-parametric jackstraw test is performed.
 #' @param r1 a numeric vector of latent variables of interest.
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
@@ -26,7 +26,7 @@
 #' \item{null.stat}{\code{s*B} null statistics}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
 #' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
 #'
 #' @seealso \link{jackstraw_pca} \link{jackstraw}

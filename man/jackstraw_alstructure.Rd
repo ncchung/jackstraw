@@ -45,6 +45,9 @@ Test association between the observed variables and population structure estimat
 This function uses ALStructure from Cabreros and Storey (2019). A deviation \code{dev} in logistic regression
 (the full model with \code{r} LFs vs. the intercept-only model) is used to assess association.
 }
+\references{
+Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
+}
 \seealso{
 \link{jackstraw_pca} \link{jackstraw}
 }
