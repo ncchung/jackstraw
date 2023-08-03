@@ -90,6 +90,7 @@ Exclusive list of functions without unit tests (all are redundant with other pac
   - Corrected citation links for two similar papers
   - Function documentation (.Rd files) was actually updated as described in the last version (last commit had source .R files edited but not their .Rd counterparts).
   - Added a recent missing `NEWS.md` entry
+  - Replaced two links that gave errors in `README.md`
 
 Changes manually ported from latest CRAN branch:
 
