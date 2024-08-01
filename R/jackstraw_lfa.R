@@ -18,7 +18,8 @@
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations. There will be a total of \code{s*B} null statistics.
 #' @param covariate a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).
-#' @param permute_alleles If TRUE, alleles (rather than genotypes) are permuted, which results in a more Binomial synthetic null when data is highly structured.  Default FALSE.
+#' @param permute_alleles If TRUE (default), alleles (rather than genotypes) are permuted, which results in a more Binomial synthetic null when data is highly structured.
+#' Changing to FALSE is not recommended, except for research purposes to confirm that it performs worse than the default.
 #' @param verbose a logical specifying to print the computational progress.
 #'
 #' @return \code{jackstraw_lfa} returns a list consisting of
@@ -64,7 +65,7 @@ jackstraw_lfa <- function(
                           s = NULL,
                           B = NULL,
                           covariate = NULL,
-                          permute_alleles = FALSE,
+                          permute_alleles = TRUE,
                           verbose = TRUE
                           ) {
     # check mandatory data

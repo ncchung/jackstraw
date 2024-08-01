@@ -111,3 +111,5 @@ Changes manually ported from latest CRAN branch:
 # jackstraw 1.3.12.9000 (2024-08-01)
 
 - `README` edited installation instructions to reflect that dependencies `lfa` and `gcatest` are now updated on Bioconductor (no need to install github versions) and `alstructure` is now optional.
+- Function `jackstraw_lfa` changed option `permute_alleles` to default to `TRUE`, which performs much better, and documentation now recommends against changing that option except for research purposes.
+

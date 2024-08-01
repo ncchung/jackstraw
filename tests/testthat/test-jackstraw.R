@@ -390,9 +390,9 @@ test_that( "jackstraw_lfa works", {
     )
     test_jackstraw_return_val( obj, s, B )
 
-    # test version with allele-level permutation!
+    # test version without default allele-level permutation!
     expect_silent(
-        obj <- jackstraw_lfa( X, r = d, s = s, B = B, permute_alleles = TRUE, verbose = FALSE )
+        obj <- jackstraw_lfa( X, r = d, s = s, B = B, permute_alleles = FALSE, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, s, B )
 
