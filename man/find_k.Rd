@@ -8,7 +8,7 @@ find_k()
 }
 \description{
 There are a wide range of algorithms and visual techniques to identify
-a number of clusters or principal components embeded in the observed data.
+a number of clusters or principal components embedded in the observed data.
 }
 \details{
 It is critical to explore the eigenvalues, cluster stability, and visualization.

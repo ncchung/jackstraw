@@ -84,8 +84,8 @@ Exclusive list of functions without unit tests (all are redundant with other pac
 # jackstraw 1.3.10.9000 (2023-08-03)
 
 - Function `jackstraw_MiniBatchKmeans`: internally added `suppressWarnings` wrapper around `ClusterR::predict_MBatchKMeans` to silence a misleading deprecation warning.  The function as a whole is not deprecated, but its output for a case we don't use (fuzzy=TRUE) is changing in the future.  Warning message now being suppressed:
-  - `predict_MBatchKMeans()` was deprecated in ClusterR 1.3.0.
-  - Beginning from version 1.4.0, if the fuzzy parameter is TRUE the function 'predict_MBatchKMeans' will return only the probabilities, whereas currently it also returns the hard clusters
+  - `predict_MBatchKMeans()` was deprecated in `ClusterR` 1.3.0.
+  - Beginning from version 1.4.0, if the fuzzy parameter is TRUE the function `predict_MBatchKMeans` will return only the probabilities, whereas currently it also returns the hard clusters
 - Removed strict dependence of the `alstructure` R package (on GitHub only), user now has to provide the function to apply to data for `jackstraw_alstructure` to work.
 - Documentation
   - Corrected citation links for two similar papers
@@ -110,6 +110,6 @@ Changes manually ported from latest CRAN branch:
 
 # jackstraw 1.3.12.9000 (2024-08-01)
 
-- `README` edited installation instructions to reflect that dependencies `lfa` and `gcatest` are now updated on Bioconductor (no need to install github versions) and `alstructure` is now optional.
+- `README` edited installation instructions to reflect that dependencies `lfa` and `gcatest` are now updated on Bioconductor (no need to install GitHub versions) and `alstructure` is now optional.
 - Function `jackstraw_lfa` changed option `permute_alleles` to default to `TRUE`, which performs much better, and documentation now recommends against changing that option except for research purposes.
-
+- Corrected typos throughout, and marked code as such to prevent false positives.

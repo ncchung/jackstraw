@@ -24,7 +24,7 @@ permutationPA(dat, B = 100, threshold = 0.05, verbose = TRUE)
 Estimate a number of significant principal components from a permutation test.
 }
 \details{
-Adopted from sva::num.sv, and based on Buja and Eyuboglu (1992)
+Adopted from \code{sva::num.sv}, and based on Buja and Eyuboglu (1992)
 }
 \references{
 Buja A and Eyuboglu N. (1992) Remarks on parallel analysis. Multivariate Behavioral Research, 27(4), 509-540

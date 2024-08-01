@@ -2,16 +2,16 @@
 #'
 #' Test association between the observed variables and their latent variables captured by logistic factors (LFs).
 #'
-#' This function uses logistic factor analysis (LFA) from Wei et al. (2014).
+#' This function uses logistic factor analysis (LFA) from Hao et al. (2016).
 #' Particularly, the deviance in logistic regression (the full model with \code{r} LFs vs. the intercept-only model) is used to assess significance.
 #'
-#' The random outputs of the regular matrix versus the BEDMatrix versions are equal in distribution.
+#' The random outputs of the regular matrix versus the \code{BEDMatrix} versions are equal in distribution.
 #' However, fixing a seed and providing the same data to both versions does not result in the same exact outputs.
-#' This is because the BEDMatrix version permutes loci in a different order by necessity.
+#' This is because the \code{BEDMatrix} version permutes loci in a different order by necessity.
 #'
-#' @param dat either a genotype matrix with \code{m} rows as variables and \code{n} columns as observations, or a BEDMatrix object (see package \code{BEDMatrix}, these objects are transposed compared to the above but this works fine as-is, see example, no need to modify a \code{BEDMatrix} input).
-#' A BEDMatrix input triggers a low-memory mode where permutted data is also written and processed from disk, whereas a regular matrix input stores permutations in memory.
-#' The tradeoff is BEDMatrix version typically runs considerably slower, but enables analysis of very large data that is otherwise impossible.
+#' @param dat either a genotype matrix with \code{m} rows as variables and \code{n} columns as observations, or a \code{BEDMatrix} object (see package \code{BEDMatrix}, these objects are transposed compared to the above but this works fine as-is, see example, no need to modify a \code{BEDMatrix} input).
+#' A \code{BEDMatrix} input triggers a low-memory mode where permuted data is also written and processed from disk, whereas a regular matrix input stores permutations in memory.
+#' The tradeoff is \code{BEDMatrix} version typically runs considerably slower, but enables analysis of very large data that is otherwise impossible.
 #' @param r a number of significant LFs.
 #' @param FUN a function to use for LFA (by default, it uses the \code{lfa} package)
 #' @param r1 a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).

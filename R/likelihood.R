@@ -1,4 +1,4 @@
-#' Mcfadden's Pseudo R-sqaured
+#' Mcfadden's Pseudo R-squared
 #'
 #' @param X a data matrix.
 #' @param LF_alt Observed logistic factors.
@@ -54,7 +54,7 @@ mcfadden_Rsq_snp <- function(snp, p1, p0) {
     1 - (llalt/llnull)
 }
 
-#' Efron's Pseudo R-sqaured
+#' Efron's Pseudo R-squared
 #'
 #' @param X a data matrix.
 #' @param LF Observed logistic factors.
