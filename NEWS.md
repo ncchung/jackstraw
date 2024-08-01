@@ -65,7 +65,7 @@ Exclusive list of functions without unit tests (all are redundant with other pac
 
 - Version was not bumped accidentally
 - Removed old vignette
-- Fixed a small error in jackstraw_lfa example
+- Fixed a small error in `jackstraw_lfa` example
 
 # jackstraw 1.3.6.9000 (2022-02-08)
 
@@ -108,3 +108,6 @@ Changes manually ported from latest CRAN branch:
 
 - Function `jackstraw_lfa` added option `permute_alleles`, to change default genotype permutation to an allele-level permutation algorithm that results in much more Binomial data, particularly when input data is highly structured.
 
+# jackstraw 1.3.12.9000 (2024-08-01)
+
+- `README` edited installation instructions to reflect that dependencies `lfa` and `gcatest` are now updated on Bioconductor (no need to install github versions) and `alstructure` is now optional.

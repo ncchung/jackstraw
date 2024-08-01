@@ -49,7 +49,7 @@ LF0 <- NULL
 
 # set these parameters (match defaults), which also determine dimensions of null.stat matrix
 # let's use smaller values than defaults so tests are faster
-s <- 2 # default is: round( m / 10 )
+s <- 5 # default is: round( m / 10 )
 B <- 2 # default is: round( m * 10 / s )
 
 # include a covariate for tests (a vector for individuals)

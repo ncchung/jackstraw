@@ -13,6 +13,8 @@ FSTAT <- function(dat, LV, ALV = NULL,
         stop( '`dat` must be a matrix!' )
     if ( missing( LV ) )
         stop( '`LV` is required!' )
+    if ( !is.matrix( LV ) )
+        stop( '`LV` must be a matrix!' )
     
     m <- nrow(dat)
     n <- ncol(dat)

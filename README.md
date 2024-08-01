@@ -26,47 +26,44 @@ https://academic.oup.com/bioinformatics/article/31/4/545/2748186
 
 [Unsupervised Evaluation of Cell Identities in Single Cell Genomics using the 10X Genomics Data](https://cbml.science/post/unsupervised-evaluation-of-cell-identities/)
 
-# Stable Version on CRAN
+# Installation
 
-The stable version **jackstraw v1.3.8** is on CRAN. This lacks functionalities that requires `lfa`, `gcatest`, and `alstructure`. If you are interested in those functionalities, see below for installing the developmental version on this GitHub repo.
+## Bioconductor dependencies
 
-To use a stable version from CRAN:
+Bioconductor dependencies may fail to automatically install, e.g., [lfa](https://bioconductor.org/packages/release/bioc/html/lfa.html), [gcatest](https://bioconductor.org/packages/release/bioc/html/gcatest.html), [qvalue](https://bioconductor.org/packages/release/bioc/html/qvalue.html). This would result in a [warning](https://github.com/ncchung/jackstraw/issues/2).
+
+To solve this problem, please install Bioconductor dependencies manually first:
 ```R
-install.packages("jackstraw")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(c('qvalue', 'lfa', 'gcatest'))
 ```
 
-# Development Version on GitHub
+## Development Version on GitHub
 
-This package is in active development. To install this developmental version, first install updates for `lfa`, `gcatest`, and `alstructure` from these GitHub repositories: 
-
-```R
-library(devtools)
-install_github("StoreyLab/lfa")
-install_github("StoreyLab/alstructure")
-install_github("alexviiia/gcatest")
-```
-Eventually, the Bioconductor versions of `lfa` and `gcatest` will have these updates; sorry for the temporary inconvenience.
-
-Then, install the jackstraw from GitHub:
+This package is in active development. 
+Install jackstraw from GitHub:
 ```R
 install.packages("devtools")
 library("devtools")
 install_github("ncchung/jackstraw")
 ```
 
-# Troubleshooting
-
-Bioconductor dependencies may fail to automatically install, e.g., [lfa](https://bioconductor.org/packages/release/bioc/html/lfa.html), [gcatest](https://bioconductor.org/packages/release/bioc/html/gcatest.html), [qvalue](https://bioconductor.org/packages/release/bioc/html/qvalue.html). This would result in a [warning](https://github.com/ncchung/jackstraw/issues/2).
-
-To solve this problem, please install Bioconductor dependencies manually.
+To make full use of the `jackstraw_alstructure` function, also install the optional `alstructure` package from this GitHub repository: 
 ```R
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-BiocManager::install(c('qvalue'))
+library(devtools)
+install_github("StoreyLab/alstructure")
 ```
 
-Note that to use the development version, please install corresponding packages from GitHub repositories.
+## Stable Version on CRAN
+
+The stable version **jackstraw v1.3.8** is on CRAN. This lacks functionalities that requires `lfa`, `gcatest`, and `alstructure`. If you are interested in those functionalities, see above for installing the developmental version on this GitHub repo.
+
+To use a stable version from CRAN:
+```R
+install.packages("jackstraw")
+```
 
 # Implementations and Extensions
 
