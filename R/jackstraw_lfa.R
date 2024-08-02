@@ -197,9 +197,11 @@ jackstraw_lfa <- function(
                         )
 
         # now we're done with these temporary files
+        # NOTE: on Windows there's a peculiar issue, that these temporary files cannot be removed because BEDMatrix left them "open", silence those warnings!
         if ( is_BEDMatrix ) {
-            invisible( file.remove( objBM$file_full ) )
-            invisible( file.remove( objBM$file_rand ) )
+            # try to delete, ignore warnings if it failed
+            invisible( suppressWarnings( file.remove( objBM$file_full ) ) )
+            invisible( suppressWarnings( file.remove( objBM$file_rand ) ) )
         }
 
         if ( verbose )
@@ -309,7 +311,7 @@ jackstraw_BEDMatrix <- function(
     # provide dimensions for speed and also since BIM and FAM files are absent!
     dat_full <- BEDMatrix::BEDMatrix( file_full, n = n_ind, p = m_loci )
     dat_rand <- BEDMatrix::BEDMatrix( file_rand, n = n_ind, p = s )
-
+    
     # done, return necessary data!
     return(
         list(

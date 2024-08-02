@@ -113,3 +113,10 @@ Changes manually ported from latest CRAN branch:
 - `README` edited installation instructions to reflect that dependencies `lfa` and `gcatest` are now updated on Bioconductor (no need to install GitHub versions) and `alstructure` is now optional.
 - Function `jackstraw_lfa` changed option `permute_alleles` to default to `TRUE`, which performs much better, and documentation now recommends against changing that option except for research purposes.
 - Corrected typos throughout, and marked code as such to prevent false positives.
+
+# jackstraw 1.3.13 (2024-08-01)
+
+- CRAN submission
+- DESCRIPTION replaced `Author` and `Maintainer` with `Authors@R` field
+- Function `jackstraw_lfa` silenced warnings that occurs only if input is `BEDMatrix` object and OS is Windows, in which case some temporary files cannot be deleted during the R session.
+- Created `cran-comments.md`

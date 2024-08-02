@@ -1203,4 +1203,4 @@ test_that( "jackstraw_lfa works with BEDMatrix", {
 
 
 # clean up BEDMatrix example
-invisible( file.remove( file_tmp ) )
+invisible( suppressWarnings( file.remove( file_tmp ) ) )
