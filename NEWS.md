@@ -120,3 +120,8 @@ Changes manually ported from latest CRAN branch:
 - DESCRIPTION replaced `Author` and `Maintainer` with `Authors@R` field
 - Function `jackstraw_lfa` silenced warnings that occurs only if input is `BEDMatrix` object and OS is Windows, in which case some temporary files cannot be deleted during the R session.
 - Created `cran-comments.md`
+
+# jackstraw 1.3.14 (2024-08-29)
+
+- `README` edited. Use cases as a separate subsection.
+- Description in `DESCRIPTION` edited.
