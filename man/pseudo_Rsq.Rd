@@ -14,7 +14,7 @@ pseudo_Rsq(X, LF_alt, LF_null = NULL)
 \item{LF_null}{Null logistic factors.}
 }
 \description{
-Mcfadden's Pseudo R-squared
+This function requires the Bioconductor \code{lfa} package to be installed.
 }
 \author{
 Wei Hao

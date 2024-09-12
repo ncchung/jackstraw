@@ -125,3 +125,16 @@ Changes manually ported from latest CRAN branch:
 
 - `README` edited. Use cases as a separate subsection.
 - Description in `DESCRIPTION` edited.
+
+# jackstraw 1.3.15 (2024-08-30?)
+
+- ???
+
+# jackstraw 1.3.16 (2024-09-12)
+
+- Moved Bioconductor dependencies (`qvalue`, `lfa`, and `gcatest`) from Imports to Suggests, as required by CRAN.  Dependent functions will now only work if those packages are installed: 
+  - Package `qvalue` is required for function `pip`.
+  - Package `lfa` is required for functions `pseudo_Rsq` and `efron_Rsq`, and in practice for `jackstraw_lfa` too.
+  - Package `gcatest` is required for functions `jackstraw_alstructure` and `jackstraw_lfa`.
+  - Function `jackstraw_lfa` now requires option `FUN` to be defined and provided by the user (it used to default to the `lfa` function)
+  - Internal function `empPvals` is now a copy of the function of the same name in the `qvalue` package, with minor adaptations.  This is to ensure most `jackstraw` functions, which depend on `empPvals`, work without `qvalue`.

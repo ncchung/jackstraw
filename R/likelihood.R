@@ -1,5 +1,7 @@
 #' Mcfadden's Pseudo R-squared
 #'
+#' This function requires the Bioconductor \code{lfa} package to be installed.
+#'
 #' @param X a data matrix.
 #' @param LF_alt Observed logistic factors.
 #' @param LF_null Null logistic factors.
@@ -7,6 +9,10 @@
 #'
 #' @keywords internal
 pseudo_Rsq <- function(X, LF_alt, LF_null = NULL) {
+    # check package dependencies!
+    if ( !requireNamespace( "lfa" ) )
+        stop( 'The Bioconductor `lfa` package is required to use function `jackstraw::pseudo_Rsq`, please install it manually!' )
+    
     if ( missing( X ) )
         stop( '`X` is required!' )
     if ( missing( LF_alt ) )
@@ -56,12 +62,18 @@ mcfadden_Rsq_snp <- function(snp, p1, p0) {
 
 #' Efron's Pseudo R-squared
 #'
+#' This function requires the Bioconductor \code{lfa} package to be installed.
+#'
 #' @param X a data matrix.
 #' @param LF Observed logistic factors.
 #' @author Wei Hao
 #'
 #' @keywords internal
 efron_Rsq <- function(X, LF) {
+    # check package dependencies!
+    if ( !requireNamespace( "lfa" ) )
+        stop( 'The Bioconductor `lfa` package is required to use function `jackstraw::efron_Rsq`, please install it manually!' )
+    
     if ( missing( X ) )
         stop( '`X` is required!' )
     if ( missing( LF ) )

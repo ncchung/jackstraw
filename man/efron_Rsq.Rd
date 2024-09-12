@@ -12,7 +12,7 @@ efron_Rsq(X, LF)
 \item{LF}{Observed logistic factors.}
 }
 \description{
-Efron's Pseudo R-squared
+This function requires the Bioconductor \code{lfa} package to be installed.
 }
 \author{
 Wei Hao

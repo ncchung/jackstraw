@@ -4,6 +4,7 @@
 #'
 #' This function uses ALStructure from Cabreros and Storey (2019). A deviation \code{dev} in logistic regression
 #' (the full model with \code{r} LFs vs. the intercept-only model) is used to assess association.
+#' This function also requires the Bioconductor \code{gcatest} package to be installed.
 #'
 #' @param dat a genotype matrix with \code{m} rows as variables and \code{n} columns as observations.
 #' @param r a number of significant LFs.
@@ -51,6 +52,10 @@ jackstraw_alstructure <- function(
                                   covariate = NULL,
                                   verbose = TRUE
                                   ) {
+    # check package dependencies!
+    if ( !requireNamespace( "gcatest" ) )
+        stop( 'The Bioconductor `gcatest` package is required to use function `jackstraw::jackstraw_alstructure`, please install it manually!' )
+    
     # check mandatory data
     if ( missing( dat ) )
         stop( '`dat` is required!' )

@@ -44,6 +44,7 @@ Test association between the observed variables and population structure estimat
 \details{
 This function uses ALStructure from Cabreros and Storey (2019). A deviation \code{dev} in logistic regression
 (the full model with \code{r} LFs vs. the intercept-only model) is used to assess association.
+This function also requires the Bioconductor \code{gcatest} package to be installed.
 }
 \examples{
 \dontrun{

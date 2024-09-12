@@ -28,6 +28,9 @@ From a set of p-values, computes posterior probabilities that a feature should b
 For example, membership inclusion in a given cluster can be improved by filtering low quality members.
 In using PCA and related methods, it helps select variables that are truly associated with given latent variables.
 }
+\details{
+This function requires the Bioconductor \code{qvalue} package to be installed.
+}
 \references{
 Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
 

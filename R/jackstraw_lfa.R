@@ -4,6 +4,7 @@
 #'
 #' This function uses logistic factor analysis (LFA) from Hao et al. (2016).
 #' Particularly, the deviance in logistic regression (the full model with \code{r} LFs vs. the intercept-only model) is used to assess significance.
+#' This function requires the \code{gcatest} package, and in practice also the \code{lfa} package, to be installed from Bioconductor.
 #'
 #' The random outputs of the regular matrix versus the \code{BEDMatrix} versions are equal in distribution.
 #' However, fixing a seed and providing the same data to both versions does not result in the same exact outputs.
@@ -13,7 +14,7 @@
 #' A \code{BEDMatrix} input triggers a low-memory mode where permuted data is also written and processed from disk, whereas a regular matrix input stores permutations in memory.
 #' The tradeoff is \code{BEDMatrix} version typically runs considerably slower, but enables analysis of very large data that is otherwise impossible.
 #' @param r a number of significant LFs.
-#' @param FUN a function to use for LFA (by default, it uses the \code{lfa} package)
+#' @param FUN a function to use for LFA.
 #' @param r1 a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).
 #' @param s a number of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number of resampling iterations. There will be a total of \code{s*B} null statistics.
@@ -45,22 +46,29 @@
 #'
 #' dat <- matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 #'
+#' # load lfa package (install from Bioconductor)
+#' library(lfa)
+#' # choose the number of logistic factors, including the intercept
+#' r <- 2
+#' # define the function this way, a function of the genotype matrix only
+#' FUN <- function(x) lfa::lfa( x, r )
+#'
 #' ## apply the jackstraw_lfa
-#' out <- jackstraw_lfa(dat, r = 2)
+#' out <- jackstraw_lfa( dat, r, FUN )
 #'
 #' # if you had very large genotype data in plink BED/BIM/FAM files,
 #' # use BEDMatrix and save memory by reading from disk (at the expense of speed)
 #' library(BEDMatrix)
 #' dat_BM <- BEDMatrix( 'filepath' ) # assumes filepath.bed, .bim and .fam exist
 #' # run jackstraw!
-#' out <- jackstraw_lfa(dat_BM, r = 2)
+#' out <- jackstraw_lfa( dat_BM, r, FUN )
 #' }
 #'
 #' @export
 jackstraw_lfa <- function(
                           dat,
                           r,
-                          FUN = function(x) lfa::lfa(x, r),
+                          FUN,
                           r1 = NULL,
                           s = NULL,
                           B = NULL,
@@ -68,13 +76,21 @@ jackstraw_lfa <- function(
                           permute_alleles = TRUE,
                           verbose = TRUE
                           ) {
+    # check package dependencies!
+    if ( !requireNamespace( "gcatest" ) )
+        stop( 'The Bioconductor `gcatest` package is required to use function `jackstraw::jackstraw_lfa`, please install it manually!' )
+    
     # check mandatory data
     if ( missing( dat ) )
         stop( '`dat` is required!' )
     if ( missing( r ) )
         stop( '`r` is required!' )
+    if ( missing( FUN ) )
+        stop( '`FUN` is required!' )
     if ( !is.matrix( dat ) )
         stop( '`dat` must be a matrix!' )
+    if ( !is.function( FUN ) )
+        stop( '`FUN` must be a function!' )
 
     if ( !is.null( FUN ) ) {
         FUN <- match.fun( FUN )

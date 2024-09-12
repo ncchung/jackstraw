@@ -7,7 +7,7 @@
 jackstraw_lfa(
   dat,
   r,
-  FUN = function(x) lfa::lfa(x, r),
+  FUN,
   r1 = NULL,
   s = NULL,
   B = NULL,
@@ -23,7 +23,7 @@ The tradeoff is \code{BEDMatrix} version typically runs considerably slower, but
 
 \item{r}{a number of significant LFs.}
 
-\item{FUN}{a function to use for LFA (by default, it uses the \code{lfa} package)}
+\item{FUN}{a function to use for LFA.}
 
 \item{r1}{a numeric vector of LFs of interest (implying you are not interested in all \code{r} LFs).}
 
@@ -50,6 +50,7 @@ Test association between the observed variables and their latent variables captu
 \details{
 This function uses logistic factor analysis (LFA) from Hao et al. (2016).
 Particularly, the deviance in logistic regression (the full model with \code{r} LFs vs. the intercept-only model) is used to assess significance.
+This function requires the \code{gcatest} package, and in practice also the \code{lfa} package, to be installed from Bioconductor.
 
 The random outputs of the regular matrix versus the \code{BEDMatrix} versions are equal in distribution.
 However, fixing a seed and providing the same data to both versions does not result in the same exact outputs.
@@ -69,15 +70,22 @@ prob <- exp(BL)/(1+exp(BL))
 
 dat <- matrix(rbinom(m*n, 2, as.numeric(prob)), m, n)
 
+# load lfa package (install from Bioconductor)
+library(lfa)
+# choose the number of logistic factors, including the intercept
+r <- 2
+# define the function this way, a function of the genotype matrix only
+FUN <- function(x) lfa::lfa( x, r )
+
 ## apply the jackstraw_lfa
-out <- jackstraw_lfa(dat, r = 2)
+out <- jackstraw_lfa( dat, r, FUN )
 
 # if you had very large genotype data in plink BED/BIM/FAM files,
 # use BEDMatrix and save memory by reading from disk (at the expense of speed)
 library(BEDMatrix)
 dat_BM <- BEDMatrix( 'filepath' ) # assumes filepath.bed, .bim and .fam exist
 # run jackstraw!
-out <- jackstraw_lfa(dat_BM, r = 2)
+out <- jackstraw_lfa( dat_BM, r, FUN )
 }
 
 }

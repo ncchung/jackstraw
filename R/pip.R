@@ -4,6 +4,8 @@
 #' For example, membership inclusion in a given cluster can be improved by filtering low quality members.
 #' In using PCA and related methods, it helps select variables that are truly associated with given latent variables.
 #'
+#' This function requires the Bioconductor \code{qvalue} package to be installed.
+#'
 #' @param pvalue a vector of p-values.
 #' @param group a vector of group indicators (optional).
 #' If provided, PIP analysis is stratified.
@@ -26,6 +28,10 @@ pip <- function(
                 verbose = TRUE,
                 ...
                 ) {
+    # check package dependencies!
+    if ( !requireNamespace( "qvalue" ) )
+        stop( 'The Bioconductor `qvalue` package is required to use function `jackstraw::pip`, please install it manually!' )
+    
     # pvalue is always mandatory
     if ( missing( pvalue ) )
         stop( '`pvalue` is required!' )
