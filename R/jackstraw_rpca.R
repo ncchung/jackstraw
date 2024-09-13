@@ -39,7 +39,7 @@
 #' \item{null.stat}{\code{s*B} null F-test statistics}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
+#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \doi{10.1093/bioinformatics/btu674}
 #'
 #' @seealso \link{jackstraw} \link{jackstraw_subspace} \link{permutationPA}
 #'
@@ -59,7 +59,7 @@
 #' \dontrun{
 #' ## out = jackstraw_rpca(dat, r=1, s=10, B=200)
 #' }
-#' 
+#'
 #' @export
 jackstraw_rpca <- function(
                            dat,
@@ -87,7 +87,7 @@ jackstraw_rpca <- function(
             if ( nrow( covariate ) != n )
                 stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
         } else {
-            if ( length( covariate ) != n ) 
+            if ( length( covariate ) != n )
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
@@ -100,7 +100,7 @@ jackstraw_rpca <- function(
     if (!(r > 0 && r < n)) {
         stop("r is not in valid range between 1 and n-1.")
     }
-    
+
     if (is.null(s)) {
         s <- round(m/10)
         if (verbose)
@@ -111,7 +111,7 @@ jackstraw_rpca <- function(
         if (verbose)
             message( "A number of resampling iterations (B) is not specified: B=round(m*10/s)=", B, "." )
     }
-    
+
     if (is.null(r1))
         r1 <- 1:r
     if (all(seq(r) %in% r1)) {
@@ -143,7 +143,7 @@ jackstraw_rpca <- function(
 
     if ( verbose )
         cat(paste0("\nComputating null statistics (", B, " total iterations): "))
-    
+
     for (i in 1:B) {
         random.s <- sample.int( m, s )
         s.nulls <- dat[ random.s, , drop = FALSE ]
@@ -167,7 +167,7 @@ jackstraw_rpca <- function(
     }
 
     p.value <- empPvals( obs, null )
-    
+
     return(
         list(
             call = match.call(),

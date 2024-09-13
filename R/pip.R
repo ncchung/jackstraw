@@ -16,7 +16,7 @@
 #' @param ... optional arguments for \code{\link[qvalue]{lfdr}} to control a local FDR estimation.
 #'
 #' @return \code{pip} returns a vector of posterior inclusion probabilities
-#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \doi{10.1093/bioinformatics/btaa087}
 #' @references Chung (2014) "Jackstraw Weighted Shrinkage for Principal Component Analysis and Covariance Matrix" in Statistical Inference of Variables Driving Systematic Variation in High-Dimensional Biological Data. PhD thesis, Princeton University. \url{https://www.proquest.com/openview/e90b562d689cf3a021c35a93c6f346db/1?pq-origsite=gscholar&cbl=18750}
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' John R. Yamamoto-Wilson
@@ -31,13 +31,13 @@ pip <- function(
     # check package dependencies!
     if ( !requireNamespace( "qvalue" ) )
         stop( 'The Bioconductor `qvalue` package is required to use function `jackstraw::pip`, please install it manually!' )
-    
+
     # pvalue is always mandatory
     if ( missing( pvalue ) )
         stop( '`pvalue` is required!' )
 
     m <- length(pvalue)
-    
+
     if ( is.null( pi0 ) ) {
         if (verbose)
             message("Using qvalue::pi0est to estimate pi0 values.")
@@ -52,7 +52,7 @@ pip <- function(
             prob <- vector("numeric", length = m )
             for (i in 1:k) {
                 # skip empty groups quietly
-                if ( sum(group == i) > 0 ) 
+                if ( sum(group == i) > 0 )
                     prob[group == i] <- 1 - qvalue::lfdr( pvalue[group == i], ... )
             }
         }
@@ -76,7 +76,7 @@ pip <- function(
             prob <- vector("numeric", length = m )
             for (i in 1:k) {
                 # skip empty groups quietly
-                if ( sum(group == i) > 0 ) 
+                if ( sum(group == i) > 0 )
                     prob[group == i] <- 1 - qvalue::lfdr( pvalue[group == i], pi0 = pi0[i], ... )
             }
         }

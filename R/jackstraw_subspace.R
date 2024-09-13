@@ -6,7 +6,7 @@
 #' captured by a user-defined dimension reduction method.
 #' Its resampling strategy accounts for the over-fitting characteristics due to direct computation of PCs from the observed data
 #' and protects against an anti-conservative bias.
-#' 
+#'
 #' This function allows you to specify a parametric distribution of a noise term. It is an experimental feature. Then, a small number \code{s} of observed variables
 #' are replaced by synthetic null variables generated from a specified distribution.
 #'
@@ -26,8 +26,8 @@
 #' \item{null.stat}{\code{s*B} null statistics}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
-#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \doi{10.1093/bioinformatics/btu674}
+#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \doi{10.1093/bioinformatics/btaa087}
 #'
 #' @seealso \link{jackstraw_pca} \link{jackstraw}
 #'
@@ -41,15 +41,15 @@
 #'
 #' ## apply the jackstraw with the svd as a function
 #' out = jackstraw_subspace(dat, FUN = function(x) svd(x)$v[,1,drop=FALSE], r=1, s=100, B=50)
-#' 
+#'
 #' @export
 jackstraw_subspace <- function(
-                               dat, 
-                               r, 
+                               dat,
+                               r,
                                FUN,
                                r1 = NULL,
                                s = NULL,
-                               B = NULL, 
+                               B = NULL,
                                covariate = NULL,
                                noise = NULL,
                                verbose = TRUE
@@ -65,7 +65,7 @@ jackstraw_subspace <- function(
         stop( '`dat` must be a matrix!' )
     if ( !is.function( FUN ) )
         stop( "`FUN` must be a function!" )
-    
+
     # more validations of mandatory parameters
     m <- nrow(dat)
     n <- ncol(dat)
@@ -79,7 +79,7 @@ jackstraw_subspace <- function(
             if ( nrow( covariate ) != n )
                 stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
         } else {
-            if ( length( covariate ) != n ) 
+            if ( length( covariate ) != n )
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
@@ -97,12 +97,12 @@ jackstraw_subspace <- function(
 
     FUN <- match.fun(FUN)
     LV <- FUN(dat)
-    if (r != ncol(LV)) 
+    if (r != ncol(LV))
         stop( "The number of latent variables ", r, " is not equal to the number of column(s) provided by FUN: ", ncol(LV) )
-    
-    if (is.null(r1)) 
+
+    if (is.null(r1))
         r1 <- 1:r
-    
+
     if (all(seq(r) %in% r1)) {
         # no adjustment LVs
         r0 <- NULL
@@ -114,19 +114,19 @@ jackstraw_subspace <- function(
         ALV <- LV[, r0, drop = FALSE]
         LV <- LV[, r1, drop = FALSE]  ## note that LV firstly contained the r latent variables; then reduced to the r1 latent variables of interest.
     }
-    
+
     obs <- FSTAT(
         dat = dat,
-        LV = LV, 
+        LV = LV,
         ALV = ALV,
         covariate = covariate
     )$fstat
-    
+
     if (!is.null(noise)) {
         noise <- match.fun(noise)
         message("The distribution for the noise term is specified; performing the parametric jackstraw test.")
     }
-    
+
     if ( verbose )
         cat(paste0("\nComputating null statistics (", B, " total iterations): "))
 
@@ -146,27 +146,27 @@ jackstraw_subspace <- function(
         }
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls
-        
+
         LV.js <- FUN(jackstraw.dat)
         if (!is.null(r0)) {
             ALV.js <- LV.js[, r0, drop = FALSE]
             LV.js <- LV.js[, r1, drop = FALSE]
         }
         null[, i] <- FSTAT(
-            dat = s.nulls, 
+            dat = s.nulls,
             LV = LV.js,
-            ALV = ALV.js, 
+            ALV = ALV.js,
             covariate = covariate
         )$fstat
     }
-    
+
     p.value <- empPvals( obs, null )
-    
+
     return(
         list(
-            call = match.call(), 
+            call = match.call(),
             p.value = p.value,
-            obs.stat = obs, 
+            obs.stat = obs,
             null.stat = null
         )
     )

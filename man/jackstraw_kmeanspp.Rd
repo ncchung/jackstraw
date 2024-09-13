@@ -68,7 +68,7 @@ jackstraw.out <- jackstraw_kmeanspp(dat, kmeans.dat)
 
 }
 \references{
-Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \doi{10.1093/bioinformatics/btaa087}
 }
 \author{
 Neo Christopher Chung \email{nchchung@gmail.com}

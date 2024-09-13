@@ -128,7 +128,7 @@ Changes manually ported from latest CRAN branch:
 
 # jackstraw 1.3.15 (2024-08-30?)
 
-- ???
+- Use DOIs instead of publication URLs, as required by CRAN.
 
 # jackstraw 1.3.16 (2024-09-12)
 

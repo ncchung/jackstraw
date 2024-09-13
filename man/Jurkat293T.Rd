@@ -17,6 +17,6 @@ Jurkat293T
 50%:50% Jurkat:293T
 }
 \references{
-Zheng et al. (2017) Massively parallel digital transcriptional profiling of single cells. Nature Communications. 8:14049. DOI: 10.1038/ncomms14049
+Zheng et al. (2017) Massively parallel digital transcriptional profiling of single cells. Nature Communications. 8:14049. \doi{10.1038/ncomms14049}
 }
 \keyword{datasets}

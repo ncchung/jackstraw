@@ -64,7 +64,7 @@ out <- jackstraw_alstructure( X, r, FUN )
 
 }
 \references{
-Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
+Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \doi{10.1093/bioinformatics/btu674}
 }
 \seealso{
 \link{jackstraw_pca} \link{jackstraw}

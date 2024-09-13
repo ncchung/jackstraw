@@ -26,7 +26,7 @@
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \doi{10.1093/bioinformatics/btaa087}
 #' @examples
 #' \dontrun{
 #' library(ClusterR)
@@ -36,7 +36,7 @@
 #' jackstraw.output <- jackstraw_MiniBatchKmeans(dat,
 #' MiniBatchKmeans.output = MiniBatchKmeans.output)
 #' }
-#' 
+#'
 #' @export
 jackstraw_MiniBatchKmeans <- function(
                                       dat,
@@ -60,7 +60,7 @@ jackstraw_MiniBatchKmeans <- function(
         stop( '`dat` must be a matrix!' )
     if ( !methods::is( MiniBatchKmeans.output, "k-means clustering" ) )
         stop("`MiniBatchKmeans.output` must be an object of class `k-means clustering` as a result from applying ClusterR::MiniBatchKmeans. See ?ClusterR::MiniBatchKmeans.")
-    
+
     m <- nrow(dat)
     n <- ncol(dat)
 
@@ -71,7 +71,7 @@ jackstraw_MiniBatchKmeans <- function(
             if ( nrow( covariate ) != n )
                 stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
         } else {
-            if ( length( covariate ) != n ) 
+            if ( length( covariate ) != n )
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
@@ -95,7 +95,7 @@ jackstraw_MiniBatchKmeans <- function(
         MiniBatchKmeans.output$cluster <- ClusterR::predict_MBatchKMeans( dat, MiniBatchKmeans.output$centroids )
     )
     k <- clusters <- nrow( MiniBatchKmeans.output$centroids )
-    
+
     if ( verbose )
         cat(paste0("\nComputating null statistics (", B, " total iterations): "))
 
@@ -176,11 +176,11 @@ jackstraw_MiniBatchKmeans <- function(
             # number of null statistics
             if (length(F.null[[i]]) < (B * s/k * 0.1))
                 warning( "The number of empirical null statistics for the cluster [", i, "] is [", length(F.null[[i]]), "].")
-            
+
             p.F[MiniBatchKmeans.output$cluster == i] <- empPvals( F.obs[MiniBatchKmeans.output$cluster == i], F.null[[i]] )
         }
     }
-    
+
     return(
         list(
             call = match.call(),

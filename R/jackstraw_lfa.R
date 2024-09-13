@@ -29,7 +29,8 @@
 #' \item{null.stat}{\code{s*B} null deviances}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \url{https://academic.oup.com/bioinformatics/article/31/4/545/2748186}
+#' @author Alejandro Ochoa \email{alejandro.ochoa@@duke.edu}
+#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \doi{10.1093/bioinformatics/btu674}
 #' @seealso  \link{jackstraw_pca} \link{jackstraw} \link{jackstraw_subspace}
 #'
 #' @examples
@@ -79,7 +80,7 @@ jackstraw_lfa <- function(
     # check package dependencies!
     if ( !requireNamespace( "gcatest" ) )
         stop( 'The Bioconductor `gcatest` package is required to use function `jackstraw::jackstraw_lfa`, please install it manually!' )
-    
+
     # check mandatory data
     if ( missing( dat ) )
         stop( '`dat` is required!' )
@@ -225,7 +226,7 @@ jackstraw_lfa <- function(
     }
 
     p.value <- empPvals( obs, null )
-    
+
     return(
         list(
             call = match.call(),
@@ -327,7 +328,7 @@ jackstraw_BEDMatrix <- function(
     # provide dimensions for speed and also since BIM and FAM files are absent!
     dat_full <- BEDMatrix::BEDMatrix( file_full, n = n_ind, p = m_loci )
     dat_rand <- BEDMatrix::BEDMatrix( file_rand, n = n_ind, p = s )
-    
+
     # done, return necessary data!
     return(
         list(

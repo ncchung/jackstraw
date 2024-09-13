@@ -27,14 +27,14 @@
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \doi{10.1093/bioinformatics/btaa087}
 #' @examples
 #' \dontrun{
 #' dat = t(scale(t(Jurkat293T), center=TRUE, scale=FALSE))
 #' kmeans.dat <- kmeans(dat, centers=2, nstart = 10, iter.max = 100)
 #' jackstraw.out <- jackstraw_kmeans(dat, kmeans.dat)
 #' }
-#' 
+#'
 #' @export
 jackstraw_kmeans <- function(
                              dat,
@@ -68,7 +68,7 @@ jackstraw_kmeans <- function(
             if ( nrow( covariate ) != n )
                 stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
         } else {
-            if ( length( covariate ) != n ) 
+            if ( length( covariate ) != n )
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
@@ -83,7 +83,7 @@ jackstraw_kmeans <- function(
         if (verbose)
             message( "A number of resampling iterations (B) is not specified: B=round(m*10/s)=", B, "." )
     }
-    
+
     k <- nrow(kmeans.dat$centers)
     obs.centers <- kmeans.dat$centers
     rownames(obs.centers) <- paste0("obs",1:k)
@@ -109,7 +109,7 @@ jackstraw_kmeans <- function(
     for (j in 1:B) {
         if (verbose)
             cat(paste(j, " "))
-        
+
         jackstraw.dat <- dat
         # randomly choose s variables
         # to permute
@@ -125,14 +125,14 @@ jackstraw_kmeans <- function(
                 center = TRUE,
                 scale = FALSE
             ))
-        
+
         # re-cluster the jackstraw data
         kmeans.null <- stats::kmeans(
                                   jackstraw.dat,
                                   centers = kmeans.dat$centers,
                                   ...
                               )
-        
+
         # with stable clusters, numeric identities of clusters are typically matched, after resampling s
         if (match) {
             jck.centers <- kmeans.null$centers

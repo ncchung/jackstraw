@@ -13,7 +13,7 @@
 #' Furthermore, provide \code{cluster} and \code{centers} as given by applying \code{algorithm} onto \code{dat}.
 #' The rows of \code{centers} correspond to \code{k} clusters, as well as available levels in \code{cluster}.
 #' This function allows you to specify a parametric distribution of a noise term. It is an experimental feature.
-#' 
+#'
 #' @param dat a data matrix with \code{m} rows as variables and \code{n} columns as observations.
 #' @param k a number of clusters.
 #' @param cluster a vector of cluster assignments.
@@ -34,11 +34,11 @@
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
-#' 
+#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \doi{10.1093/bioinformatics/btaa087}
+#'
 #' @export
 jackstraw_cluster <- function(
-                              dat, 
+                              dat,
                               k,
                               cluster,
                               centers,
@@ -66,7 +66,7 @@ jackstraw_cluster <- function(
 
     m <- nrow(dat)
     n <- ncol(dat)
-    
+
     # check additional dimensions
     if ( length(cluster) != m )
         stop( 'Length of `cluster` (', length(cluster), ') does not equal numbber of rows of data (', m , ').')
@@ -76,7 +76,7 @@ jackstraw_cluster <- function(
         stop( 'Number of rows in `centers` (', nrow(centers), ') does not equal `k` (', k, ')' )
     if ( ncol(centers) != n )
         stop( 'Number of columns in `centers` (', ncol(centers), ') does not equal number of columns in `dat` (', n, ')' )
-    
+
     # if there are covariates, the dimensions must agree
     # covariate can be either a vector or a matrix, test both cases
     if ( !is.null( covariate ) ) {
@@ -84,25 +84,25 @@ jackstraw_cluster <- function(
             if ( nrow( covariate ) != n )
                 stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
         } else {
-            if ( length( covariate ) != n ) 
+            if ( length( covariate ) != n )
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
 
     algorithm <- match.fun(algorithm)
-    
+
     # compute the observed
     # statistics between observed
     # variables and cluster centers
     F.obs <- vector("numeric", m)
     for (i in 1:k) {
         F.obs[cluster == i] <- FSTAT(
-            dat[cluster == i, , drop = FALSE], 
-            LV = t( centers[i, , drop = FALSE] ), 
+            dat[cluster == i, , drop = FALSE],
+            LV = t( centers[i, , drop = FALSE] ),
             covariate = covariate
         )$fstat
     }
-    
+
     if (!is.null(noise)) {
         noise <- match.fun(noise)
         if (verbose)
@@ -128,7 +128,7 @@ jackstraw_cluster <- function(
         } else {
             jackstraw.dat[ind, ] <- apply(
                 dat[ind, , drop = FALSE],
-                1, 
+                1,
                 function(x) sample(x, replace = TRUE)
             )
         }
@@ -139,24 +139,24 @@ jackstraw_cluster <- function(
                 scale = FALSE
             ))
         }
-        
+
         # re-cluster the jackstraw data
         recluster <- algorithm(
-            jackstraw.dat, 
+            jackstraw.dat,
             centers = centers,
             ...
         )
-        
+
         for (i in 1:k) {
             ind.i <- intersect( ind, which(recluster$cluster == i) )
             if (length(ind.i) > 0) {
-                
+
                 F.null[[i]] <- c(
-                    F.null[[i]], 
+                    F.null[[i]],
                     as.vector(
                         FSTAT(
-                            dat = jackstraw.dat[ind.i, , drop = FALSE], 
-                            LV = t(recluster$centers[i, , drop = FALSE]), 
+                            dat = jackstraw.dat[ind.i, , drop = FALSE],
+                            LV = t(recluster$centers[i, , drop = FALSE]),
                             covariate = covariate
                         )$fstat
                     )
@@ -164,7 +164,7 @@ jackstraw_cluster <- function(
             }
         }
     }
-    
+
     # compute p-values
     p.F <- vector("numeric", m)
     if (pool) {
@@ -178,16 +178,16 @@ jackstraw_cluster <- function(
 
             if (length(F.null[[i]]) < (B * s/k * 0.1))
                 warning( "The number of empirical null statistics for the cluster [", i, "] is [", length(F.null[[i]]), "]." )
-            
+
             p.F[cluster == i] <- empPvals( F.obs[ cluster == i ], F.null[[ i ]] )
         }
     }
-    
+
     return(
         list(
-            call = match.call(), 
+            call = match.call(),
             F.obs = F.obs,
-            F.null = F.null, 
+            F.null = F.null,
             p.F = p.F
         )
     )

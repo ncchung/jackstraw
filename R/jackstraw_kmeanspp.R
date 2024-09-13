@@ -30,7 +30,7 @@
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \doi{10.1093/bioinformatics/btaa087}
 #' @examples
 #' \dontrun{
 #' library(ClusterR)
@@ -39,7 +39,7 @@
 #' max_iters = 100, initializer = 'kmeans++')
 #' jackstraw.out <- jackstraw_kmeanspp(dat, kmeans.dat)
 #' }
-#' 
+#'
 #' @export
 jackstraw_kmeanspp <- function(
                                dat,
@@ -61,10 +61,10 @@ jackstraw_kmeanspp <- function(
         stop( '`dat` must be a matrix!' )
     if ( !methods::is( kmeans.dat, "k-means clustering" ) )
         stop( "`kmeans.dat` must be an object of class `k-means clustering`. See ?ClusterR::KMeans_rcpp." )
-    
+
     m <- nrow(dat)
     n <- ncol(dat)
-    
+
     # if there are covariates, the dimensions must agree
     # covariate can be either a vector or a matrix, test both cases
     if ( !is.null( covariate ) ) {
@@ -72,7 +72,7 @@ jackstraw_kmeanspp <- function(
             if ( nrow( covariate ) != n )
                 stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
         } else {
-            if ( length( covariate ) != n ) 
+            if ( length( covariate ) != n )
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
@@ -111,7 +111,7 @@ jackstraw_kmeanspp <- function(
     for (j in 1:B) {
         if (verbose)
             cat(paste(j, " "))
-        
+
         jackstraw.dat <- dat
         # randomly choose s variables
         # to permute

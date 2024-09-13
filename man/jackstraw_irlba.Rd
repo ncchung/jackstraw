@@ -83,7 +83,7 @@ out = jackstraw_irlba(dat, r=1)
 
 }
 \references{
-Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \doi{10.1093/bioinformatics/btu674}
 }
 \seealso{
 \link{jackstraw} \link{jackstraw_subspace} \link{permutationPA}

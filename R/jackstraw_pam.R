@@ -28,7 +28,7 @@
 #' \item{p.F}{\code{m} p-values of membership.}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \doi{10.1093/bioinformatics/btaa087}
 #' @examples
 #' \dontrun{
 #' library(cluster)
@@ -36,7 +36,7 @@
 #' pam.dat <- pam(dat, k=2)
 #' jackstraw.out <- jackstraw_pam(dat, pam.dat = pam.dat)
 #' }
-#' 
+#'
 #' @export
 jackstraw_pam <- function(
                           dat,
@@ -58,7 +58,7 @@ jackstraw_pam <- function(
         stop( '`dat` must be a matrix!' )
     if ( !methods::is( pam.dat, "pam" ) )
         stop( "`pam.dat` must be an object of class `pam`. See ?pam.object." )
-    
+
     m <- nrow(dat)
     n <- ncol(dat)
 
@@ -69,7 +69,7 @@ jackstraw_pam <- function(
             if ( nrow( covariate ) != n )
                 stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
         } else {
-            if ( length( covariate ) != n ) 
+            if ( length( covariate ) != n )
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
@@ -89,7 +89,7 @@ jackstraw_pam <- function(
 
     if (verbose)
         cat(paste0("\nComputating null statistics (", B, " total iterations): "))
-    
+
     # compute the observed
     # statistics between rows and
     # cluster medoids
@@ -108,7 +108,7 @@ jackstraw_pam <- function(
     for (j in 1:B) {
         if (verbose)
             cat(paste(j, " "))
-        
+
         jackstraw.dat <- dat
         # randomly choose s variables
         # to permute
@@ -124,7 +124,7 @@ jackstraw_pam <- function(
                 center = TRUE,
                 scale = FALSE
             ))
-        
+
         # re-cluster the jackstraw data
         pam.null <- cluster::pam(
                                  jackstraw.dat,
@@ -132,7 +132,7 @@ jackstraw_pam <- function(
                                  medoids = pam.dat$id.med,
                                  ...
                              )
-        
+
         for (i in 1:k) {
             ind.i <- intersect(
                 ind,
@@ -164,7 +164,7 @@ jackstraw_pam <- function(
             p.F[pam.dat$clustering == i] <- empPvals( F.obs[pam.dat$clustering == i], F.null[[i]] )
         }
     }
-    
+
     return(
         list(
             call = match.call(),

@@ -39,7 +39,7 @@
 #' \item{null.stat}{\code{s*B} null F-test statistics}
 #'
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
-#' @references Chung (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114 \url{https://academic.oup.com/bioinformatics/article/36/10/3107/5788523}
+#' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \doi{10.1093/bioinformatics/btu674}
 #'
 #' @seealso \link{jackstraw} \link{jackstraw_subspace} \link{permutationPA}
 #'
@@ -59,7 +59,7 @@
 #' \dontrun{
 #' ## out = jackstraw_irlba(dat, r=1, s=10, B=200)
 #' }
-#' 
+#'
 #' @export
 jackstraw_irlba <- function(
                             dat,
@@ -76,7 +76,7 @@ jackstraw_irlba <- function(
         stop( '`dat` is required!' )
     if ( !is.matrix( dat ) )
         stop( '`dat` must be a matrix!' )
-    
+
     m <- nrow(dat)
     n <- ncol(dat)
 
@@ -87,7 +87,7 @@ jackstraw_irlba <- function(
             if ( nrow( covariate ) != n )
                 stop( 'Matrix `covariate` must have `n` rows, has: ', nrow( covariate ), ', expected: ', n )
         } else {
-            if ( length( covariate ) != n ) 
+            if ( length( covariate ) != n )
                 stop( 'Vector `covariate` must have `n` elements, has: ', length( covariate ), ', expected: ', n )
         }
     }
@@ -111,7 +111,7 @@ jackstraw_irlba <- function(
         if (verbose)
             message( "A number of resampling iterations (B) is not specified: B=round(m*10/s)=", B, "." )
     }
-    
+
     if (is.null(r1))
         r1 <- 1:r
     if (all(seq(r) %in% r1)) {
@@ -135,20 +135,20 @@ jackstraw_irlba <- function(
         ALV = ALV,
         covariate = covariate
     )$fstat
-    
+
     # Estimate null association statistics
     null <- matrix( 0, nrow = s, ncol = B )
     ALV.js <- NULL
 
     if ( verbose )
         cat(paste0("\nComputating null statistics (", B, " total iterations): "))
-    
+
     for (i in 1:B) {
         random.s <- sample.int( m, s )
 
         s.nulls <- dat[random.s, , drop = FALSE]
         s.nulls <- t( apply( s.nulls, 1, sample ) )
-        
+
         jackstraw.dat <- dat
         jackstraw.dat[random.s, ] <- s.nulls
 
