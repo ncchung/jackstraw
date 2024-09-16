@@ -19,7 +19,7 @@ jackstraw_pca(
 
 \item{r}{a number (a positive integer) of significant principal components. See \link{permutationPA} and other methods.}
 
-\item{r1}{a numeric vector of principal components of interest. Choose a subset of \code{r} significant PCs to be used.}
+\item{r1}{a numeric vector of the principal components that are of interest. Choose a subset of \code{r} significant PCs to be used.}
 
 \item{s}{a number (a positive integer) of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.}
 

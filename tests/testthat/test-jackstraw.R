@@ -1,6 +1,6 @@
 # need to simulate binomial data
 # these are the dimensions we want
-m <- 300 # this has to be at least this large or `pip` (really `qvalue::pi0est`) fails in stupid ways
+m <- 600 # this has to be at least this large or `pip` (really `qvalue::pi0est`) fails in stupid ways
 n <- 10
 # use these many LFs
 d <- 3
@@ -75,7 +75,7 @@ if ( requireNamespace( "qvalue", quietly = TRUE ) ) {
         expect_error( pip( ) )
         # pass group with wrong length
         expect_error( pip( pvalue = pvalue, group = group[-1], verbose = FALSE ) )
-        
+
         # now successful runs
         expect_silent(
             prob <- pip( pvalue = pvalue, group = group, pi0 = pi0, verbose = FALSE )
@@ -159,7 +159,7 @@ test_that( "RSS works" , {
 test_that( "FSTAT works", {
     # LF1 doesn't work as-is because the intercept gets added twice!
     LV <- LF1[ , -d, drop = FALSE ]
-    
+
     # check for missing mandatory data
     # both `dat` and `LV` are required
     expect_error( FSTAT( ) )
@@ -188,7 +188,7 @@ test_that( "FSTAT works", {
         fstat_lm[ i ] <- summary( lm( X[ i, ] ~ LF1 ) )$fstatistic[1]
     }
     expect_equal( obj$fstat, fstat_lm )
-    
+
     # successful run with covariates
     expect_silent(
         obj <- FSTAT( dat = Xc, LV = LV, covariate = covariate )
@@ -205,12 +205,12 @@ test_that( "FSTAT works", {
         obj2 <- FSTAT( dat = Xc, LV = LV, ALV = covariate )
     )
     expect_equal( obj2, obj )
-    
+
     # NOTE: `parametric = TRUE` is not used in this package for any public code, so it's also not tested
-    
+
     #FSTAT(dat, LV, ALV = NULL, covariate = NULL, parametric = FALSE)
 })
-    
+
 
 test_that( "permutationPA works", {
     # data is required
@@ -257,7 +257,7 @@ test_that( 'permute_alleles_from_geno works', {
     expect_true( any( y == 1L ) )
     # and sum of genotypes equals `n` (in this case true by construction, not true in general)
     expect_equal( sum( y ), n )
-    
+
     # now try on the simulated random data (all rows)
     # vectorize so number of tests isn't too extreme
     expect_silent(
@@ -389,7 +389,7 @@ test_that("jackstraw_subspace works", {
     expect_error( jackstraw_subspace( dat = Xc, r = d, FUN = FUN, covariate = covariate[-1] ) ) # length off by 1, vector
     expect_error( jackstraw_subspace( dat = Xc, r = d, FUN = FUN, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
     expect_error( jackstraw_subspace( dat = Xc, r = d, FUN = FUN, covariate = rbind( covariate ) ) ) # transposed matrix
-    
+
     # perform a basic run
 
     # make it silent so we can focus on problem messages
@@ -415,7 +415,7 @@ test_that("jackstraw_subspace works", {
         obj <- jackstraw_subspace( Xc, r = d, FUN = FUN, s = 1, B = 1, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, 1, 1 )
-    
+
     # test version with covariates
     expect_silent(
         obj <- jackstraw_subspace( Xc, r = d, FUN = FUN, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -435,7 +435,7 @@ test_that("jackstraw_pca works", {
     expect_error( jackstraw_pca( dat = Xc, r = d, covariate = covariate[-1] ) ) # length off by 1, vector
     expect_error( jackstraw_pca( dat = Xc, r = d, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
     expect_error( jackstraw_pca( dat = Xc, r = d, covariate = rbind( covariate ) ) ) # transposed matrix
-    
+
     # perform a basic run
 
     # make it silent so we can focus on problem messages
@@ -461,7 +461,7 @@ test_that("jackstraw_pca works", {
         obj <- jackstraw_pca( Xc, r = d, s = 1, B = 1, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, 1, 1 )
-    
+
     # test version with covariates
     expect_silent(
         obj <- jackstraw_pca( Xc, r = d, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -481,7 +481,7 @@ test_that("jackstraw_rpca works", {
     expect_error( jackstraw_rpca( dat = Xc, r = d, covariate = covariate[-1] ) ) # length off by 1, vector
     expect_error( jackstraw_rpca( dat = Xc, r = d, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
     expect_error( jackstraw_rpca( dat = Xc, r = d, covariate = rbind( covariate ) ) ) # transposed matrix
-    
+
     # perform a basic run
 
     # make it silent so we can focus on problem messages
@@ -507,7 +507,7 @@ test_that("jackstraw_rpca works", {
         obj <- jackstraw_rpca( Xc, r = d, s = 1, B = 1, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, 1, 1 )
-    
+
     # test version with covariates
     expect_silent(
         obj <- jackstraw_rpca( Xc, r = d, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -527,7 +527,7 @@ test_that("jackstraw_irlba works", {
     expect_error( jackstraw_irlba( dat = Xc, r = d, covariate = covariate[-1] ) ) # length off by 1, vector
     expect_error( jackstraw_irlba( dat = Xc, r = d, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
     expect_error( jackstraw_irlba( dat = Xc, r = d, covariate = rbind( covariate ) ) ) # transposed matrix
-    
+
     # perform a basic run
 
     # make it silent so we can focus on problem messages
@@ -553,7 +553,7 @@ test_that("jackstraw_irlba works", {
         obj <- jackstraw_irlba( Xc, r = d, s = 1, B = 1, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, 1, 1 )
-    
+
     # test version with covariates
     expect_silent(
         obj <- jackstraw_irlba( Xc, r = d, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -570,7 +570,7 @@ test_that( "jackstraw_kmeans works", {
     expect_error( jackstraw_kmeans() )
     expect_error( jackstraw_kmeans( dat = Xc ) )
     expect_error( jackstraw_kmeans( kmeans.dat = kmeans.dat ) )
-    
+
     # check that data is matrix
     expect_error( jackstraw_kmeans( dat = 1:10, kmeans.dat = kmeans.dat ) )
     # pass bad covariates on purpose
@@ -578,7 +578,7 @@ test_that( "jackstraw_kmeans works", {
     expect_error( jackstraw_kmeans( dat = Xc, kmeans.dat = kmeans.dat, covariate = covariate[-1] ) ) # length off by 1, vector
     expect_error( jackstraw_kmeans( dat = Xc, kmeans.dat = kmeans.dat, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
     expect_error( jackstraw_kmeans( dat = Xc, kmeans.dat = kmeans.dat, covariate = rbind( covariate ) ) ) # transposed matrix
-    
+
     # perform a basic run
 
     # make it silent so we can focus on problem messages
@@ -604,7 +604,7 @@ test_that( "jackstraw_kmeans works", {
         obj <- jackstraw_kmeans( Xc, kmeans.dat = kmeans.dat, s = 1, B = 1, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, 1, 1, kmeans = TRUE )
-    
+
     # test version with covariates
     expect_silent(
         obj <- jackstraw_kmeans( Xc, kmeans.dat = kmeans.dat, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -621,7 +621,7 @@ test_that( "jackstraw_kmeanspp works", {
     expect_error( jackstraw_kmeanspp() )
     expect_error( jackstraw_kmeanspp( dat = Xc ) )
     expect_error( jackstraw_kmeanspp( kmeans.dat = kmeans.dat ) )
-    
+
     # check that data is matrix
     expect_error( jackstraw_kmeanspp( dat = 1:10, kmeans.dat = kmeans.dat ) )
     # pass bad covariates on purpose
@@ -629,7 +629,7 @@ test_that( "jackstraw_kmeanspp works", {
     expect_error( jackstraw_kmeanspp( dat = Xc, kmeans.dat = kmeans.dat, covariate = covariate[-1] ) ) # length off by 1, vector
     expect_error( jackstraw_kmeanspp( dat = Xc, kmeans.dat = kmeans.dat, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
     expect_error( jackstraw_kmeanspp( dat = Xc, kmeans.dat = kmeans.dat, covariate = rbind( covariate ) ) ) # transposed matrix
-    
+
     # perform a basic run
 
     # make it silent so we can focus on problem messages
@@ -655,7 +655,7 @@ test_that( "jackstraw_kmeanspp works", {
         obj <- jackstraw_kmeanspp( Xc, kmeans.dat = kmeans.dat, s = 1, B = 1, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, 1, 1, kmeans = TRUE )
-    
+
     # test version with covariates
     expect_silent(
         obj <- jackstraw_kmeanspp( Xc, kmeans.dat = kmeans.dat, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -667,13 +667,13 @@ test_that( "jackstraw_MiniBatchKmeans works", {
     # a simple k-means run
     batch_size <- 10
     MiniBatchKmeans.output <- ClusterR::MiniBatchKmeans( Xc, clusters = d, batch_size = batch_size )
-    
+
     # cause errors due to missing required data
     # must provide both dat = X and MiniBatchKmeans.output for a minimal successful run
     expect_error( jackstraw_MiniBatchKmeans() )
     expect_error( jackstraw_MiniBatchKmeans( dat = Xc ) )
     expect_error( jackstraw_MiniBatchKmeans( MiniBatchKmeans.output = MiniBatchKmeans.output ) )
-    
+
     # check that data is matrix
     expect_error( jackstraw_MiniBatchKmeans( dat = 1:10, MiniBatchKmeans.output = MiniBatchKmeans.output ) )
     # pass bad covariates on purpose
@@ -681,7 +681,7 @@ test_that( "jackstraw_MiniBatchKmeans works", {
     expect_error( jackstraw_MiniBatchKmeans( dat = Xc, MiniBatchKmeans.output = MiniBatchKmeans.output, covariate = covariate[-1] ) ) # length off by 1, vector
     expect_error( jackstraw_MiniBatchKmeans( dat = Xc, MiniBatchKmeans.output = MiniBatchKmeans.output, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
     expect_error( jackstraw_MiniBatchKmeans( dat = Xc, MiniBatchKmeans.output = MiniBatchKmeans.output, covariate = rbind( covariate ) ) ) # transposed matrix
-    
+
     # perform a basic run
 
     # make it silent so we can focus on problem messages
@@ -707,7 +707,7 @@ test_that( "jackstraw_MiniBatchKmeans works", {
         obj <- jackstraw_MiniBatchKmeans( Xc, MiniBatchKmeans.output = MiniBatchKmeans.output, batch_size = batch_size, s = 1, B = 1, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, 1, 1, kmeans = TRUE )
-    
+
     # test version with covariates
     expect_silent(
         obj <- jackstraw_MiniBatchKmeans( Xc, MiniBatchKmeans.output = MiniBatchKmeans.output, batch_size = batch_size, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -718,13 +718,13 @@ test_that( "jackstraw_MiniBatchKmeans works", {
 test_that( "jackstraw_pam works", {
     # a simple PAM run
     pam.dat <- cluster::pam( Xc, k = d )
-    
+
     # cause errors due to missing required data
     # must provide both dat = X and pam.dat for a minimal successful run
     expect_error( jackstraw_pam() )
     expect_error( jackstraw_pam( dat = Xc ) )
     expect_error( jackstraw_pam( pam.dat = pam.dat ) )
-    
+
     # check that data is matrix
     expect_error( jackstraw_pam( dat = 1:10, pam.dat = pam.dat ) )
     # pass bad covariates on purpose
@@ -732,7 +732,7 @@ test_that( "jackstraw_pam works", {
     expect_error( jackstraw_pam( dat = Xc, pam.dat = pam.dat, covariate = covariate[-1] ) ) # length off by 1, vector
     expect_error( jackstraw_pam( dat = Xc, pam.dat = pam.dat, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
     expect_error( jackstraw_pam( dat = Xc, pam.dat = pam.dat, covariate = rbind( covariate ) ) ) # transposed matrix
-    
+
     # perform a basic run
 
     # make it silent so we can focus on problem messages
@@ -760,7 +760,7 @@ test_that( "jackstraw_pam works", {
     ##     obj <- jackstraw_pam( Xc, pam.dat = pam.dat, s = 1, B = 1, verbose = FALSE )
     ## )
     ## test_jackstraw_return_val( obj, 1, 1, kmeans = TRUE )
-    
+
     # test version with covariates
     expect_silent(
         obj <- jackstraw_pam( Xc, pam.dat = pam.dat, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -774,7 +774,7 @@ test_that( "jackstraw_cluster works", {
     FUN.dat <- FUN( Xc, centers = d )
     cluster <- FUN.dat$cluster
     centers <- FUN.dat$centers
-    
+
     # cause errors due to missing required data
     # 4 arguments are required for a successful run
     expect_error( jackstraw_cluster() )
@@ -795,7 +795,7 @@ test_that( "jackstraw_cluster works", {
     expect_error( jackstraw_cluster( dat = Xc, cluster = cluster, centers = centers ) )
     expect_error( jackstraw_cluster( dat = Xc, k = d, centers = centers ) )
     expect_error( jackstraw_cluster( dat = Xc, k = d, cluster = cluster ) )
-    
+
     # check that data is matrix
     expect_error( jackstraw_cluster( dat = 1:10, k = d, cluster = cluster, centers = centers ) )
     # check cluster vector length
@@ -808,7 +808,7 @@ test_that( "jackstraw_cluster works", {
     expect_error( jackstraw_cluster( dat = Xc, k = d, cluster = cluster, centers = centers, covariate = covariate[-1] ) ) # length off by 1, vector
     expect_error( jackstraw_cluster( dat = Xc, k = d, cluster = cluster, centers = centers, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
     expect_error( jackstraw_cluster( dat = Xc, k = d, cluster = cluster, centers = centers, covariate = rbind( covariate ) ) ) # transposed matrix
-    
+
     # perform a basic run
 
     # make it silent so we can focus on problem messages
@@ -834,7 +834,7 @@ test_that( "jackstraw_cluster works", {
         obj <- jackstraw_cluster( dat = Xc, k = d, cluster = cluster, centers = centers, algorithm = FUN, s = 1, B = 1, verbose = FALSE )
     )
     test_jackstraw_return_val( obj, 1, 1, kmeans = TRUE )
-    
+
     # test version with covariates
     expect_silent(
         obj <- jackstraw_cluster( dat = Xc, k = d, cluster = cluster, centers = centers, algorithm = FUN, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -859,7 +859,7 @@ test_that( "jackstraw_BEDMatrix works", {
     random_s <- sample.int( m, s )
     # need sorted version for some tests
     random_s_sorted <- sort( random_s )
-    
+
     expect_silent(
         obj <- jackstraw_BEDMatrix( dat = X_BM, random_s, m_chunk = m_chunk )
     )
@@ -885,7 +885,7 @@ test_that( "jackstraw_BEDMatrix works", {
     X_rand_exp <- obj$dat_rand[]
     X_rand_obs <- obj$dat_full[ , random_s_sorted, drop = FALSE ]
     expect_equal( X_rand_obs, X_rand_exp )
-    
+
     # test this edge case
     m_chunk <- 1
     expect_silent(
@@ -908,7 +908,7 @@ test_that( "jackstraw_BEDMatrix works", {
     X_rand_exp <- obj$dat_rand[]
     X_rand_obs <- obj$dat_full[ , random_s_sorted, drop = FALSE ]
     expect_equal( X_rand_obs, X_rand_exp )
-    
+
     # test this edge case
     s <- 1
     m_chunk <- 1000
@@ -935,7 +935,7 @@ test_that( "jackstraw_BEDMatrix works", {
     X_rand_exp <- obj$dat_rand[]
     X_rand_obs <- obj$dat_full[ , random_s_sorted, drop = FALSE ]
     expect_equal( X_rand_obs, X_rand_exp )
-    
+
     # final, double edge case
     s <- 1
     m_chunk <- 1
@@ -959,7 +959,7 @@ test_that( "jackstraw_BEDMatrix works", {
     X_rand_exp <- obj$dat_rand[]
     X_rand_obs <- obj$dat_full[ , random_s_sorted, drop = FALSE ]
     expect_equal( X_rand_obs, X_rand_exp )
-    
+
 })
 
 
@@ -970,7 +970,7 @@ if ( requireNamespace( "lfa", quietly = TRUE ) ) {
         # data to use
         xi <- X[1,]
         pi <- lfa::af_snp(xi, LF1)
-        
+
         # cause errors due to missing arguments
         expect_error( efron_Rsq_snp() )
         expect_error( efron_Rsq_snp( snp = xi ) )
@@ -996,7 +996,7 @@ if ( requireNamespace( "lfa", quietly = TRUE ) ) {
             xi <- X[1,]
             p1 <- lfa::af_snp(xi, LF1)
             p0 <- lfa::af_snp(xi, LF0)
-            
+
             # cause errors due to missing arguments
             # all three arguments are required
             expect_error( mcfadden_Rsq_snp() )
@@ -1006,7 +1006,7 @@ if ( requireNamespace( "lfa", quietly = TRUE ) ) {
             expect_error( mcfadden_Rsq_snp( snp = xi, p1 = p1 ) )
             expect_error( mcfadden_Rsq_snp( snp = xi, p0 = p0 ) )
             expect_error( mcfadden_Rsq_snp( p1 = p1, p0 = p0 ) )
-            
+
             # now a successful run
             expect_silent(
                 r2 <- mcfadden_Rsq_snp( snp = xi, p1 = p1, p0 = p0 )
@@ -1089,7 +1089,7 @@ if ( requireNamespace( "gcatest", quietly = TRUE ) ) {
             expect_error( jackstraw_lfa( dat = X, r = d, FUN = FUN, covariate = covariate[-1] ) ) # length off by 1, vector
             expect_error( jackstraw_lfa( dat = X, r = d, FUN = FUN, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
             expect_error( jackstraw_lfa( dat = X, r = d, FUN = FUN, covariate = rbind( covariate ) ) ) # transposed matrix
-            
+
             # perform a basic run
 
             # make it silent so we can focus on problem messages
@@ -1098,7 +1098,7 @@ if ( requireNamespace( "gcatest", quietly = TRUE ) ) {
             )
             # check basic jackstraw return object
             test_jackstraw_return_val( obj, s, B )
-            
+
             # test edge cases
             # s = 1
             expect_silent(
@@ -1115,11 +1115,11 @@ if ( requireNamespace( "gcatest", quietly = TRUE ) ) {
                 obj <- jackstraw_lfa( X, r = d, FUN = FUN, s = 1, B = 1, verbose = FALSE )
             )
             test_jackstraw_return_val( obj, 1, 1 )
-            
+
             # this comparison succeeds most of the time, but not 100% of the time
             # bad fits cause errors randomly, which are rare but over 100 loci it gets less rare
             # also, things get very slow
-            
+
             # test version with covariates
             expect_silent(
                 obj <- jackstraw_lfa( X, r = d, FUN = FUN, s = s, B = B, covariate = covariate, verbose = FALSE )
@@ -1170,11 +1170,11 @@ if ( requireNamespace( "gcatest", quietly = TRUE ) ) {
 
     # run alstructure tests only if optional package is available
     if (suppressMessages(suppressWarnings(require(alstructure)))) {
-        
+
         test_that("jackstraw_alstructure works", {
             # define function to pass (uses global `d`)
             FUN <- function(x) t( alstructure(x, d_hat = d)$Q_hat )
-            
+
             # cause errors due to missing required data
             # must provide all of (dat = X, r = d, FUN = FUN) for a minimal successful run
             expect_error( jackstraw_alstructure( ) )
@@ -1191,7 +1191,7 @@ if ( requireNamespace( "gcatest", quietly = TRUE ) ) {
             expect_error( jackstraw_alstructure( dat = X, r = d, FUN = FUN, covariate = covariate[-1] ) ) # length off by 1, vector
             expect_error( jackstraw_alstructure( dat = X, r = d, FUN = FUN, covariate = cbind( covariate[-1] ) ) ) # length off by 1, matrix
             expect_error( jackstraw_alstructure( dat = X, r = d, FUN = FUN, covariate = rbind( covariate ) ) ) # transposed matrix
-            
+
             # perform a basic run
 
             # make it silent so we can focus on problem messages
@@ -1217,7 +1217,7 @@ if ( requireNamespace( "gcatest", quietly = TRUE ) ) {
                 obj <- jackstraw_alstructure( X, r = d, FUN = FUN, s = 1, B = 1, verbose = FALSE )
             )
             test_jackstraw_return_val( obj, 1, 1 )
-            
+
             # test version with covariates
             expect_silent(
                 obj <- jackstraw_alstructure( X, r = d, FUN = FUN, s = s, B = B, covariate = covariate, verbose = FALSE )

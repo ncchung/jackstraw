@@ -26,7 +26,7 @@
 #'
 #' @param dat a data matrix with \code{m} rows as variables and \code{n} columns as observations.
 #' @param r a number (a positive integer) of significant principal components. See \link{permutationPA} and other methods.
-#' @param r1 a numeric vector of principal components of interest. Choose a subset of \code{r} significant PCs to be used.
+#' @param r1 a numeric vector of the principal components that are of interest. Choose a subset of \code{r} significant PCs to be used.
 #' @param s a number (a positive integer) of ``synthetic'' null variables. Out of \code{m} variables, \code{s} variables are independently permuted.
 #' @param B a number (a positive integer) of resampling iterations. There will be a total of \code{s*B} null statistics.
 #' @param covariate a data matrix of covariates with corresponding \code{n} observations (do not include an intercept term).

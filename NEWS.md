@@ -138,3 +138,8 @@ Changes manually ported from latest CRAN branch:
   - Package `gcatest` is required for functions `jackstraw_alstructure` and `jackstraw_lfa`.
   - Function `jackstraw_lfa` now requires option `FUN` to be defined and provided by the user (it used to default to the `lfa` function)
   - Internal function `empPvals` is now a copy of the function of the same name in the `qvalue` package, with minor adaptations.  This is to ensure most `jackstraw` functions, which depend on `empPvals`, work without `qvalue`.
+
+# jackstraw 1.3.17 (2024-09-16)
+
+- `m` increased in unit tests to pass building in CRAN `r-devel-windows-x86_64`
+- `README` edited 

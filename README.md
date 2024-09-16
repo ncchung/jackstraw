@@ -6,23 +6,23 @@ Using a variety of unsupervised learning techniques, the jackstraw provides a re
 
 ## Use cases
 
-Using `jackstraw_pca`, we can find statistically significant variables with regard to the top `r` principal components (PCs). Alternatively, we could test association with respect to a subset of `r` PCs, which are called PCs of interest `r1`. The package also supports truncated PCA, using augmented implicitly restarted Lanczos bidiagonalization algorithm (IRLBA; `jackstraw_irlba`) or randomized Singular Value Decomposition (RSVD; `jackstraw_rpca`). 
+Using `jackstraw_pca`, we can find statistically significant variables with regard to the top `r` principal components (PCs). If we only specify `r`, we conduct association tests with all `r` PCs simultaneously. Alternatively, we could test association with respect to a subset of `r` PCs, using an optional argument `r1`. By specifying `r` (a total number of significant PCs) and `r1` (a numeric vector of target PCs), `jackstraw_pca` helps find statistically significant variables with respect to `r1` PCs, while accounting for the fact that there are `r` significant PCs. The package also supports truncated PCA, using augmented implicitly restarted Lanczos bidiagonalization algorithm (IRLBA; `jackstraw_irlba`) or randomized Singular Value Decomposition (RSVD; `jackstraw_rpca`). 
 
-[Logistic factor analysis (LFA)](https://academic.oup.com/bioinformatics/article/32/5/713/1744055) and [ALStructure](https://academic.oup.com/genetics/article/212/4/1009/5931257?login=false) estimate population structure from genetic data ([single-nucleotide polymorphisms](https://en.wikipedia.org/wiki/Single-nucleotide_polymorphism); SNPs). `jackstraw_lfa` and `jackstraw_alstructure` provides corresponding association tests between SNPs and population structure, as estimated by the aforementioned methods. Generally, one could directly specify an estimation method for latent variables in `jackstraw_subspace`.
+[Logistic factor analysis (LFA)](https://doi.org/10.1093/bioinformatics/btv641) estimates population structure from genetic data ([single-nucleotide polymorphisms](https://en.wikipedia.org/wiki/Single-nucleotide_polymorphism); SNPs). `jackstraw_lfa` provides corresponding association tests between SNPs and population structure, as estimated by LFA. Due to the requirements of a CRAN package, please manually install [`lfa`](https://bioconductor.org/packages/release/bioc/html/lfa.html) from Bioconductor. See the R help on `lfa`. In general, one could directly specify an estimation method for latent variables in `jackstraw_subspace`.
 
-Instead of continuous latent variables that are estimated by PCA, LFA, or others, one may be interested in estimating discrete clusters from a high dimensional data. For K-means clustering, `jackstraw_kmeans` evaluates whether data points are significant members of a given cluster, by testing association between observed data and cluster centers. This can help select data points that are reliable members of clusters and further improve the cluster membership. 
+Instead of continuous latent variables that are estimated by PCA, LFA, or others, one may be interested in estimating discrete clusters from a high dimensional data. For K-means clustering, `jackstraw_kmeans` evaluates whether data points are significant members of a given cluster, by testing association between observed data and cluster centers. This can help select data points that are reliable members of clusters and further improve the cluster membership. Note that in order to use the jackstraw for clustering, it's necessary to first apply the clustering algorithm to the data and provide the resulting object (e.g., `kmeans.dat`).
 
-Related algorithms, such as [Partitioning Around Medoids (PAM) or k-medoids](https://en.wikipedia.org/wiki/K-medoids) and [Mini Batch K-means](https://dl.acm.org/doi/10.1145/1772690.1772862) algorithms, are supported by `jackstraw_pam` and `jackstraw_MiniBatchKmeans`, respectively. Generally, `jackstraw_cluster` can be used for other clustering algorithms.
+Related algorithms, such as [Partitioning Around Medoids (PAM) or k-medoids](https://doi.org/10.1002/9780470316801.ch2) and [Mini Batch K-means](https://doi.org/10.1145/1772690.1772862) algorithms, are supported by `jackstraw_pam` and `jackstraw_MiniBatchKmeans`, respectively. Generally, `jackstraw_cluster` can be used for other clustering algorithms.
 
 There are few additional functions to support statistical inference for unsupervised learning, such as finding a number of PCs or clusters. Based on p-values, we could estimate posterior inclusion probabilities (PIPs) using `pip`.
 
 # References
 
 *Chung, N.C.* (2020) Statistical significance of cluster membership for unsupervised evaluation of cell identities. Bioinformatics, 36(10): 3107–3114
-https://academic.oup.com/bioinformatics/article/36/10/3107/5788523
+https://doi.org/10.1093/bioinformatics/btaa087
 
 *Chung, N.C.* and *Storey, J.D.* (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554
-https://academic.oup.com/bioinformatics/article/31/4/545/2748186
+https://doi.org/10.1093/bioinformatics/btu674
 
 # Short Tutorials
 
@@ -36,15 +36,19 @@ https://academic.oup.com/bioinformatics/article/31/4/545/2748186
 
 ## Bioconductor dependencies
 
-Bioconductor dependencies may fail to automatically install, e.g., [`lfa`](https://bioconductor.org/packages/release/bioc/html/lfa.html), [`gcatest`](https://bioconductor.org/packages/release/bioc/html/gcatest.html), [`qvalue`](https://bioconductor.org/packages/release/bioc/html/qvalue.html). This would result in a [warning](https://github.com/ncchung/jackstraw/issues/2).
-
-To solve this problem, please install Bioconductor dependencies manually first:
+Install Bioconductor dependencies,  [`lfa`](https://bioconductor.org/packages/release/bioc/html/lfa.html), [`gcatest`](https://bioconductor.org/packages/release/bioc/html/gcatest.html), [`qvalue`](https://bioconductor.org/packages/release/bioc/html/qvalue.html), manually first:
 ```R
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
 BiocManager::install(c('qvalue', 'lfa', 'gcatest'))
 ```
+
+The following `jackstraw` functions requires Bioconductor packages:
+
+  - `jackstraw_lfa`, `pseudo_Rsq`, `efron_Rsq` requires [`lfa`](https://bioconductor.org/packages/release/bioc/html/lfa.html).
+  - `jackstraw_lfa` and `jackstraw_alstructure` requires [`gcatest`](https://bioconductor.org/packages/release/bioc/html/gcatest.html).
+  - `pip` requires the package [`qvalue`](https://bioconductor.org/packages/release/bioc/html/qvalue.html).
 
 ## Development Version on GitHub
 
@@ -64,7 +68,7 @@ install_github("StoreyLab/alstructure")
 
 ## Stable Version on CRAN
 
-The stable version **jackstraw v1.3.14** is on CRAN. To install a stable version from CRAN:
+The stable version **jackstraw v1.3.17** is on CRAN. To install from CRAN:
 ```R
 install.packages("jackstraw")
 ```
