@@ -143,3 +143,11 @@ Changes manually ported from latest CRAN branch:
 
 - `m` increased in unit tests to pass building in CRAN `r-devel-windows-x86_64`
 - `README` edited 
+
+# jackstraw 1.3.17.9000 (2024-11-08)
+
+- Added two functions for calculating high precision p-values from the data output by `jackstraw_lfa` and `jackstraw_alstructure`:
+  - `ncp_est`: estimates parameter of non-central chi squared distribution from samples.
+  - `pvals_nc_chisq`: uses `ncp_est` to fit a non-central chi squared model to the Jackstraw null statistics, then calculates p-values from this model for the observed statistics.
+- New package dependency `stats4` added to calculate maximum likelihood estimates of the non-centrality parameter.
+- Internally, documentation now uses Markdown shortcuts.

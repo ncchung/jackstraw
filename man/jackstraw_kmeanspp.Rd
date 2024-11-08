@@ -55,7 +55,7 @@ Generally, it functions identical to \code{jackstraw_kmeans}, but this uses \cod
 A speed improvement is gained by K-means++ initialization and \code{RcppArmadillo}. If the input data is still too large,
 consider using \code{jackstraw_MiniBatchKmeans}.
 
-The input data (\code{dat}) must be of a class `matrix`.
+The input data (\code{dat}) must be of a class \code{matrix}.
 }
 \examples{
 \dontrun{

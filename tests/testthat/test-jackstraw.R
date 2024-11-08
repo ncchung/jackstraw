@@ -842,6 +842,92 @@ test_that( "jackstraw_cluster works", {
     test_jackstraw_return_val( obj, s, B, kmeans = TRUE )
 })
 
+validate_ncp_est <- function( ests ) {
+    expect_true( is.vector( ests ) )
+    expect_true( is.numeric( ests ) )
+    expect_equal( length( ests ), 2 )
+    expect_true( all( ests >= 0 ) )
+}
+
+validate_pvals_nc_chisq <- function( obj, n_obs, test_ncp = TRUE ) {
+    expect_true( is.list( obj ) )
+    expect_equal( names( obj ), c('p.value', 'ncp') )
+    expect_equal( length( obj$p.value ), n_obs )
+    expect_true( is.numeric( obj$p.value ) )
+    expect_true( min( obj$p.value, na.rm = TRUE ) >= 0 )
+    expect_true( max( obj$p.value, na.rm = TRUE ) <= 1 )
+    if ( test_ncp )
+        validate_ncp_est( obj$ncp )
+}
+
+# test nc-chisq code
+test_that( 'ncp_est, pvals_nc_chisq work', {
+    # simulate small data truly from nc-chisq
+    df <- 1
+    ncp_true <- 2
+    n <- 100
+    x <- rchisq( n, df, ncp_true )
+    # and a second data with stats we want p-values for, let's give huge power to this test
+    ny <- 11
+    y <- rchisq( ny, df, ncp_true + 10 )
+    # add artifacts to these from the start
+    y[1:3] <- c(NA, -1, Inf)
+    
+    # test this expected successful example
+    expect_silent( 
+        ests <- ncp_est( x, df )
+    )
+    validate_ncp_est( ests )
+
+    # and the bigger wrapper
+    out <- list( null.stat = x, obs.stat = y )
+    expect_silent(
+        obj <- pvals_nc_chisq( out, df )
+    )
+    validate_pvals_nc_chisq( obj, ny, test_ncp = FALSE )
+    # since the inputs were the same, these should match what we had before
+    expect_equal( obj$ncp, ests )
+
+    # repeat with alternate call setup, expect identical results again
+    expect_silent(
+        obj2 <- pvals_nc_chisq( null.stat = x, obs.stat = y, df = df )
+    )
+    expect_equal( obj2, obj )
+
+    # make sure when things are missing that it dies
+    expect_error( pvals_nc_chisq( null.stat = x, df = df ) )
+    expect_error( pvals_nc_chisq( obs.stat = y, df = df ) )
+    expect_error( pvals_nc_chisq( df = df ) )
+    
+    # add artifacts to this data that the code is supposed to handle, including NAs, infinite values, and negatives (all get removed)
+    x2 <- c( x, NA, Inf, -Inf, -1 )
+    expect_silent( 
+        ests2 <- ncp_est( x2, df )
+    )
+    # since the input was effectively the same as before (all additions should be removed), the output should be identical too
+    expect_equal( ests2, ests )
+    # ditto here
+    expect_silent(
+        obj2 <- pvals_nc_chisq( null.stat = x2, obs.stat = y, df = df )
+    )
+    expect_equal( obj2, obj )
+
+    # test the edge case where the data is actually central
+    x <- rchisq( n, df, 0 )
+    expect_silent( 
+        ests <- ncp_est( x, df )
+    )
+    validate_ncp_est( ests )
+    # repeat this wrapper too
+    expect_silent(
+        obj <- pvals_nc_chisq( null.stat = x, obs.stat = y, df = df )
+    )
+    validate_pvals_nc_chisq( obj, ny, test_ncp = FALSE )
+    # since the inputs were the same, these should match what we had before
+    expect_equal( obj$ncp, ests )
+})
+
+
 
 # first write test genotypes somewhere
 file_tmp <- tempfile( 'test-jackstraw', fileext = '.bed' )
@@ -1098,7 +1184,12 @@ if ( requireNamespace( "gcatest", quietly = TRUE ) ) {
             )
             # check basic jackstraw return object
             test_jackstraw_return_val( obj, s, B )
-
+            # in this case try nc-chisq p-values!
+            expect_silent(
+                obj_nc <- pvals_nc_chisq( obj, d-1 )
+            )
+            validate_pvals_nc_chisq( obj_nc, m )
+            
             # test edge cases
             # s = 1
             expect_silent(
@@ -1200,6 +1291,11 @@ if ( requireNamespace( "gcatest", quietly = TRUE ) ) {
             )
             # check basic jackstraw return object
             test_jackstraw_return_val( obj, s, B )
+            # in this case try nc-chisq p-values!
+            expect_silent(
+                obj_nc <- pvals_nc_chisq( obj, d-1 )
+            )
+            validate_pvals_nc_chisq( obj_nc, m )
 
             # test edge cases
             # s = 1

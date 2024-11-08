@@ -61,7 +61,7 @@ to determine a number of significant PCs, \code{r}. The number of significant PC
 In a case when you fail to specify \code{r}, it will be estimated from a permutation test (Buja and Eyuboglu, 1992)
 using a function \link{permutationPA}.
 
-If \code{s} is not supplied, \code{s} is set to about 10\% of \code{m} variables.
+If \code{s} is not supplied, \code{s} is set to about 10\\% of \code{m} variables.
 If \code{B} is not supplied, \code{B} is set to \code{m*10/s}.
 }
 \examples{

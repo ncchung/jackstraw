@@ -52,7 +52,7 @@
 #' # choose the number of logistic factors, including the intercept
 #' r <- 2
 #' # define the function this way, a function of the genotype matrix only
-#' FUN <- function(x) lfa::lfa( x, r )
+#' FUN <- function(x) lfa( x, r )
 #'
 #' ## apply the jackstraw_lfa
 #' out <- jackstraw_lfa( dat, r, FUN )

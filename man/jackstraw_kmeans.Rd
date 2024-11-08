@@ -54,7 +54,7 @@ the statistical test of that row with regard to its assigned cluster.
 Its resampling strategy accounts for the over-fitting characteristics due to direct computation of clusters from the observed data
 and protects against an anti-conservative bias.
 
-The input data (\code{dat}) must be of a class `matrix`.
+The input data (\code{dat}) must be of a class \code{matrix}.
 }
 \examples{
 \dontrun{

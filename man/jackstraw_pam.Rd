@@ -53,7 +53,7 @@ and protects against an anti-conservative bias.
 
 For a large dataset, PAM could be too slow. Consider using \code{cluster::clara} and \code{jackstraw::jackstraw_clara}.
 
-The input data (\code{dat}) must be of a class `matrix`.
+The input data (\code{dat}) must be of a class \code{matrix}.
 }
 \examples{
 \dontrun{

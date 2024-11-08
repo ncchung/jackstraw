@@ -14,7 +14,7 @@ Supplementary Data 1 from Zheng et al. (2017) \url{https://static-content.spring
 Jurkat293T
 }
 \description{
-50%:50% Jurkat:293T
+50\%:50\% Jurkat:293T
 }
 \references{
 Zheng et al. (2017) Massively parallel digital transcriptional profiling of single cells. Nature Communications. 8:14049. \doi{10.1038/ncomms14049}
