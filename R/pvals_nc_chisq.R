@@ -32,7 +32,7 @@
 #' out2 <- pvals_nc_chisq( out, df )
 #' # these are the desired p-values
 #' out2$p.value
-#' # and NCP estimates from tow methds
+#' # and NCP estimates from two methods
 #' out2$ncp
 #'
 #' \dontrun{

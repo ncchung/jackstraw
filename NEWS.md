@@ -151,3 +151,7 @@ Changes manually ported from latest CRAN branch:
   - `pvals_nc_chisq`: uses `ncp_est` to fit a non-central chi squared model to the Jackstraw null statistics, then calculates p-values from this model for the observed statistics.
 - New package dependency `stats4` added to calculate maximum likelihood estimates of the non-centrality parameter.
 - Internally, documentation now uses Markdown shortcuts.
+
+# jackstraw 1.3.18.9000 (2024-12-12)
+
+- Minor documentation updates to functions `jackstraw_lfa` and `pvals_nc_chisq`

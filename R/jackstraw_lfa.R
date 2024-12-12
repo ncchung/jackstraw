@@ -31,7 +31,9 @@
 #' @author Neo Christopher Chung \email{nchchung@@gmail.com}
 #' @author Alejandro Ochoa \email{alejandro.ochoa@@duke.edu}
 #' @references Chung and Storey (2015) Statistical significance of variables driving systematic variation in high-dimensional data. Bioinformatics, 31(4): 545-554 \doi{10.1093/bioinformatics/btu674}
-#' @seealso  \link{jackstraw_pca} \link{jackstraw} \link{jackstraw_subspace}
+#' @seealso  [jackstraw_pca()] \link{jackstraw} [jackstraw_subspace()]
+#'
+#' [pvals_nc_chisq()] for calculating high-precision p-values from `jackstraw_lfa` outputs if desired.
 #'
 #' @examples
 #' \dontrun{
@@ -63,6 +65,13 @@
 #' dat_BM <- BEDMatrix( 'filepath' ) # assumes filepath.bed, .bim and .fam exist
 #' # run jackstraw!
 #' out <- jackstraw_lfa( dat_BM, r, FUN )
+#'
+#' # if desired, this calculates new p-values with much higher precision for highly significant cases
+#' out2 <- pvals_nc_chisq( out, r-1 )
+#' # these are the desired p-values
+#' out2$p.value
+#' # and non-centrality estimates from two methods
+#' out2$ncp
 #' }
 #'
 #' @export
