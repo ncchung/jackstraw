@@ -1,7 +1,7 @@
 #' Calculate high precision p-values from Jackstraw data under non-central chi squared distribution for null statistics
 #'
 #' This function takes a Jackstraw object for convenience, estimates the non-centrality parameter (NCP) from the null statistics (using [ncp_est()]), then uses this non-central chi squared model to calculate p-values for the observed statistics.
-#' The goal is to be able to calculate small p-values with arbitrary precision, which is normally not possible with the ordinary Jackstraw functions since the minimum empirical p-value is determined by the inverse of the number of null samples (`1 /( s * B )` where s` and `B` are Jackstraw parameters (see [jackstraw_lfa()])).
+#' The goal is to be able to calculate small p-values with arbitrary precision, which is normally not possible with the ordinary Jackstraw functions since the minimum empirical p-value is determined by the inverse of the number of null samples (`1 /( s * B )` where `s` and `B` are Jackstraw parameters (see [jackstraw_lfa()])).
 #' In contrast, large p-values values are typically similar between empirical and NCP model versions, and in fact this must hold if the null model is correctly specified.
 #' This model works well empirically for [jackstraw_lfa()] and [jackstraw_alstructure()], whose statistics are deviances that would ordinarily be central chi-squared distributed were the test factors not estimated from the same data.
 #' This model is not appropriate for data from [jackstraw_pca()], whose statistics have a roughly F distribution, and possibly many other functions from this package.
@@ -69,6 +69,7 @@ pvals_nc_chisq <- function( out, df, null.stat = out$null.stat, obs.stat = out$o
     ncp_ests  <- ncp_est( null.stat, df )
     # and p-values according to this model
     pvals <- stats::pchisq( obs.stat, df, ncp_ests[1], lower.tail = FALSE )
+    pvals[pvals==0] <- .Machine$double.xmin
     # return all the useful data, the first in the same style as the jackstraw_* functions
     return( list( p.value = pvals, ncp = ncp_ests ) )
 }
