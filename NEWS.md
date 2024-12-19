@@ -155,3 +155,7 @@ Changes manually ported from latest CRAN branch:
 # jackstraw 1.3.18.9000 (2024-12-12)
 
 - Minor documentation updates to functions `jackstraw_lfa` and `pvals_nc_chisq`
+
+# jackstraw 1.3.19.9000 (2024-12-19)
+
+- P-values of 0 from a non-central chi squared model are set to `.Machine$double.xmin` in `pvals_nc_chisq`
