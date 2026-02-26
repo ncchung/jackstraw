@@ -90,6 +90,3 @@ Here are some implementations of the jackstraw in different contexts and applica
 [Guided Clustering Tutorial](https://satijalab.org/seurat/articles/pbmc3k_tutorial.html)
 
 [Determine statistical significance of PCA scores](https://satijalab.org/seurat/reference/jackstraw)
-
-[Seurat Wizard (GUI Web App)](http://nasqar2.abudhabi.nyu.edu/SeuratV3Wizard/)
-
